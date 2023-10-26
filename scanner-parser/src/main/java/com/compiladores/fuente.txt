@@ -1,0 +1,58 @@
+
+
+ int#main(){
+	bool#b1;
+	string#s1;
+	read>>s1; //semantico
+	print<<b1; //semantico
+	print<<true; //semantico
+	print<<-6.7;
+	return#1;
+}
+
+float#miFunc(int#dif,char#otra){
+	int#otra;
+	string#str="Hola $%&/#$&) mundo";
+	for#x#in#range(10,300,2) //for i in range(i+10,300,2)
+	{
+		while(var2>12.2 || (34+34)>12) //semantico
+		{
+			var = var - 1; //semantico
+		}else{
+			read>>var2;
+			break;
+		}
+
+		if (var==0)
+		{
+			print<<"entra al if";
+		}
+		if(10>12 && var!=0)
+		{
+			print<<var;
+		}
+		else
+		{
+			switch(otra) //semantico
+			{
+				case#1:
+					print<<"!#";
+				case#2:
+					otra = 10;
+					break;
+				default:
+					otra = -10.5 * -1.9;
+			}
+			switch(otra2) //semantico
+			{
+				case#10:
+					print<<"un case";
+			}
+		}
+	}
+	return#1; //semantico
+}
+
+bool#miOtraFun(){
+	return#-5.6; //semantico
+}

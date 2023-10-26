@@ -1,0 +1,224 @@
+package com.compiladores;
+
+import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+
+
+parser code  {:
+
+    //Connect to the lexer
+    Lexer lexer;
+    public Boolean errorDisplayed = false;
+    Map<String, ArrayList<String>> tablasDeSimbolos = new Hashtable<>();
+    String currentHash = "";
+
+    @SuppressWarnings("deprecation")
+    public parser(Lexer lexer) {
+        this.lexer = lexer;
+        this.symbolFactory = new DefaultSymbolFactory();
+
+        //Inicializar tabla de simbolos Global
+        ArrayList<String> tabla = new ArrayList<>();
+        currentHash = "Tabla Global";
+        tabla.add("Variables globales: ");
+        tablasDeSimbolos.put(currentHash, tabla);
+    }
+
+    //Metodo para imprimir la tabla de simbolos
+    public void imprimirTablaSimbolos(){
+        System.out.println("\n##### TABLAS DE SIMBOLOS #####");
+        for (Map.Entry<String, ArrayList<String>> entry : tablasDeSimbolos.entrySet()) {
+            System.out.println("\n##### "+entry.getKey()+" #####");
+            for(String s : entry.getValue()){
+                System.out.println(s);
+            }
+        }
+    }
+
+:};
+
+
+init with {: :};
+scan with {: return lexer.next_token(); :};
+
+
+
+/** TERMINALES **/
+terminal PLUS, MINUS, TIMES, LPAREN, RPAREN, DIVIDE, MODULE, POWER, INCREMENT, DECREMENT, ASSIGN, ENDLINE, EQUALS, DIFFERENT, GREATER,
+ LESS, GREATEREQUAL, LESSEQUAL, AND, OR, NOT, BLOCKSTART, BLOCKEND, COMMA, SEPARATOR, IF, ELSE, IDENTIFIER, RETURN, BREAK, FOR, IN,
+ RANGE, WHILE, SWITCH, CASE, DOTS, DEFAULT, READ, READSYMBOL, PRINT, PRINTSYMBOL, INTEGERTYPE, FLOATTYPE, BOOLEANTYPE, CHARTYPE,
+ STRINGTYPE, BOOLEAN, INTEGER, FLOAT, CHAR, STRING;
+
+terminal ERROR_RECOVERY;
+
+
+/** NO TERMINALES **/
+non terminal type;
+
+non terminal  function, functions, program, parameter, parameters, expression, statement, statements, if_struct, if_else_struct, while_struct,
+              while_else_struct, for_range_struct, decl, assignment, decl_and_assignment, readData, printData, callFunction, case_statement,
+              case_statements, default_statement, switch_struct,aritmeticExpression, relationalExpression, logicalExpression, literal, aritmeticOp,
+              relationalOp, logicalOp, operand, functionIdentifier,varIdentifier, return_statement, break_statement, callFunction_statement,
+              error_recovery,errors, globalVariable, globalVariables;
+
+
+//PRECEDENCIA
+precedence left OR;
+precedence left AND;
+precedence left EQUALS, DIFFERENT, GREATER, LESS, GREATEREQUAL, LESSEQUAL;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE, MODULE, POWER;
+precedence right NOT;
+
+start with program;
+
+
+type ::= INTEGERTYPE {:RESULT = "int"; :}
+       | FLOATTYPE {:RESULT = "float"; :}
+       | BOOLEANTYPE {:RESULT = "boolean"; :}
+       | CHARTYPE {:RESULT = "char"; :}
+       | STRINGTYPE {:RESULT = "string"; :};
+
+literal ::= INTEGER | FLOAT | CHAR | STRING | BOOLEAN;
+aritmeticOp ::= PLUS | MINUS | TIMES | DIVIDE | MODULE | POWER;
+operand ::= literal | IDENTIFIER | callFunction;
+relationalOp ::= EQUALS | DIFFERENT | GREATER | LESS | GREATEREQUAL | LESSEQUAL;
+logicalOp ::= AND | OR;
+
+
+/** EXPRESSIONS **/
+
+aritmeticExpression ::= operand:n {: RESULT = n; :}
+                      | MINUS operand:n {: RESULT = "-"+n; :}
+                      | IDENTIFIER:id INCREMENT {: RESULT = id+"++"; :}
+                      | IDENTIFIER:id DECREMENT {:RESULT = id+"--"; :};
+
+// EXPRESIONES ARITMETICAS
+aritmeticExpression ::= aritmeticExpression aritmeticOp aritmeticExpression;
+aritmeticExpression ::= LPAREN aritmeticExpression RPAREN;
+
+//EXPRESIONES RELACIONALES
+relationalExpression ::= aritmeticExpression relationalOp aritmeticExpression;
+
+// EXPRESIONES LOGICAS
+logicalExpression ::= relationalExpression;//| operand;
+logicalExpression ::= logicalExpression logicalOp logicalExpression;
+logicalExpression ::= LPAREN logicalExpression RPAREN;
+logicalExpression ::= NOT logicalExpression;
+
+expression ::= aritmeticExpression | logicalExpression;
+
+
+/** CONTROL STRUCTURES **/
+
+if_struct ::= IF LPAREN expression RPAREN BLOCKSTART statements BLOCKEND;
+
+if_else_struct ::= if_struct ELSE BLOCKSTART statements BLOCKEND;
+
+while_struct ::= WHILE LPAREN logicalExpression RPAREN BLOCKSTART statements BLOCKEND;
+
+while_else_struct ::= while_struct ELSE BLOCKSTART statements BLOCKEND;
+
+for_range_struct ::= FOR SEPARATOR IDENTIFIER SEPARATOR IN SEPARATOR RANGE LPAREN INTEGER COMMA
+                     INTEGER COMMA INTEGER RPAREN BLOCKSTART statements BLOCKEND;
+for_range_struct ::= FOR SEPARATOR IDENTIFIER SEPARATOR IN SEPARATOR RANGE LPAREN INTEGER COMMA
+                     INTEGER RPAREN BLOCKSTART statements BLOCKEND;
+for_range_struct ::= FOR SEPARATOR IDENTIFIER SEPARATOR IN SEPARATOR RANGE LPAREN INTEGER RPAREN BLOCKSTART statements BLOCKEND;
+
+default_statement ::= DEFAULT DOTS statements;
+
+case_statement ::= CASE SEPARATOR literal DOTS statements;
+
+case_statements ::= case_statement;
+case_statements ::= case_statements case_statement;
+
+switch_struct ::= SWITCH LPAREN expression RPAREN BLOCKSTART case_statements BLOCKEND;
+switch_struct ::= SWITCH LPAREN expression RPAREN BLOCKSTART case_statements default_statement BLOCKEND;
+switch_struct ::= SWITCH LPAREN expression RPAREN BLOCKSTART default_statement BLOCKEND;
+
+
+/** STATEMENTS **/
+
+varIdentifier ::= type:t SEPARATOR IDENTIFIER:idVar {:tablasDeSimbolos.get(currentHash).add(idVar.toString()+": "+t.toString()); :}; //Agregar id a la tabla de simbolos
+
+decl ::= varIdentifier ENDLINE;
+
+assignment ::= IDENTIFIER ASSIGN expression ENDLINE;
+
+decl_and_assignment ::= varIdentifier ASSIGN  expression ENDLINE;
+
+readData ::= READ READSYMBOL IDENTIFIER ENDLINE;
+
+printData ::= PRINT PRINTSYMBOL expression ENDLINE;
+
+callFunction ::= IDENTIFIER LPAREN expression  RPAREN;
+callFunction ::= IDENTIFIER LPAREN expression COMMA expression RPAREN;
+callFunction_statement ::= callFunction ENDLINE;
+
+return_statement ::= RETURN SEPARATOR expression ENDLINE;
+return_statement ::= RETURN ENDLINE;
+
+break_statement ::= BREAK ENDLINE;
+
+statement ::=   decl | assignment | decl_and_assignment | readData | printData | return_statement | break_statement |
+                callFunction_statement | if_struct | if_else_struct| while_struct | while_else_struct | for_range_struct
+                | switch_struct;
+
+statements ::= statement;
+statements ::= statements statement;
+
+
+/** PARAMETERS **/
+
+parameter ::= type SEPARATOR IDENTIFIER;
+parameters ::= parameter;
+parameters ::= parameters COMMA parameter;
+parameters ::= errors; //  parmetros no válidos
+
+
+/** FUNCTIONS **/
+
+functionIdentifier ::= type:t SEPARATOR IDENTIFIER :idFunc {:
+                                                            String tipoTabla = "main";
+                                                            if (idFunc.toString().equals("main"))
+                                                                tipoTabla = "tipo: main: "+t.toString();
+                                                            else
+                                                                tipoTabla = "tipo: funcion: "+t.toString();
+                                                            ArrayList<String> tabla = new ArrayList<>();
+                                                            currentHash = idFunc.toString();
+                                                            tabla.add(tipoTabla);
+                                                            tablasDeSimbolos.put(currentHash, tabla);
+                                                        :}; // Crear tabla de simbolos para la funcion
+
+function ::= functionIdentifier LPAREN parameters RPAREN BLOCKSTART statements BLOCKEND
+           | functionIdentifier LPAREN  RPAREN BLOCKSTART statements BLOCKEND;
+
+functions ::= function;
+functions ::= functions function;
+functions ::= errors; // Error cuando hay algo fuera de una funcion
+
+
+globalVariable ::= decl | decl_and_assignment;
+globalVariables ::= globalVariable;
+globalVariables ::= globalVariables globalVariable;
+
+
+/** PUNTO DE ENTRADA **/
+program ::= globalVariables | functions {: imprimirTablaSimbolos(); :};
+program ::= globalVariables functions  {: imprimirTablaSimbolos(); :};
+
+
+error_recovery ::= ERROR_RECOVERY:err {:if (!errorDisplayed){
+                                           System.out.println("EL ARCHIVO FUENTE NO PUEDE SER GENERADO POR LA GRAMÁTICA \n\nERRORS:\n ");
+                                           errorDisplayed = true;
+                                         } System.out.println("[ERROR] Caracter Invalido: "+err);:} |
+                   IDENTIFIER: err {:  if (!errorDisplayed){
+                                          System.out.println("EL ARCHIVO FUENTE NO PUEDE SER GENERADO POR LA GRAMÁTICA \n\nERRORS:\n ");
+                                          errorDisplayed = true;
+                                       }   System.out.println("[ERROR] Statement Out of Place: "+err); :} ; //MANEJO DE ERRORES
+
+errors ::= error_recovery;
+errors ::= errors error_recovery;

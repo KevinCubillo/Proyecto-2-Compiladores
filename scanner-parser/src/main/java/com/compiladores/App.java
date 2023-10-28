@@ -11,7 +11,7 @@ public class App
     {
         String archivoFuente = "src/main/java/com/compiladores/fuente.txt";
 
-        testLexer(archivoFuente); // PRUEBA LEXER
+        //testLexer(archivoFuente); // PRUEBA LEXER
         testParser(archivoFuente); // PRUEBA PARSER
     }
 
@@ -42,5 +42,6 @@ public class App
 
         parser p = new parser(lexer);
         p.parse();
+        p.imprimirCodigoIntermedio();
     }
 }

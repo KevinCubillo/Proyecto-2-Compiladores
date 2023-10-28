@@ -2,7 +2,7 @@ package com.compiladores;
 
 import java_cup.runtime.*;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +12,7 @@ parser code  {:
     //Connect to the lexer
     Lexer lexer;
     public Boolean errorDisplayed = false;
-    Map<String, ArrayList<String>> tablasDeSimbolos = new Hashtable<>();
+    Map<String, ArrayList<String[]>> tablasDeSimbolos = new HashMap<>();
     String currentHash = "";
 
     @SuppressWarnings("deprecation")
@@ -21,22 +21,40 @@ parser code  {:
         this.symbolFactory = new DefaultSymbolFactory();
 
         //Inicializar tabla de simbolos Global
-        ArrayList<String> tabla = new ArrayList<>();
-        currentHash = "Tabla Global";
-        tabla.add("Variables globales: ");
+        currentHash = "Global";
+        ArrayList<String[]> tabla = new ArrayList<>();
+        String[] titulo = new String[1];
+        titulo[0] = "Variables Globales";
+        tabla.add(titulo);
         tablasDeSimbolos.put(currentHash, tabla);
     }
 
-    //Metodo para imprimir la tabla de simbolos
-    public void imprimirTablaSimbolos(){
-        System.out.println("\n##### TABLAS DE SIMBOLOS #####");
-        for (Map.Entry<String, ArrayList<String>> entry : tablasDeSimbolos.entrySet()) {
-            System.out.println("\n##### "+entry.getKey()+" #####");
-            for(String s : entry.getValue()){
-                System.out.println(s);
-            }
+//Metodo para imprimir la tabla de simbolos
+public void imprimirTablaSimbolos() {
+    System.out.println("\n##### TABLAS DE SIMBOLOS #####");
+    for (Map.Entry<String, ArrayList<String[]>> entry : tablasDeSimbolos.entrySet()) {
+        System.out.println("\n##### " + entry.getKey() + " #####");
+        for (String[] symbol : entry.getValue()) {
+            System.out.println("Tipo: " + symbol[0] + " ID: " + symbol[1] + " Tipo de dato: " + symbol[2]); 
         }
     }
+}
+
+
+//Metodo para obtener un symbolo
+public String[] getSymbol(List<String[]> tabla, String id) {
+    for (int i = 1; i < tabla.size(); i++) {
+        String[] symbol = tabla.get(i);
+        if (symbol[1].equals(id)) {
+            return symbol; // Devuelve el símbolo que coincide con el ID.
+        }
+    }
+    return null; // Si no se encuentra el símbolo, devuelve null o maneja el caso según tus necesidades.
+}
+
+//Metodo para obtener los parametros de una funcion
+
+     
 
 :};
 
@@ -62,7 +80,7 @@ non terminal  function, functions, program, parameter, parameters, expression, s
               while_else_struct, for_range_struct, decl, assignment, decl_and_assignment, readData, printData, callFunction, case_statement,
               case_statements, default_statement, switch_struct,aritmeticExpression, relationalExpression, logicalExpression, literal, aritmeticOp,
               relationalOp, logicalOp, operand, functionIdentifier,varIdentifier, return_statement, break_statement, callFunction_statement,
-              error_recovery,errors, globalVariable, globalVariables;
+              error_recovery,errors, globalVariable, globalVariables,sendParameters;
 
 
 //PRECEDENCIA
@@ -78,25 +96,81 @@ start with program;
 
 type ::= INTEGERTYPE {:RESULT = "int"; :}
        | FLOATTYPE {:RESULT = "float"; :}
-       | BOOLEANTYPE {:RESULT = "boolean"; :}
+       | BOOLEANTYPE {:RESULT = "bool"; :}
        | CHARTYPE {:RESULT = "char"; :}
        | STRINGTYPE {:RESULT = "string"; :};
 
-literal ::= INTEGER | FLOAT | CHAR | STRING | BOOLEAN;
-aritmeticOp ::= PLUS | MINUS | TIMES | DIVIDE | MODULE | POWER;
-operand ::= literal | IDENTIFIER | callFunction;
+literal ::= INTEGER:n {: RESULT = n+":int"; :}  
+          | FLOAT:n {: RESULT = n+":float"; :} 
+          | CHAR:n {: RESULT = n+":char"; :}  
+          | STRING:n {: RESULT = n+":string"; :} 
+          | BOOLEAN:n {: RESULT = n+":bool"; :};
+
+aritmeticOp ::= PLUS | MINUS |  TIMES |  DIVIDE |  MODULE | POWER;
+
+operand ::= literal:n    {:
+                            RESULT = n;    
+                        :} 
+
+        |   IDENTIFIER:id {:
+                            ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
+                            String[] symbol = getSymbol(tabla, id.toString());
+                            String tipoId = symbol[2];
+                            System.out.println("tipo encontado para id: "+id+" es: "+tipoId);            
+                            RESULT = id+":"+tipoId;
+                        :}          
+        |   callFunction;
+           
 relationalOp ::= EQUALS | DIFFERENT | GREATER | LESS | GREATEREQUAL | LESSEQUAL;
 logicalOp ::= AND | OR;
 
 
 /** EXPRESSIONS **/
 
-aritmeticExpression ::= operand:n {: RESULT = n; :}
-                      | MINUS operand:n {: RESULT = "-"+n; :}
-                      | IDENTIFIER:id INCREMENT {: RESULT = id+"++"; :}
-                      | IDENTIFIER:id DECREMENT {:RESULT = id+"--"; :};
-
 // EXPRESIONES ARITMETICAS
+aritmeticExpression ::= operand:n 
+{:
+
+    RESULT = n; 
+
+:}
+| MINUS literal:n 
+
+{: 
+
+    if (!String.valueOf(n).endsWith("int") && !String.valueOf(n).endsWith("float")) {
+        System.out.println("Error semantico en la linea x: Operacion aritmetica no valida");
+    }
+    RESULT = "-"+n; 
+
+:}
+| IDENTIFIER:id INCREMENT 
+{:
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
+    String[] symbol = getSymbol(tabla, id.toString());
+    String tipoId = symbol[2];
+
+    System.out.println("tipo encontado para id: "+id+" es: "+tipoId);
+    if (!tipoId.equals("int"))
+    System.out.println("Error semantico en la linea x: No se permite el uso de incremento en variables de tipo: "+tipoId);  
+    RESULT = id+":"+tipoId;
+:}
+| IDENTIFIER:id DECREMENT 
+{:
+
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
+    String[] symbol = getSymbol(tabla, id.toString());
+    String tipoId = symbol[2];
+
+    System.out.println("tipo encontado para id: "+id+" es: "+tipoId);
+    if (!tipoId.equals("int")){
+        System.out.println("Error semantico en la linea x: No se permite el uso de decremento en variables de tipo: "+tipoId);  
+    }
+    RESULT = id+":"+tipoId;
+
+:};
+
+
 aritmeticExpression ::= aritmeticExpression aritmeticOp aritmeticExpression;
 aritmeticExpression ::= LPAREN aritmeticExpression RPAREN;
 
@@ -109,7 +183,15 @@ logicalExpression ::= logicalExpression logicalOp logicalExpression;
 logicalExpression ::= LPAREN logicalExpression RPAREN;
 logicalExpression ::= NOT logicalExpression;
 
-expression ::= aritmeticExpression | logicalExpression;
+expression ::= aritmeticExpression:e
+{:
+    RESULT = e; //Enviar solo el tipo de dato
+:} 
+
+| logicalExpression:e
+{:
+    RESULT = e; //Enviar solo el tipo de dato
+:};
 
 
 /** CONTROL STRUCTURES **/
@@ -122,11 +204,11 @@ while_struct ::= WHILE LPAREN logicalExpression RPAREN BLOCKSTART statements BLO
 
 while_else_struct ::= while_struct ELSE BLOCKSTART statements BLOCKEND;
 
-for_range_struct ::= FOR SEPARATOR IDENTIFIER SEPARATOR IN SEPARATOR RANGE LPAREN INTEGER COMMA
-                     INTEGER COMMA INTEGER RPAREN BLOCKSTART statements BLOCKEND;
-for_range_struct ::= FOR SEPARATOR IDENTIFIER SEPARATOR IN SEPARATOR RANGE LPAREN INTEGER COMMA
-                     INTEGER RPAREN BLOCKSTART statements BLOCKEND;
-for_range_struct ::= FOR SEPARATOR IDENTIFIER SEPARATOR IN SEPARATOR RANGE LPAREN INTEGER RPAREN BLOCKSTART statements BLOCKEND;
+for_range_struct ::= FOR SEPARATOR IDENTIFIER SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression COMMA
+                     aritmeticExpression COMMA aritmeticExpression RPAREN BLOCKSTART statements BLOCKEND;
+for_range_struct ::= FOR SEPARATOR IDENTIFIER SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression COMMA
+                     aritmeticExpression RPAREN BLOCKSTART statements BLOCKEND;
+for_range_struct ::= FOR SEPARATOR IDENTIFIER SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression RPAREN BLOCKSTART statements BLOCKEND;
 
 default_statement ::= DEFAULT DOTS statements;
 
@@ -142,7 +224,16 @@ switch_struct ::= SWITCH LPAREN expression RPAREN BLOCKSTART default_statement B
 
 /** STATEMENTS **/
 
-varIdentifier ::= type:t SEPARATOR IDENTIFIER:idVar {:tablasDeSimbolos.get(currentHash).add(idVar.toString()+": "+t.toString()); :}; //Agregar id a la tabla de simbolos
+varIdentifier ::= type:t SEPARATOR IDENTIFIER:idVar 
+{:
+    //Agregar id a la tabla de simbolos
+    String[] symbol = new String[3];
+    symbol[0] = "Variable";
+    symbol[1] = idVar.toString();
+    symbol[2] = t.toString();
+
+    tablasDeSimbolos.get(currentHash).add(symbol);
+:}; 
 
 decl ::= varIdentifier ENDLINE;
 
@@ -154,8 +245,38 @@ readData ::= READ READSYMBOL IDENTIFIER ENDLINE;
 
 printData ::= PRINT PRINTSYMBOL expression ENDLINE;
 
-callFunction ::= IDENTIFIER LPAREN expression  RPAREN;
-callFunction ::= IDENTIFIER LPAREN expression COMMA expression RPAREN;
+
+sendParameters ::= expression:e 
+{:
+   
+:};
+
+sendParameters ::= sendParameters COMMA expression;
+
+callFunction ::= IDENTIFIER:id LPAREN sendParameters:actualParams  RPAREN 
+{: 
+/*
+    if (tablasDeSimbolos.containsKey(id.toString())) { //Verificar si la funcion existe
+        ArrayList<String[]> tabla = tablasDeSimbolos.get(id.toString()); //Obtener la tabla de simbolos de la funcion
+        String[] titulo = tabla.get(0); //Obtener el titulo de la tabla de simbolos de la funcion
+
+        if (titulo[0].equals("main")) { //Verificar si la funcion es main
+            System.out.println("Error semantico en la linea x: La función main no recibe parametros");
+        }
+
+        // Verificar si los parametros enviados coinciden con los parametros de la funcion
+        for ()
+
+      
+    }else{
+        System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" no existe");
+    }
+   */       
+
+:};
+
+callFunction ::= IDENTIFIER LPAREN RPAREN;
+
 callFunction_statement ::= callFunction ENDLINE;
 
 return_statement ::= RETURN SEPARATOR expression ENDLINE;
@@ -173,7 +294,43 @@ statements ::= statements statement;
 
 /** PARAMETERS **/
 
-parameter ::= type SEPARATOR IDENTIFIER;
+parameter ::= type:t SEPARATOR IDENTIFIER:idParam 
+{:
+
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
+
+     // Verificar si el parámetro ya existe en la tabla
+    boolean exists = false;
+    /*
+    for (String[] symbol : tabla) {
+        if (symbol[0].equals("Parametro") && symbol[1].equals(idParamString)) {
+            System.out.println("Error semantico en la linea x: El parametro "+idParamString+" ya existe");
+            exists = true;
+            break;
+        }
+    }*/
+
+    if (!exists) {
+        // Agregar el parámetro solo si no existe en la tabla
+        String[] symbol = new String[3];
+        symbol[0] = "Parametro";
+        symbol[1] = idParam.toString();
+        symbol[2] = t.toString();
+        tabla.add(symbol);
+
+        tablasDeSimbolos.put(currentHash, tabla);
+    }
+
+    //Agregar id a la tabla de simbolos
+    String[] symbol = new String[3];
+    symbol[0] = "Parametro";
+    symbol[1] = idParam.toString();
+    symbol[2] = t.toString();
+
+    tablasDeSimbolos.get(currentHash).add(symbol);
+   
+:};
+
 parameters ::= parameter;
 parameters ::= parameters COMMA parameter;
 parameters ::= errors; //  parmetros no válidos
@@ -181,17 +338,26 @@ parameters ::= errors; //  parmetros no válidos
 
 /** FUNCTIONS **/
 
-functionIdentifier ::= type:t SEPARATOR IDENTIFIER :idFunc {:
-                                                            String tipoTabla = "main";
-                                                            if (idFunc.toString().equals("main"))
-                                                                tipoTabla = "tipo: main: "+t.toString();
-                                                            else
-                                                                tipoTabla = "tipo: funcion: "+t.toString();
-                                                            ArrayList<String> tabla = new ArrayList<>();
-                                                            currentHash = idFunc.toString();
-                                                            tabla.add(tipoTabla);
-                                                            tablasDeSimbolos.put(currentHash, tabla);
-                                                        :}; // Crear tabla de simbolos para la funcion
+functionIdentifier ::= type:t SEPARATOR IDENTIFIER :idFunc 
+{:
+
+// Crear tabla de simbolos para la funcion
+
+    String tipoTabla = "main";
+    if (idFunc.toString().equals("main")){
+    tipoTabla = "Tipo: main: "+t.toString();
+    }
+    else{
+    tipoTabla = "Tipo: funcion: "+t.toString();
+    }
+
+    ArrayList<String[]> tabla = new ArrayList<>();
+    String[] titulo = new String[1];
+    titulo[0] = tipoTabla;
+    tabla.add(titulo);
+    tablasDeSimbolos.put(currentHash, tabla);
+   
+:}; 
 
 function ::= functionIdentifier LPAREN parameters RPAREN BLOCKSTART statements BLOCKEND
            | functionIdentifier LPAREN  RPAREN BLOCKSTART statements BLOCKEND;
@@ -207,18 +373,37 @@ globalVariables ::= globalVariables globalVariable;
 
 
 /** PUNTO DE ENTRADA **/
-program ::= globalVariables | functions {: imprimirTablaSimbolos(); :};
-program ::= globalVariables functions  {: imprimirTablaSimbolos(); :};
+program ::= globalVariables | functions
+{:
+   // imprimirTablaSimbolos();
+:};
 
+program ::= globalVariables functions  
+{:
+   // imprimirTablaSimbolos();
+:};
 
-error_recovery ::= ERROR_RECOVERY:err {:if (!errorDisplayed){
-                                           System.out.println("EL ARCHIVO FUENTE NO PUEDE SER GENERADO POR LA GRAMÁTICA \n\nERRORS:\n ");
-                                           errorDisplayed = true;
-                                         } System.out.println("[ERROR] Caracter Invalido: "+err);:} |
-                   IDENTIFIER: err {:  if (!errorDisplayed){
-                                          System.out.println("EL ARCHIVO FUENTE NO PUEDE SER GENERADO POR LA GRAMÁTICA \n\nERRORS:\n ");
-                                          errorDisplayed = true;
-                                       }   System.out.println("[ERROR] Statement Out of Place: "+err); :} ; //MANEJO DE ERRORES
+error_recovery ::= ERROR_RECOVERY:err 
+{:
+    if (!errorDisplayed){
+        System.out.println("EL ARCHIVO FUENTE NO PUEDE SER GENERADO POR LA GRAMÁTICA \n\nERRORS:\n ");
+        errorDisplayed = true;
+    } 
+    System.out.println("[ERROR] Caracter Invalido: "+err);
+                                        
+:} |
+
+IDENTIFIER: err 
+{: 
+
+    //MANEJO DE ERRORES
+    if (!errorDisplayed){
+        System.out.println("EL ARCHIVO FUENTE NO PUEDE SER GENERADO POR LA GRAMÁTICA \n\nERRORS:\n ");
+        errorDisplayed = true;
+    }   
+    System.out.println("[ERROR] Statement Out of Place: "+err); 
+                    
+:} ; 
 
 errors ::= error_recovery;
 errors ::= errors error_recovery;

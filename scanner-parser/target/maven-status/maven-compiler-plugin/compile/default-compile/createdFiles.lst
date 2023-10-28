@@ -1,5 +1,3 @@
 com/compiladores/parser$CUP$parser$actions.class
-com/compiladores/Lexer.class
-com/compiladores/App.class
-com/compiladores/parser.class
 com/compiladores/sym.class
+com/compiladores/parser.class

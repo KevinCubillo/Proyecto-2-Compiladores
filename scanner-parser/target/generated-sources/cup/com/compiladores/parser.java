@@ -1303,13 +1303,32 @@ class CUP$parser$actions {
 		int idVarright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object idVar = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    //Agregar id a la tabla de simbolos
-    String[] symbol = new String[3];
-    symbol[0] = "Variable";
-    symbol[1] = idVar.toString();
-    symbol[2] = t.toString();
 
-    tablasDeSimbolos.get(currentHash).add(symbol);
+    // Verificar si la variable ya existe en el ámbito actual
+    String varName = idVar.toString();
+    String varType = t.toString();
+    List<String[]> tabla = tablasDeSimbolos.get(currentHash);
+    boolean variableExist = false;
+
+    for (String[] symbol : tabla) {
+        if (symbol[0].equals("Variable") && symbol[1].equals(varName)) {
+            // La variable ya existe en el ámbito actual
+            variableExist = true;
+            break;
+        }
+    }
+    if (variableExist) {
+        System.out.println("Error: La variable '" + varName + "' ya ha sido declarada en este ámbito.");
+
+    } else {
+        // Agregar la variable a la tabla de símbolos
+        String[] symbol = new String[3];
+        symbol[0] = "Variable";
+        symbol[1] = varName;
+        symbol[2] = varType;
+        tablasDeSimbolos.get(currentHash).add(symbol);
+    }
+    
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("varIdentifier",33, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

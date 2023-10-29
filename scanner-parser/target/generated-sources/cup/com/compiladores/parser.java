@@ -641,6 +641,9 @@ public class parser extends java_cup.runtime.lr_parser {
     public Boolean errorDisplayed = false;
     Map<String, ArrayList<String[]>> tablasDeSimbolos = new HashMap<>();
     String currentHash = "";
+    List<String> intermediateCode = new ArrayList<>();
+    int currentTemp = 1;
+
 
     @SuppressWarnings("deprecation")
     public parser(Lexer lexer) {
@@ -654,6 +657,7 @@ public class parser extends java_cup.runtime.lr_parser {
         titulo[0] = "Variables Globales";
         tabla.add(titulo);
         tablasDeSimbolos.put(currentHash, tabla);
+
     }
 
 //Metodo para imprimir la tabla de simbolos
@@ -664,6 +668,14 @@ public void imprimirTablaSimbolos() {
         for (String[] symbol : entry.getValue()) {
             System.out.println("Tipo: " + symbol[0] + " ID: " + symbol[1] + " Tipo de dato: " + symbol[2]); 
         }
+    }
+}
+
+//Metodo para imprimir el codigo intermedio
+public void imprimirCodigoIntermedio() {
+    System.out.println("\n##### CODIGO INTERMEDIO #####");
+    for (String code : intermediateCode) {
+        System.out.println(code);
     }
 }
 
@@ -1024,6 +1036,9 @@ class CUP$parser$actions {
         System.out.println("Error semantico en la linea x: Operacion aritmetica no valida");
     }
     RESULT = "-"+n; 
+    //cod 3d
+    intermediateCode.add("\nt"+currentTemp++ +" =- "+n);
+ 
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("aritmeticExpression",24, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1046,6 +1061,8 @@ class CUP$parser$actions {
     if (!tipoId.equals("int"))
     System.out.println("Error semantico en la linea x: No se permite el uso de incremento en variables de tipo: "+tipoId);  
     RESULT = id+":"+tipoId;
+    //cod 3d
+    intermediateCode.add("\nt"+currentTemp++ +" =+ "+id);
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("aritmeticExpression",24, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1069,6 +1086,8 @@ class CUP$parser$actions {
         System.out.println("Error semantico en la linea x: No se permite el uso de decremento en variables de tipo: "+tipoId);  
     }
     RESULT = id+":"+tipoId;
+    //cod 3d
+    intermediateCode.add("\nt"+currentTemp++ +" =- "+id);
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("aritmeticExpression",24, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1327,6 +1346,7 @@ class CUP$parser$actions {
         symbol[1] = varName;
         symbol[2] = varType;
         tablasDeSimbolos.get(currentHash).add(symbol);
+        intermediateCode.add("\ndata_"+t.toString()+" "+idVar.toString());
     }
     
 
@@ -1728,7 +1748,11 @@ class CUP$parser$actions {
     titulo[0] = tipoTabla;
     tabla.add(titulo);
     tablasDeSimbolos.put(currentHash, tabla);
-   
+
+   //cod 3d
+   currentTemp = 1;
+    intermediateCode.add("\n\nbegin_func_ "+idFunc.toString()+":");
+
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("functionIdentifier",32, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

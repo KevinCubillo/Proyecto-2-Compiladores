@@ -168,9 +168,11 @@ aritmeticExpression ::= operand:n
     System.out.println("tipo encontado para id: "+id+" es: "+tipoId);
     if (!tipoId.equals("int"))
     System.out.println("Error semantico en la linea x: No se permite el uso de incremento en variables de tipo: "+tipoId);  
-    RESULT = id+":"+tipoId;
+    
     //cod 3d
-    intermediateCode.add("\nt"+currentTemp++ +" =+ "+id);
+    temp= currentTemp++;
+    intermediateCode.add("\nt"+ temp +" =+ "+id);
+    RESULT = id+ temp+":"+tipoId;
 :}
 | IDENTIFIER:id DECREMENT 
 {:
@@ -269,6 +271,7 @@ varIdentifier ::= type:t SEPARATOR IDENTIFIER:idVar
         symbol[1] = varName;
         symbol[2] = varType;
         tablasDeSimbolos.get(currentHash).add(symbol);
+        intermediateCode.add("\ndata_"+t.toString()+" "+idVar.toString());
     }
     
 :}; 

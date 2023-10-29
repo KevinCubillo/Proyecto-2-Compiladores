@@ -4,6 +4,7 @@
 	string#b1;
 	string#s1;
 	int#hola;
+	hola = 10;
 	read>>s1; //semantico
 	print<<b1; //semantico
 	print<<true; //semantico

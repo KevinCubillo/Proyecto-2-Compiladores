@@ -13,7 +13,7 @@ int#getName(char#vava,int#monoArana){
 }
 
 
-/*
+
 float#miFunc(int#dif,char#otra){
 	int#otra;
 	string#str="Hola $%&/#$&) mundo";
@@ -22,6 +22,7 @@ float#miFunc(int#dif,char#otra){
 		while(var2>12.2 || (34+34)>12) //semantico
 		{
 			var = var - 1; //semantico
+
 		}else{
 			read>>var2;
 			break;
@@ -61,4 +62,3 @@ bool#miOtraFun(){
 	return#-5.6; //semantico
 }
 
-*/

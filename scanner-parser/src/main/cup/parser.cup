@@ -150,6 +150,7 @@ aritmeticOp ::= PLUS | MINUS |  TIMES |  DIVIDE |  MODULE | POWER;
 operand ::= literal:n
 {:
     RESULT = n;
+    intermediateCode.add("t"+currentTemp++ +" = "+n);
 :}
 
 | IDENTIFIER:id
@@ -162,6 +163,8 @@ operand ::= literal:n
     }else{
         String tipoId = symbol[2];
         RESULT = id+":"+tipoId;
+        //cod 3d
+        intermediateCode.add("t"+currentTemp++ +" = "+id);
     }
 
 :}
@@ -179,6 +182,8 @@ aritmeticExpression ::= operand:n
 {:
 
     RESULT = n; 
+    //cod 3d
+
 
 :}
 | MINUS literal:n 
@@ -190,7 +195,7 @@ aritmeticExpression ::= operand:n
     }
     RESULT = "-"+n; 
     //cod 3d
-    intermediateCode.add("\nt"+currentTemp++ +" =- "+n);
+    intermediateCode.add("t"+currentTemp++ +" =- "+n);
 
 
 :}
@@ -205,9 +210,10 @@ aritmeticExpression ::= operand:n
     System.out.println("Error semantico en la linea x: No se permite el uso de incremento en variables de tipo: "+tipoId);  
 
     //cod 3d
-    temp= currentTemp++;
-    intermediateCode.add("\nt"+ temp +" =+ "+id);
-    RESULT = id+ temp+":"+tipoId;
+    int temp= currentTemp++;
+    intermediateCode.add("t"+ temp +" =+ "+id);
+    RESULT = id+":"+tipoId;
+
 :}
 | IDENTIFIER:id DECREMENT 
 {:
@@ -222,7 +228,7 @@ aritmeticExpression ::= operand:n
     }
     RESULT = id+":"+tipoId;
     //cod 3d
-    intermediateCode.add("\nt"+currentTemp++ +" =- "+id);
+    intermediateCode.add("t"+currentTemp++ +" =- "+id);
 
 :};
 
@@ -242,11 +248,15 @@ logicalExpression ::= NOT logicalExpression;
 expression ::= aritmeticExpression:e
 {:
     RESULT = e; //Enviar solo el tipo de dato
+    //intermediateCode.add("aritmetical2");
+    //intermediateCode.add("\t"+currentTemp++ +" = "+e);
 :} 
 
 | logicalExpression:e
 {:
     RESULT = e; //Enviar solo el tipo de dato
+    intermediateCode.add("logical");
+    intermediateCode.add("t"+currentTemp++ +" = "+e);
 :};
 
 
@@ -308,7 +318,7 @@ varIdentifier ::= type:t SEPARATOR IDENTIFIER:idVar
         symbol[1] = varName;
         symbol[2] = varType;
         tabla.add(symbol);
-        intermediateCode.add("\ndata_"+t.toString()+" "+idVar.toString());
+        intermediateCode.add("data_"+t.toString()+" "+idVar.toString());
     }
     
 :}; 

@@ -641,9 +641,6 @@ public class parser extends java_cup.runtime.lr_parser {
     public Boolean errorDisplayed = false;
     Map<String, ArrayList<String[]>> tablasDeSimbolos = new HashMap<>();
     String currentHash = "";
-    List<String> intermediateCode = new ArrayList<>();
-    int currentTemp = 1;
-
 
     @SuppressWarnings("deprecation")
     public parser(Lexer lexer) {
@@ -651,34 +648,32 @@ public class parser extends java_cup.runtime.lr_parser {
         this.symbolFactory = new DefaultSymbolFactory();
 
         //Inicializar tabla de simbolos Global
-        currentHash = "Global";
+        currentHash = "Tabla Global";
         ArrayList<String[]> tabla = new ArrayList<>();
-        String[] titulo = new String[1];
-        titulo[0] = "Variables Globales";
-        tabla.add(titulo);
+        String[] tipo = new String[2];
+        tipo[0] = "Variables";
+        tipo[1] = "Globales";
+        tabla.add(tipo);
         tablasDeSimbolos.put(currentHash, tabla);
-
     }
 
 //Metodo para imprimir la tabla de simbolos
 public void imprimirTablaSimbolos() {
     System.out.println("\n##### TABLAS DE SIMBOLOS #####");
     for (Map.Entry<String, ArrayList<String[]>> entry : tablasDeSimbolos.entrySet()) {
-        System.out.println("\n##### " + entry.getKey() + " #####");
-        for (String[] symbol : entry.getValue()) {
-            System.out.println("Tipo: " + symbol[0] + " ID: " + symbol[1] + " Tipo de dato: " + symbol[2]); 
+        String tablaNombre = entry.getKey();
+        System.out.println("\n##### " + tablaNombre + " #####");
+
+        ArrayList<String[]> symbols = entry.getValue();
+
+        // Imprimir el tipo de tabla
+        System.out.println(symbols.get(0)[0]+" "+symbols.get(0)[1]);
+
+        for (int i = 1; i < symbols.size(); i++) {   
+            System.out.println(symbols.get(i)[0] + ", ID:" + symbols.get(i)[1] + ", Tipo:" + symbols.get(i)[2]); 
         }
     }
 }
-
-//Metodo para imprimir el codigo intermedio
-public void imprimirCodigoIntermedio() {
-    System.out.println("\n##### CODIGO INTERMEDIO #####");
-    for (String code : intermediateCode) {
-        System.out.println(code);
-    }
-}
-
 
 //Metodo para obtener un symbolo
 public String[] getSymbol(List<String[]> tabla, String id) {
@@ -691,9 +686,28 @@ public String[] getSymbol(List<String[]> tabla, String id) {
     return null; // Si no se encuentra el símbolo, devuelve null o maneja el caso según tus necesidades.
 }
 
-//Metodo para obtener los parametros de una funcion
+//Metodo para buscar si existe un parametro
+public boolean existParam(List<String[]> tabla, String id) {
+    for (int i = 1; i < tabla.size(); i++) {
+        String[] symbol = tabla.get(i);
+        if (symbol[0].equals("Param") && symbol[1].equals(id)) {
+            return true; // si encontró el parametro
+        }
+    }
+    return false; //  no encontró el parametro
+}
 
-     
+//Metodo que devuelve los tipos de los parametros de una funcion
+public ArrayList<String> getFuncParamsTypes(List<String[]> tabla) {
+    ArrayList<String> paramsTypes = new ArrayList<>();
+    for (int i = 1; i < tabla.size(); i++) {
+        String[] symbol = tabla.get(i);
+        if (symbol[0].equals("Parametro")) {
+            paramsTypes.add(symbol[2]);
+        }
+    }
+    return paramsTypes;
+}
 
 
 
@@ -902,8 +916,8 @@ class CUP$parser$actions {
 		int nright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object n = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-                            RESULT = n;    
-                        
+    RESULT = n;    
+
               CUP$parser$result = parser.getSymbolFactory().newSymbol("operand",31, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -916,12 +930,17 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-                            ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-                            String[] symbol = getSymbol(tabla, id.toString());
-                            String tipoId = symbol[2];
-                            System.out.println("tipo encontado para id: "+id+" es: "+tipoId);            
-                            RESULT = id+":"+tipoId;
-                        
+
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
+    String[] symbol = getSymbol(tabla, id.toString());
+    if (symbol == null) {
+        System.out.println("Error semantico en la linea x: "+id.toString()+" no ha sido declarado");
+    }else{
+        String tipoId = symbol[2];
+        RESULT = id+":"+tipoId;     
+    }
+                                                       
+
               CUP$parser$result = parser.getSymbolFactory().newSymbol("operand",31, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1036,9 +1055,6 @@ class CUP$parser$actions {
         System.out.println("Error semantico en la linea x: Operacion aritmetica no valida");
     }
     RESULT = "-"+n; 
-    //cod 3d
-    intermediateCode.add("\nt"+currentTemp++ +" =- "+n);
- 
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("aritmeticExpression",24, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1061,8 +1077,6 @@ class CUP$parser$actions {
     if (!tipoId.equals("int"))
     System.out.println("Error semantico en la linea x: No se permite el uso de incremento en variables de tipo: "+tipoId);  
     RESULT = id+":"+tipoId;
-    //cod 3d
-    intermediateCode.add("\nt"+currentTemp++ +" =+ "+id);
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("aritmeticExpression",24, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1086,8 +1100,6 @@ class CUP$parser$actions {
         System.out.println("Error semantico en la linea x: No se permite el uso de decremento en variables de tipo: "+tipoId);  
     }
     RESULT = id+":"+tipoId;
-    //cod 3d
-    intermediateCode.add("\nt"+currentTemp++ +" =- "+id);
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("aritmeticExpression",24, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1324,11 +1336,13 @@ class CUP$parser$actions {
 		
 
     // Verificar si la variable ya existe en el ámbito actual
+    
     String varName = idVar.toString();
     String varType = t.toString();
     List<String[]> tabla = tablasDeSimbolos.get(currentHash);
     boolean variableExist = false;
 
+    // Busca en la tabla de símbolos si la variable ya existe en el ámbito actual
     for (String[] symbol : tabla) {
         if (symbol[0].equals("Variable") && symbol[1].equals(varName)) {
             // La variable ya existe en el ámbito actual
@@ -1345,8 +1359,7 @@ class CUP$parser$actions {
         symbol[0] = "Variable";
         symbol[1] = varName;
         symbol[2] = varType;
-        tablasDeSimbolos.get(currentHash).add(symbol);
-        intermediateCode.add("\ndata_"+t.toString()+" "+idVar.toString());
+        tabla.add(symbol);
     }
     
 
@@ -1407,7 +1420,7 @@ class CUP$parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-   
+    RESULT = e;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("sendParameters",41, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1417,6 +1430,14 @@ class CUP$parser$actions {
           case 62: // sendParameters ::= sendParameters COMMA expression 
             {
               Object RESULT =null;
+		int paramsleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int paramsright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Object params = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int eleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    RESULT = params + "," + e;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("sendParameters",41, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1433,23 +1454,40 @@ class CUP$parser$actions {
 		int actualParamsright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
 		Object actualParams = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		 
-/*
+
     if (tablasDeSimbolos.containsKey(id.toString())) { //Verificar si la funcion existe
         ArrayList<String[]> tabla = tablasDeSimbolos.get(id.toString()); //Obtener la tabla de simbolos de la funcion
         String[] titulo = tabla.get(0); //Obtener el titulo de la tabla de simbolos de la funcion
 
-        if (titulo[0].equals("main")) { //Verificar si la funcion es main
-            System.out.println("Error semantico en la linea x: La función main no recibe parametros");
-        }
-
+     
         // Verificar si los parametros enviados coinciden con los parametros de la funcion
-        for ()
+        ArrayList<String> funcParamstypes = getFuncParamsTypes(tabla);
+        String[] sendParams = actualParams.toString().split(",");
+
+    
+        if (funcParamstypes.size() != sendParams.length) {
+            System.out.println("Error semantico en la linea x: La cantidad de parametros enviados no coincide con la cantidad de parametros de la funcion: "+ id.toString());
+        } else {
+            for (int i = 0; i < funcParamstypes.size(); i++) {
+                if (sendParams[i].equals("null")) {
+                    break;   // No se muestra el error ya que en operand se mostró al validar el id 
+                }
+                String paramType1 = funcParamstypes.get(i); // Tipo de dato del parametro de la funcion
+                String paramType2 = sendParams[i].split(":")[1]; // Tipo de dato del parametro enviado
+
+                if (!paramType1.equals(paramType2)) { // Verificar si los tipos de datos coinciden
+                    System.out.println("Error semantico en la linea x: Se esperaba un parametro de tipo "+paramType1+" y se recibio uno de tipo "+paramType2);
+                }   
+            }
+        }
+       
+        
 
       
     }else{
         System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" no existe");
     }
-   */       
+        
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("callFunction",19, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1660,35 +1698,18 @@ class CUP$parser$actions {
     ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
 
      // Verificar si el parámetro ya existe en la tabla
-    boolean exists = false;
-    /*
-    for (String[] symbol : tabla) {
-        if (symbol[0].equals("Parametro") && symbol[1].equals(idParamString)) {
-            System.out.println("Error semantico en la linea x: El parametro "+idParamString+" ya existe");
-            exists = true;
-            break;
-        }
-    }*/
+    if (existParam(tabla, idParam.toString())) {
+        System.out.println("Error semantico en la linea x: Nombre de parametro duplicado: " + idParam.toString());
+    } else{
 
-    if (!exists) {
-        // Agregar el parámetro solo si no existe en la tabla
+        // Agregar el parámetro en la tabla
         String[] symbol = new String[3];
         symbol[0] = "Parametro";
         symbol[1] = idParam.toString();
         symbol[2] = t.toString();
         tabla.add(symbol);
-
-        tablasDeSimbolos.put(currentHash, tabla);
     }
 
-    //Agregar id a la tabla de simbolos
-    String[] symbol = new String[3];
-    symbol[0] = "Parametro";
-    symbol[1] = idParam.toString();
-    symbol[2] = t.toString();
-
-    tablasDeSimbolos.get(currentHash).add(symbol);
-   
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("parameter",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1737,22 +1758,20 @@ class CUP$parser$actions {
 
     String tipoTabla = "main";
     if (idFunc.toString().equals("main")){
-    tipoTabla = "Tipo: main: "+t.toString();
+    tipoTabla = "Tipo: main "+t.toString();
     }
     else{
-    tipoTabla = "Tipo: funcion: "+t.toString();
+    tipoTabla = "Tipo: funcion "+t.toString();
     }
 
+    currentHash = idFunc.toString();
     ArrayList<String[]> tabla = new ArrayList<>();
-    String[] titulo = new String[1];
-    titulo[0] = tipoTabla;
-    tabla.add(titulo);
+    String[] tipo = new String[2];
+    tipo[0] = tipoTabla;
+    tipo[1] = t.toString();
+    tabla.add(tipo);
     tablasDeSimbolos.put(currentHash, tabla);
-
-   //cod 3d
-   currentTemp = 1;
-    intermediateCode.add("\n\nbegin_func_ "+idFunc.toString()+":");
-
+   
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("functionIdentifier",32, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1853,7 +1872,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
 		
-   // imprimirTablaSimbolos();
+    imprimirTablaSimbolos();
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("program",3, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1864,7 +1883,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
 		
-   // imprimirTablaSimbolos();
+    imprimirTablaSimbolos();
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("program",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

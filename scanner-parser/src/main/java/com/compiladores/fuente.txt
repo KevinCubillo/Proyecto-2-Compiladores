@@ -1,17 +1,17 @@
+int#variable;
 
-
- int#main(char#perro){
+int#main(char#perro){
 	string#b1;
-	string#s1;
-	int#hola;
-	hola = 10;
-	read>>s1; //semantico
-	print<<b1; //semantico
-	print<<true; //semantico
-	print<<-"caca";
-	return#1;
-	hola(hola,hola,hola,perro, 34);
 }
+
+int#getName(char#vava,int#monoArana){
+	string#b1;
+    char#s1;
+    int#hola;
+    return#1;
+    main(s1);
+}
+
 
 /*
 float#miFunc(int#dif,char#otra){

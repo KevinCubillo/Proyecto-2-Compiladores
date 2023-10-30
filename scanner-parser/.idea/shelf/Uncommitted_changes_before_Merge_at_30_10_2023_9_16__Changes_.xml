@@ -1,0 +1,34 @@
+<changelist name="Uncommitted_changes_before_Merge_at_30_10_2023_9_16_[Changes]" date="1698679319866" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_30_10_2023_9_16_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Merge at 30/10/2023 9:16 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/compiladores/parser$CUP$parser$actions.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/compiladores/sym.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/compiladores/App.class" />
+    <option name="AFTER_PATH" value="target/classes/com/compiladores/App.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_30_10_2023_9_16_[Changes]/App.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/compiladores/parser.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/compiladores/Lexer.class" />
+    <option name="AFTER_PATH" value="target/classes/com/compiladores/Lexer.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_30_10_2023_9_16_[Changes]/Lexer.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/test-classes/com/compiladores/AppTest.class" />
+    <option name="AFTER_PATH" value="target/test-classes/com/compiladores/AppTest.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_30_10_2023_9_16_[Changes]/AppTest.class" />
+  </binary>
+</changelist>

@@ -11,7 +11,9 @@ int#getName(char#vava,int#monoArana){
     int#var;
     return#1;
     main(s1);
-
+	
+	hola = 1+2;
+	//hola++;
     switch(hola) //semantico
     {
     	case#7:

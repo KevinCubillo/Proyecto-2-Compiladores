@@ -226,9 +226,14 @@ aritmeticExpression ::= operand:n
     if (!tipoId.equals("int"))
     System.out.println("Error semantico en la linea x: No se permite el uso de incremento en variables de tipo: "+tipoId);  
 
-    //cod 3d
-    int temp= currentTemp++;
-    intermediateCode.add("t"+ temp +" =+ "+id);
+    String tempId= "t"+currentTemp++;
+    intermediateCode.add(tempId +" = "+id);
+    //cod 3d ++
+    String tempPP1= "t"+currentTemp++;
+    String tempPP2= "t"+currentTemp++;
+    intermediateCode.add(tempPP1 +" = 1");
+    intermediateCode.add(tempPP2 +" = "+tempId+" + "+tempPP1);
+    intermediateCode.add(id +" = "+tempPP2);
     RESULT = id+":"+tipoId;
 
 :}
@@ -244,9 +249,18 @@ aritmeticExpression ::= operand:n
     if (!tipoId.equals("int")){
         System.out.println("Error semantico en la linea x: No se permite el uso de decremento en variables de tipo: "+tipoId);  
     }
-    RESULT = id+":"+tipoId;
     //cod 3d
-    intermediateCode.add("t"+currentTemp++ +" =- "+id);
+        String tempId= "t"+currentTemp++;
+    intermediateCode.add(tempId +" = "+id);
+    //cod 3d ++
+    String tempPP1= "t"+currentTemp++;
+    String tempPP2= "t"+currentTemp++;
+    intermediateCode.add(tempPP1 +" = 1");
+    intermediateCode.add(tempPP2 +" = "+tempId+" + "+tempPP1);
+    intermediateCode.add(id +" = "+tempPP2);
+
+    RESULT = id+":"+tipoId;
+
 
 :};
 
@@ -274,7 +288,9 @@ aritmeticExpression ::= aritmeticExpression:e1 aritmeticOp:op aritmeticExpressio
           operationType = tipo1;
     }
     RESULT = operand1+op.toString()+operand2+":"+operationType;
-    // --->Para el codigo intermedio puede sacar el signo de la operacion de la variable op.toString()
+    
+    //cod 3d
+
 
 :};
 

@@ -150,7 +150,12 @@ literal ::= INTEGER:n {: RESULT = n+":int"; :}
           | STRING:n {: RESULT = n+":string"; :} 
           | BOOLEAN:n {: RESULT = n+":bool"; :};
 
-aritmeticOp ::= PLUS | MINUS |  TIMES |  DIVIDE |  MODULE | POWER;
+aritmeticOp ::= PLUS:plus {: RESULT = plus; :}
+| MINUS:minus {: RESULT = minus; :}
+| TIMES:times {: RESULT = times; :}
+| DIVIDE:divide {: RESULT = divide; :}
+| MODULE:module {: RESULT = module; :}
+| POWER:power {: RESULT = power; :};
 
 operand ::= literal:n
 {:
@@ -171,10 +176,16 @@ operand ::= literal:n
         //cod 3d
         intermediateCode.add("t"+currentTemp++ +" = "+id);
     }
+                                                       
+:} ;
+/*
+| callFunction:cf
+{:
+    RESULT = cf;
 
-:}
-
-| callFunction;
+:};
+*/
+  
            
 relationalOp ::= EQUALS | DIFFERENT | GREATER | LESS | GREATEREQUAL | LESSEQUAL;
 logicalOp ::= AND | OR;
@@ -204,6 +215,7 @@ aritmeticExpression ::= operand:n
 
 
 :}
+
 | IDENTIFIER:id INCREMENT 
 {:
     ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
@@ -220,6 +232,7 @@ aritmeticExpression ::= operand:n
     RESULT = id+":"+tipoId;
 
 :}
+
 | IDENTIFIER:id DECREMENT 
 {:
 
@@ -238,7 +251,33 @@ aritmeticExpression ::= operand:n
 :};
 
 
-aritmeticExpression ::= aritmeticExpression aritmeticOp aritmeticExpression;
+aritmeticExpression ::= aritmeticExpression:e1 aritmeticOp:op aritmeticExpression:e2
+{:
+    //Verificar que los operandos sean iguales y que sean de tipo int o float
+
+    String operand1 = e1.toString().split(":")[0];
+    String operand2 = e2.toString().split(":")[0];
+    String tipo1 = e1.toString().split(":")[1];
+    String tipo2 = e2.toString().split(":")[1];
+
+    String operationType = "null";
+
+    // Verificar que los operandos sean de tipo int o float
+    if ((!tipo1.equals("int") && !tipo1.equals("float")) || (!tipo2.equals("int") && !tipo2.equals("float"))) {
+        System.out.println("Error semantico en la linea x: Tipos de operandos invalidos en operacion aritmetica: "+operand1+op.toString()+operand2);
+    }
+    // Verificar que los operandos sean iguales
+    else if (!tipo1.equals(tipo2)){
+        System.out.println("Error semantico en la linea x: Los operandos deben ser del mismo tipo en operacion aritmetica: "+operand1+op.toString()+operand2);
+    }
+    else{
+          operationType = tipo1;
+    }
+    RESULT = operand1+op.toString()+operand2+":"+operationType;
+    // --->Para el codigo intermedio puede sacar el signo de la operacion de la variable op.toString()
+
+:};
+
 aritmeticExpression ::= LPAREN aritmeticExpression RPAREN;
 
 //EXPRESIONES RELACIONALES
@@ -252,6 +291,7 @@ logicalExpression ::= NOT logicalExpression;
 
 expression ::= aritmeticExpression:e
 {:
+    RESULT = e; 
     RESULT = e; //Enviar solo el tipo de dato
     //intermediateCode.add("aritmetical2");
     //intermediateCode.add("\t"+currentTemp++ +" = "+e);
@@ -259,6 +299,7 @@ expression ::= aritmeticExpression:e
 
 | logicalExpression:e
 {:
+    RESULT = e; 
     RESULT = e; //Enviar solo el tipo de dato
     intermediateCode.add("logical");
     intermediateCode.add("t"+currentTemp++ +" = "+e);
@@ -267,7 +308,7 @@ expression ::= aritmeticExpression:e
 
 /** CONTROL STRUCTURES **/
 
-if_struct ::= IF LPAREN expression RPAREN BLOCKSTART statements BLOCKEND;
+if_struct ::= IF LPAREN logicalExpression RPAREN BLOCKSTART statements BLOCKEND;
 
 if_else_struct ::= if_struct ELSE BLOCKSTART statements BLOCKEND;
 
@@ -533,15 +574,64 @@ varIdentifier ::= type:t SEPARATOR IDENTIFIER:idVar
         intermediateCode.add("data_"+t.toString()+" "+idVar.toString());
     }
     
+    RESULT = idVar.toString()+":"+t.toString();
+    
 :}; 
 
 decl ::= varIdentifier ENDLINE;
 
-assignment ::= IDENTIFIER ASSIGN expression ENDLINE;
+assignment ::= IDENTIFIER:id ASSIGN expression:e ENDLINE
+{:
+    //Verificar si la variable existe
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
+    String[] symbol = getSymbol(tabla, id.toString());
+    if (symbol == null) {
+        System.out.println("Error semantico en la linea x: "+id.toString()+" no ha sido declarado");
+    }else{
+        String tipoId = symbol[2];
+        String tipoExpresion = e.toString().split(":")[1];
 
-decl_and_assignment ::= varIdentifier ASSIGN  expression ENDLINE;
+        // Verificar que el tipo de dato de la expresion coincida con el tipo de dato de la variable
+        if (!tipoId.equals(tipoExpresion)) {
+            System.out.println("Error semantico en la linea x: El tipo de dato de la expresion no coincide con el tipo de dato de la variable");
+        }
+    }
+    
+:};
 
-readData ::= READ READSYMBOL IDENTIFIER ENDLINE;
+decl_and_assignment ::= varIdentifier:id ASSIGN  expression:e ENDLINE
+{:
+    //Verificar si la variable existe
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
+    String[] symbol = getSymbol(tabla, id.toString());
+    if (symbol == null) {
+        System.out.println("Error semantico en la linea x: "+id.toString()+" no ha sido declarado");
+    }else{
+        String tipoId = symbol[2];
+        String tipoExpresion = e.toString().split(":")[1];
+
+        // Verificar que el tipo de dato de la expresion coincida con el tipo de dato de la variable
+        if (!tipoId.equals(tipoExpresion)) {
+            System.out.println("Error semantico en la linea x: El tipo de dato de la expresion no coincide con el tipo de dato de la variable");
+        }
+    }
+:};
+
+readData ::= READ READSYMBOL IDENTIFIER:id ENDLINE
+{:
+    //Verificar si la variable existe
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
+    String[] symbol = getSymbol(tabla, id.toString());
+    if (symbol == null) {
+        System.out.println("Error semantico en la linea x: "+id.toString()+" no ha sido declarado");
+    }else{
+        String tipoId = symbol[2];
+        // Verificar que el tipo de dato de la variable sea int o float
+        if (!tipoId.equals("int") && !tipoId.equals("float")) {
+            System.out.println("Error semantico en la linea x: Tipo de dato no valido");
+        }
+    }
+:};
 
 printData ::= PRINT PRINTSYMBOL expression ENDLINE;
 
@@ -559,10 +649,10 @@ sendParameters ::= expression:e
 
 callFunction ::= IDENTIFIER:id LPAREN sendParameters:actualParams  RPAREN 
 {: 
-
-    if (tablasDeSimbolos.containsKey(id.toString())) { //Verificar si la funcion existe
+     //Verificar si la funcion existe
+    if (tablasDeSimbolos.containsKey(id.toString())) {
         ArrayList<String[]> tabla = tablasDeSimbolos.get(id.toString()); //Obtener la tabla de simbolos de la funcion
-        String[] titulo = tabla.get(0); //Obtener el titulo de la tabla de simbolos de la funcion
+        String[] funcInfo = tabla.get(0); //Obtener la info de la tabla de simbolos de la funcion
 
 
         // Verificar si los parametros enviados coinciden con los parametros de la funcion
@@ -586,17 +676,27 @@ callFunction ::= IDENTIFIER:id LPAREN sendParameters:actualParams  RPAREN
             }
         }
 
-
-
-      
+        RESULT = id.toString()+":"+funcInfo[1];   
+    
     }else{
         System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" no existe");
     }
+  
 
 
 :};
 
-callFunction ::= IDENTIFIER LPAREN RPAREN;
+callFunction ::= IDENTIFIER:id LPAREN RPAREN
+{:
+    //Verificar si la funcion existe
+    if (!tablasDeSimbolos.containsKey(id.toString())) { 
+        System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" no existe");
+    }
+    else{
+        ArrayList<String[]> tabla = tablasDeSimbolos.get(id.toString());
+        RESULT = id.toString()+":"+tabla.get(0)[1];
+    }
+:};
 
 callFunction_statement ::= callFunction ENDLINE;
 
@@ -624,7 +724,7 @@ statement ::=   decl | assignment | decl_and_assignment | readData | printData |
                 callFunction_statement | if_struct | if_else_struct| while_struct | while_else_struct | for_range_struct
                 | switch_struct;
 
-statements ::= statement;
+statements ::= statement; //retornar solo el returnstatyement y preguntar si es null o no, para saber si hay un return o no.
 statements ::= statements statement;
 
 
@@ -660,14 +760,28 @@ parameters ::= errors; //  parmetros no válidos
 functionIdentifier ::= type:t SEPARATOR IDENTIFIER :idFunc 
 {:
 
-// Crear tabla de simbolos para la funcion
+    // Verificar si la funcion ya existe en la tabla de simbolos
+    if (tablasDeSimbolos.containsKey(idFunc.toString())) {
+        System.out.println("Error semantico en la linea x: La funcion "+idFunc.toString()+" ya ha sido declarada");
+    } else {   
 
-    String tipoTabla = "main";
-    if (idFunc.toString().equals("main")){
-    tipoTabla = "Tipo: main "+t.toString();
-    }
-    else{
-    tipoTabla = "Tipo: funcion "+t.toString();
+    //  Definir el tipo de tabla
+        String tipoTabla = "main";
+        if (idFunc.toString().equals("main")){
+        tipoTabla = "Tipo: main ";
+        }
+        else{
+        tipoTabla = "Tipo: funcion ";
+        }
+
+    // Crear tabla de simbolos para la funcion
+        currentHash = idFunc.toString();
+        ArrayList<String[]> tabla = new ArrayList<>();
+        String[] tipo = new String[2];
+        tipo[0] = tipoTabla;
+        tipo[1] = t.toString();
+        tabla.add(tipo);
+        tablasDeSimbolos.put(currentHash, tabla);
     }
 
     currentHash = idFunc.toString();
@@ -718,7 +832,7 @@ error_recovery ::= ERROR_RECOVERY:err
                                         
 :} |
 
-IDENTIFIER: err 
+expression: err 
 {: 
 
     //MANEJO DE ERRORES

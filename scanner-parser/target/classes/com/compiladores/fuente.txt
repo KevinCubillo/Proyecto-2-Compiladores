@@ -8,20 +8,34 @@ int#getName(char#vava,int#monoArana){
 	string#b1;
     char#s1;
     int#hola;
+    int#var;
     return#1;
     main(s1);
-}
+<<<<<<< HEAD
+    /*for#x#in#range(10) {
+          s1= 10;
+    }*/
+=======
 
-int#variable;
-int#main(char#perro){
-}
+>>>>>>> main
+    switch(hola) //semantico
+    {
+    	case#7:
+    		print<<"!#";
+    	case#2:
+    		hola = 10;
+    		break;
+    	default:
+<<<<<<< HEAD
+    		hola = -10.5 * -1.9;
+    }
+=======
+    		cuca = var+134-23;
+    }
+    hola=10+12.5;
+>>>>>>> main
 
-int#getName(char#vava,int#monoArana){
-	string#b1;
-    char#s1;
-    int#hola;
-    return#1;
-    main(s1);
+}
 
 
 /*
@@ -73,3 +87,4 @@ bool#miOtraFun(){
 }
 
 */
+

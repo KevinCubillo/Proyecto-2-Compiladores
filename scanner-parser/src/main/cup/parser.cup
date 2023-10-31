@@ -116,6 +116,7 @@ precedence left EQUALS, DIFFERENT, GREATER, LESS, GREATEREQUAL, LESSEQUAL;
 precedence left PLUS, MINUS;
 precedence left TIMES, DIVIDE, MODULE, POWER;
 precedence right NOT;
+precedence left LPAREN; 
 
 start with program;
 
@@ -156,16 +157,15 @@ operand ::= literal:n
         RESULT = id+":"+tipoId;     
     }
                                                        
-:} ;
-/*
+:} 
+
 | callFunction:cf
 {:
     RESULT = cf;
 
 :};
-*/
-  
-           
+
+            
 relationalOp ::= EQUALS | DIFFERENT | GREATER | LESS | GREATEREQUAL | LESSEQUAL;
 logicalOp ::= AND | OR;
 
@@ -482,12 +482,13 @@ sendParameters ::= expression:e
 
 callFunction ::= IDENTIFIER:id LPAREN sendParameters:actualParams  RPAREN 
 {: 
+
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(id.toString()); //Obtener la tabla de simbolos de la funcion
+    String[] funcInfo = tabla.get(0); //Obtener la info de la tabla de simbolos de la funcion
+
      //Verificar si la funcion existe
     if (tablasDeSimbolos.containsKey(id.toString())) {
-        ArrayList<String[]> tabla = tablasDeSimbolos.get(id.toString()); //Obtener la tabla de simbolos de la funcion
-        String[] funcInfo = tabla.get(0); //Obtener la info de la tabla de simbolos de la funcion
 
-     
         // Verificar si los parametros enviados coinciden con los parametros de la funcion
         ArrayList<String> funcParamstypes = getFuncParamsTypes(tabla);
         String[] sendParams = actualParams.toString().split(",");
@@ -507,27 +508,35 @@ callFunction ::= IDENTIFIER:id LPAREN sendParameters:actualParams  RPAREN
                     System.out.println("Error semantico en la linea x: Se esperaba un parametro de tipo "+paramType1+" y se recibio uno de tipo "+paramType2);
                 }   
             }
-        }
-
-        RESULT = id.toString()+":"+funcInfo[1];   
+        } 
     
     }else{
         System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" no existe");
     }
+
+    RESULT = id.toString()+":"+funcInfo[1];   
   
 
 :};
 
 callFunction ::= IDENTIFIER:id LPAREN RPAREN
 {:
+
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(id.toString()); //Obtener la tabla de simbolos de la funcion
+    String[] funcInfo = tabla.get(0); //Obtener la info de la tabla de simbolos de la funcion
+
     //Verificar si la funcion existe
-    if (!tablasDeSimbolos.containsKey(id.toString())) { 
+    if (tablasDeSimbolos.containsKey(id.toString())) {  
+        // Verificar si la funcion requiere parametros
+        if (getFuncParamsTypes(tabla).size() != 0) {
+            System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" requiere parametros");
+        }   
+    } else {
         System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" no existe");
     }
-    else{
-        ArrayList<String[]> tabla = tablasDeSimbolos.get(id.toString());
-        RESULT = id.toString()+":"+tabla.get(0)[1];
-    }
+
+    RESULT = id.toString()+":"+funcInfo[1];
+
 :};
 
 callFunction_statement ::= callFunction ENDLINE;

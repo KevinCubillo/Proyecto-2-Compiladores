@@ -10,14 +10,19 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/fuente.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/fuente.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/tokens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/tokens.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/fuente.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/fuente.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser$CUP$parser$actions.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/parser$CUP$parser$actions.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/parser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser$CUP$parser$actions.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/sym.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/tokens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/tokens.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/cup/com/compiladores/parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/cup/com/compiladores/parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scanner-parser-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/scanner-parser-1.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.compiladores.AppTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.compiladores.AppTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.compiladores.AppTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.compiladores.AppTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scanner-parser-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.compiladores.AppTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.compiladores.AppTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/compiladores/AppTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/compiladores/AppTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,7 +174,7 @@
       <workItem from="1697205067709" duration="5626000" />
       <workItem from="1697853376690" duration="1805000" />
       <workItem from="1698281455525" duration="20896000" />
-      <workItem from="1698604843176" duration="14482000" />
+      <workItem from="1698604843176" duration="17743000" />
     </task>
     <servers />
   </component>

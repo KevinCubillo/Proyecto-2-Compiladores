@@ -8,6 +8,7 @@ int#getName(char#vava,int#monoArana){
 	string#b1;
     char#s1;
     int#hola;
+    int#var;
     return#1;
     main(s1);
 
@@ -19,8 +20,9 @@ int#getName(char#vava,int#monoArana){
     		hola = 10;
     		break;
     	default:
-    		hola = -10.5 * -1.9;
+    		cuca = var+134-23;
     }
+    hola=10+12.5;
 
 }
 

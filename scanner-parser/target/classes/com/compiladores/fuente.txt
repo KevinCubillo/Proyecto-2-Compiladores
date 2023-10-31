@@ -10,6 +10,18 @@ int#getName(char#vava,int#monoArana){
     int#hola;
     return#1;
     main(s1);
+
+    switch(hola) //semantico
+    {
+    	case#7:
+    		print<<"!#";
+    	case#2:
+    		hola = 10;
+    		break;
+    	default:
+    		hola = -10.5 * -1.9;
+    }
+
 }
 
 

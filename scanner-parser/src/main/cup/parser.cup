@@ -178,6 +178,7 @@ aritmeticExpression ::= operand:n
     RESULT = "-"+n; 
 
 :}
+
 | IDENTIFIER:id INCREMENT 
 {:
     ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
@@ -189,6 +190,7 @@ aritmeticExpression ::= operand:n
     System.out.println("Error semantico en la linea x: No se permite el uso de incremento en variables de tipo: "+tipoId);  
     RESULT = id+":"+tipoId;
 :}
+
 | IDENTIFIER:id DECREMENT 
 {:
 
@@ -230,7 +232,7 @@ expression ::= aritmeticExpression:e
 
 /** CONTROL STRUCTURES **/
 
-if_struct ::= IF LPAREN expression RPAREN BLOCKSTART statements BLOCKEND;
+if_struct ::= IF LPAREN logicalExpression RPAREN BLOCKSTART statements BLOCKEND;
 
 if_else_struct ::= if_struct ELSE BLOCKSTART statements BLOCKEND;
 
@@ -238,21 +240,101 @@ while_struct ::= WHILE LPAREN logicalExpression RPAREN BLOCKSTART statements BLO
 
 while_else_struct ::= while_struct ELSE BLOCKSTART statements BLOCKEND;
 
-for_range_struct ::= FOR SEPARATOR IDENTIFIER SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression COMMA
-                     aritmeticExpression COMMA aritmeticExpression RPAREN BLOCKSTART statements BLOCKEND;
-for_range_struct ::= FOR SEPARATOR IDENTIFIER SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression COMMA
-                     aritmeticExpression RPAREN BLOCKSTART statements BLOCKEND;
-for_range_struct ::= FOR SEPARATOR IDENTIFIER SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression RPAREN BLOCKSTART statements BLOCKEND;
+for_range_struct ::= FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression:e1 COMMA
+                     aritmeticExpression:e2 COMMA aritmeticExpression:e3 RPAREN BLOCKSTART statements BLOCKEND
+{:
+    //Comprobar que el iterador sea entero
+    if (id.toString().endsWith("int")) {
+        System.out.println("Error semantico en la linea x: El iterador del for range debe ser de tipo entero");
+    }
+  
+    //Comprobar que el tipo de dato de la los argumentos sea entero
+    if (!String.valueOf(e1).endsWith("int") || !String.valueOf(e2).endsWith("int") || !String.valueOf(e3).endsWith("int")) {
+        System.out.println("Error semantico en la linea x: Los argumentos del for range deben ser de tipo entero");
+    }
+
+:}
+
+| FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression:e1 COMMA
+                     aritmeticExpression:e2 RPAREN BLOCKSTART statements BLOCKEND
+{:
+
+    //Comprobar que el iterador sea entero
+    if (id.toString().endsWith("int")) {
+        System.out.println("Error semantico en la linea x: El iterador del for range debe ser de tipo entero");
+    }
+  
+    //Comprobar que el tipo de dato de la los argumentos sea entero
+    if (!String.valueOf(e1).endsWith("int") || !String.valueOf(e2).endsWith("int")) {
+        System.out.println("Error semantico en la linea x: Los argumentos del for range deben ser de tipo entero");
+    }
+
+:}
+
+| FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression:e1 RPAREN BLOCKSTART statements BLOCKEND
+{:
+
+    //Comprobar que el iterador sea entero
+    if (id.toString().endsWith("int")) {
+        System.out.println("Error semantico en la linea x: El iterador del for range debe ser de tipo entero");
+    }
+  
+    //Comprobar que el tipo de dato de la los argumentos sea entero
+    if (!String.valueOf(e1).endsWith("int")) {
+        System.out.println("Error semantico en la linea x: Los argumentos del for range deben ser de tipo entero");
+    }
+
+:};
 
 default_statement ::= DEFAULT DOTS statements;
 
-case_statement ::= CASE SEPARATOR literal DOTS statements;
+case_statement ::= CASE SEPARATOR literal:lit DOTS statements
+{:
+    RESULT = lit;
+:};
 
-case_statements ::= case_statement;
-case_statements ::= case_statements case_statement;
+case_statements ::= case_statement:cs
+{:
+    RESULT = cs;
+:};
 
-switch_struct ::= SWITCH LPAREN expression RPAREN BLOCKSTART case_statements BLOCKEND;
-switch_struct ::= SWITCH LPAREN expression RPAREN BLOCKSTART case_statements default_statement BLOCKEND;
+case_statements ::= case_statements:css case_statement:cs
+{:
+    RESULT = css + "," + cs;
+
+:};
+
+switch_struct ::= SWITCH LPAREN expression:e1 RPAREN BLOCKSTART case_statements:types BLOCKEND
+{:
+
+    // Verificar que el tipo de dato de la expresion coincida con el tipo de dato de los casos
+    String tipoSwitch = e1.toString().split(":")[1];
+    String[] tiposCasos = types.toString().split(",");
+
+    for (String tipoCaso : tiposCasos) {
+        String tipoCaso1 = tipoCaso.split(":")[1];
+        if (!tipoSwitch.equals(tipoCaso1)) {
+            System.out.println("Error semantico en la linea x: El tipo de dato de la expresion no coincide con el tipo de dato de los casos");
+        }
+    }
+    
+:};
+
+switch_struct ::= SWITCH LPAREN expression:e1 RPAREN BLOCKSTART case_statements:types default_statement BLOCKEND
+{:
+
+    // Verificar que el tipo de dato de la expresion coincida con el tipo de dato de los casos
+    String tipoSwitch = e1.toString().split(":")[1];
+    String[] tiposCasos = types.toString().split(",");
+
+    for (String tipoCaso : tiposCasos) {
+        String tipoCaso1 = tipoCaso.split(":")[1];
+        if (!tipoSwitch.equals(tipoCaso1)) {
+            System.out.println("Error semantico en la linea x: El tipo de dato de la expresion no coincide con el tipo de dato de los casos");
+        }
+    }
+:};
+
 switch_struct ::= SWITCH LPAREN expression RPAREN BLOCKSTART default_statement BLOCKEND;
 
 
@@ -341,9 +423,7 @@ callFunction ::= IDENTIFIER:id LPAREN sendParameters:actualParams  RPAREN
             }
         }
        
-        
-
-      
+    
     }else{
         System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" no existe");
     }
@@ -355,8 +435,23 @@ callFunction ::= IDENTIFIER LPAREN RPAREN;
 
 callFunction_statement ::= callFunction ENDLINE;
 
-return_statement ::= RETURN SEPARATOR expression ENDLINE;
-return_statement ::= RETURN ENDLINE;
+return_statement ::= RETURN SEPARATOR expression:e ENDLINE
+{:
+
+// Verificar que el tipo de retorno coincida con el tipo de dato de la funcion
+
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
+    String[] infoTabla = tabla.get(0);
+    String tipoFuncion = infoTabla[1];
+    String tipoExpresion = e.toString().split(":")[1];
+
+    if (!tipoFuncion.equals(tipoExpresion)) {
+        System.out.println("Error semantico en la linea x: Tipo de retorno no valido");
+    }
+
+
+:}
+| RETURN ENDLINE;
 
 break_statement ::= BREAK ENDLINE;
 
@@ -364,7 +459,7 @@ statement ::=   decl | assignment | decl_and_assignment | readData | printData |
                 callFunction_statement | if_struct | if_else_struct| while_struct | while_else_struct | for_range_struct
                 | switch_struct;
 
-statements ::= statement;
+statements ::= statement; //retornar solo el returnstatyement y preguntar si es null o no, para saber si hay un return o no.
 statements ::= statements statement;
 
 
@@ -400,24 +495,30 @@ parameters ::= errors; //  parmetros no válidos
 functionIdentifier ::= type:t SEPARATOR IDENTIFIER :idFunc 
 {:
 
-// Crear tabla de simbolos para la funcion
+    // Verificar si la funcion ya existe en la tabla de simbolos
+    if (tablasDeSimbolos.containsKey(idFunc.toString())) {
+        System.out.println("Error semantico en la linea x: La funcion "+idFunc.toString()+" ya ha sido declarada");
+    } else {   
 
-    String tipoTabla = "main";
-    if (idFunc.toString().equals("main")){
-    tipoTabla = "Tipo: main "+t.toString();
-    }
-    else{
-    tipoTabla = "Tipo: funcion "+t.toString();
+    //  Definir el tipo de tabla
+        String tipoTabla = "main";
+        if (idFunc.toString().equals("main")){
+        tipoTabla = "Tipo: main ";
+        }
+        else{
+        tipoTabla = "Tipo: funcion ";
+        }
+
+    // Crear tabla de simbolos para la funcion
+        currentHash = idFunc.toString();
+        ArrayList<String[]> tabla = new ArrayList<>();
+        String[] tipo = new String[2];
+        tipo[0] = tipoTabla;
+        tipo[1] = t.toString();
+        tabla.add(tipo);
+        tablasDeSimbolos.put(currentHash, tabla);
     }
 
-    currentHash = idFunc.toString();
-    ArrayList<String[]> tabla = new ArrayList<>();
-    String[] tipo = new String[2];
-    tipo[0] = tipoTabla;
-    tipo[1] = t.toString();
-    tabla.add(tipo);
-    tablasDeSimbolos.put(currentHash, tabla);
-   
 :}; 
 
 function ::= functionIdentifier LPAREN parameters RPAREN BLOCKSTART statements BLOCKEND

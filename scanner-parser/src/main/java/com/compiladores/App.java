@@ -3,6 +3,7 @@ package com.compiladores;
 import java_cup.runtime.Symbol;
 
 import java.io.*;
+import java.util.ArrayList;
 
 
 public class App 
@@ -42,6 +43,26 @@ public class App
 
         parser p = new parser(lexer);
         p.parse();
-        p.imprimirCodigoIntermedio();
+        //p.imprimirCodigoIntermedio();
+        intermediateCode(p.getIntermediateCode());
+
     }
+
+    public static void intermediateCode(ArrayList<String> intermediateCode) {
+        try {
+            BufferedWriter escritor = new BufferedWriter(new FileWriter("src/main/java/com/compiladores/Intermedio.txt"));
+
+            for (String elemento : intermediateCode) {
+                escritor.write(elemento);
+                escritor.newLine();
+            }
+
+            escritor.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 }

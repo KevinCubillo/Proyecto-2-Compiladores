@@ -782,18 +782,13 @@ functionIdentifier ::= type:t SEPARATOR IDENTIFIER :idFunc
         tipo[1] = t.toString();
         tabla.add(tipo);
         tablasDeSimbolos.put(currentHash, tabla);
+        //cod 3d
+        currentTemp = 1;
+        intermediateCode.add("\n\nbegin_func_ "+idFunc.toString()+":");
     }
 
-    currentHash = idFunc.toString();
-    ArrayList<String[]> tabla = new ArrayList<>();
-    String[] tipo = new String[2];
-    tipo[0] = tipoTabla;
-    tipo[1] = t.toString();
-    tabla.add(tipo);
-    tablasDeSimbolos.put(currentHash, tabla);
-   //cod 3d
-      currentTemp = 1;
-       intermediateCode.add("\n\nbegin_func_ "+idFunc.toString()+":");
+
+
 
 :}; 
 

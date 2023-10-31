@@ -1,0 +1,25 @@
+data_int variable
+
+
+begin_func_ main:
+data_string b1
+
+
+begin_func_ getName:
+data_string b1
+data_char s1
+data_int hola
+data_int var
+t1 = s1
+t2 = hola
+t3 = var
+Switch:
+t4 = hola
+t5 = 7
+t6 = 2
+if t4 == t5 goto case_7
+if t4 == t6 goto case_2
+goto default
+case_7 :
+case_2 :
+default:

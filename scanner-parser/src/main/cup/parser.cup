@@ -60,6 +60,11 @@ public void imprimirCodigoIntermedio() {
     }
 }
 
+public ArrayList<String> getIntermediateCode() {
+    return (ArrayList<String>) intermediateCode;
+}
+
+
 
 //Metodo para obtener un symbolo
 public String[] getSymbol(List<String[]> tabla, String id) {
@@ -150,7 +155,7 @@ aritmeticOp ::= PLUS | MINUS |  TIMES |  DIVIDE |  MODULE | POWER;
 operand ::= literal:n
 {:
     RESULT = n;
-    intermediateCode.add("t"+currentTemp++ +" = "+n);
+    //intermediateCode.add("t"+currentTemp++ +" = "+n);
 :}
 
 | IDENTIFIER:id
@@ -270,22 +275,229 @@ while_struct ::= WHILE LPAREN logicalExpression RPAREN BLOCKSTART statements BLO
 
 while_else_struct ::= while_struct ELSE BLOCKSTART statements BLOCKEND;
 
-for_range_struct ::= FOR SEPARATOR IDENTIFIER SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression COMMA
-                     aritmeticExpression COMMA aritmeticExpression RPAREN BLOCKSTART statements BLOCKEND;
-for_range_struct ::= FOR SEPARATOR IDENTIFIER SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression COMMA
-                     aritmeticExpression RPAREN BLOCKSTART statements BLOCKEND;
-for_range_struct ::= FOR SEPARATOR IDENTIFIER SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression RPAREN BLOCKSTART statements BLOCKEND;
+
+for_range_struct ::= FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression:e1 COMMA
+                     aritmeticExpression:e2 COMMA aritmeticExpression:e3 RPAREN BLOCKSTART statements BLOCKEND
+{:
+    //Comprobar que el iterador sea entero
+    if (id.toString().endsWith("int")) {
+        System.out.println("Error semantico en la linea x: El iterador del for range debe ser de tipo entero");
+    }
+  
+    //Comprobar que el tipo de dato de la los argumentos sea entero
+    if (!String.valueOf(e1).endsWith("int") || !String.valueOf(e2).endsWith("int") || !String.valueOf(e3).endsWith("int")) {
+        System.out.println("Error semantico en la linea x: Los argumentos del for range deben ser de tipo entero");
+    }
+    //cod 3d
+    intermediateCode.add("For:");
+    intermediateCode.add("dataInt forIni");
+    intermediateCode.add("forIni = "+e1);
+    intermediateCode.add("dataInt forFin");
+    intermediateCode.add("forFin = "+e2);
+    intermediateCode.add("dataInt forStep");
+    intermediateCode.add("forStep = "+e3);
+    intermediateCode.add("For_Condition");
+    intermediateCode.add("t"+currentTemp++ +" = forIni");
+    intermediateCode.add("t"+currentTemp++ +" = forFin");
+    intermediateCode.add("t"+currentTemp++ +" = t"+(currentTemp-2)+" <= t"+(currentTemp-1));
+    intermediateCode.add("if t"+(currentTemp-1)+" goto For_bloque");
+    intermediateCode.add("goto For_end");
+
+    intermediateCode.add("For_inc");
+    intermediateCode.add("t"+currentTemp++ +" = forStep");
+    intermediateCode.add("t"+currentTemp++ +" = forIni");
+    intermediateCode.add("t"+currentTemp++ +" = t"+(currentTemp-2)+" + t"+(currentTemp-1));
+    intermediateCode.add("forIni = t"+(currentTemp-1));
+    intermediateCode.add("goto For_Condition");
+    intermediateCode.add("For_bloque");
+    //intermediateCode.add("goto For_inc");
+    //intermediateCode.add("For_end");
+    
+:}
+
+| FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression:e1 COMMA
+                     aritmeticExpression:e2 RPAREN BLOCKSTART statements BLOCKEND
+{:
+
+    //Comprobar que el iterador sea entero
+    if (id.toString().endsWith("int")) {
+        System.out.println("Error semantico en la linea x: El iterador del for range debe ser de tipo entero");
+    }
+  
+    //Comprobar que el tipo de dato de la los argumentos sea entero
+    if (!String.valueOf(e1).endsWith("int") || !String.valueOf(e2).endsWith("int")) {
+        System.out.println("Error semantico en la linea x: Los argumentos del for range deben ser de tipo entero");
+    }
+        //cod 3d
+    intermediateCode.add("For:");
+    intermediateCode.add("dataInt forIni");
+    intermediateCode.add("forIni = "+e1);
+    intermediateCode.add("dataInt forFin");
+    intermediateCode.add("forFin = "+e2);
+    intermediateCode.add("dataInt forStep");
+    intermediateCode.add("forStep = 1");
+    intermediateCode.add("For_Condition");
+    intermediateCode.add("t"+currentTemp++ +" = forIni");
+    intermediateCode.add("t"+currentTemp++ +" = forFin");
+    intermediateCode.add("t"+currentTemp++ +" = t"+(currentTemp-2)+" <= t"+(currentTemp-1));
+    intermediateCode.add("if t"+(currentTemp-1)+" goto For_bloque");
+    intermediateCode.add("goto For_end");
+
+    intermediateCode.add("For_inc");
+    intermediateCode.add("t"+currentTemp++ +" = forStep");
+    intermediateCode.add("t"+currentTemp++ +" = forIni");
+    intermediateCode.add("t"+currentTemp++ +" = t"+(currentTemp-2)+" + t"+(currentTemp-1));
+    intermediateCode.add("forIni = t"+(currentTemp-1));
+    intermediateCode.add("goto For_Condition");
+    intermediateCode.add("For_bloque");
+    //intermediateCode.add("goto For_inc");
+    //intermediateCode.add("For_end");
+
+:}
+
+| FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression:e1 RPAREN BLOCKSTART statements BLOCKEND
+{:
+
+    //Comprobar que el iterador sea entero
+    if (id.toString().endsWith("int")) {
+        System.out.println("Error semantico en la linea x: El iterador del for range debe ser de tipo entero");
+    }
+  
+    //Comprobar que el tipo de dato de la los argumentos sea entero
+    if (!String.valueOf(e1).endsWith("int")) {
+        System.out.println("Error semantico en la linea x: Los argumentos del for range deben ser de tipo entero");
+    }
+            //cod 3d
+    intermediateCode.add("For:");
+    intermediateCode.add("dataInt forIni");
+    intermediateCode.add("forIni = 1");
+    intermediateCode.add("dataInt forFin");
+    intermediateCode.add("forFin = "+e1);
+    intermediateCode.add("dataInt forStep");
+    intermediateCode.add("forStep = 1");
+    intermediateCode.add("For_Condition");
+    intermediateCode.add("t"+currentTemp++ +" = forIni");
+    intermediateCode.add("t"+currentTemp++ +" = forFin");
+    intermediateCode.add("t"+currentTemp++ +" = t"+(currentTemp-2)+" <= t"+(currentTemp-1));
+    intermediateCode.add("if t"+(currentTemp-1)+" goto For_bloque");
+    intermediateCode.add("goto For_end");
+
+    intermediateCode.add("For_inc");
+    intermediateCode.add("t"+currentTemp++ +" = forStep");
+    intermediateCode.add("t"+currentTemp++ +" = forIni");
+    intermediateCode.add("t"+currentTemp++ +" = t"+(currentTemp-2)+" + t"+(currentTemp-1));
+    intermediateCode.add("forIni = t"+(currentTemp-1));
+    intermediateCode.add("goto For_Condition");
+    intermediateCode.add("For_bloque");
+    //intermediateCode.add("goto For_inc");
+    //intermediateCode.add("For_end");
+:};
 
 default_statement ::= DEFAULT DOTS statements;
 
-case_statement ::= CASE SEPARATOR literal DOTS statements;
+case_statement ::= CASE SEPARATOR literal:lit DOTS statements
+{:
+    RESULT = lit;
+:};
 
-case_statements ::= case_statement;
-case_statements ::= case_statements case_statement;
+case_statements ::= case_statement:cs
+{:
+    RESULT = cs;
+:};
 
-switch_struct ::= SWITCH LPAREN expression RPAREN BLOCKSTART case_statements BLOCKEND;
-switch_struct ::= SWITCH LPAREN expression RPAREN BLOCKSTART case_statements default_statement BLOCKEND;
-switch_struct ::= SWITCH LPAREN expression RPAREN BLOCKSTART default_statement BLOCKEND;
+case_statements ::= case_statements:css case_statement:cs
+{:
+    RESULT = css + "," + cs;
+
+:};
+
+switch_struct ::= SWITCH LPAREN expression:e1 RPAREN BLOCKSTART case_statements:types BLOCKEND
+{:
+
+    // Verificar que el tipo de dato de la expresion coincida con el tipo de dato de los casos
+    String tipoSwitch = e1.toString().split(":")[1];
+    String[] tiposCasos = types.toString().split(",");
+
+    for (String tipoCaso : tiposCasos) {
+        String tipoCaso1 = tipoCaso.split(":")[1];
+        if (!tipoSwitch.equals(tipoCaso1)) {
+            System.out.println("Error semantico en la linea x: El tipo de dato de la expresion no coincide con el tipo de dato de los casos");
+        }
+    }
+            //cod 3d
+           intermediateCode.add("Switch:");
+           String e1Split = e1.toString().split(":")[0];
+           int tTemp= currentTemp;
+           intermediateCode.add("t" + currentTemp++ + " = " + e1Split);
+
+           int contador= 0;
+           for (String tipoCaso : tiposCasos) {
+                       String tipoCasoSplit = tipoCaso.split(":")[0];
+                       intermediateCode.add("t" + currentTemp++ + " = " + tipoCasoSplit);
+                       contador++;
+           }
+           // Generar una etiqueta para cada caso
+           for (String tipoCaso : tiposCasos) {
+               String tipoCasoSplit = tipoCaso.split(":")[0];
+               intermediateCode.add("if t" + tTemp + " == t" + (currentTemp - contador--) + " goto case_" + tipoCasoSplit);
+           }
+           intermediateCode.add("goto default");
+           // Generar una etiqueta para el caso default
+           for (String tipoCaso : tiposCasos) {
+               String tipoCasoSplit = tipoCaso.split(":")[0];
+               intermediateCode.add("case_" + tipoCasoSplit + " :");
+           }
+           intermediateCode.add("default:");
+           //intermediateCode.add("goto end_switch");
+           //intermediateCode.add("end_switch:");
+
+
+
+
+    
+:};
+
+switch_struct ::= SWITCH LPAREN expression:e1 RPAREN BLOCKSTART case_statements:types default_statement BLOCKEND
+{:
+
+    // Verificar que el tipo de dato de la expresion coincida con el tipo de dato de los casos
+    String tipoSwitch = e1.toString().split(":")[1];
+    String[] tiposCasos = types.toString().split(",");
+
+    for (String tipoCaso : tiposCasos) {
+        String tipoCaso1 = tipoCaso.split(":")[1];
+        if (!tipoSwitch.equals(tipoCaso1)) {
+            System.out.println("Error semantico en la linea x: El tipo de dato de la expresion no coincide con el tipo de dato de los casos");
+        }
+    }
+        intermediateCode.add("Switch:");
+        String e1Split = e1.toString().split(":")[0];
+        int tTemp= currentTemp;
+        intermediateCode.add("t" + currentTemp++ + " = " + e1Split);
+
+        int contador= 0;
+        for (String tipoCaso : tiposCasos) {
+                    String tipoCasoSplit = tipoCaso.split(":")[0];
+                    intermediateCode.add("t" + currentTemp++ + " = " + tipoCasoSplit);
+                    contador++;
+        }
+        // Generar una etiqueta para cada caso
+        for (String tipoCaso : tiposCasos) {
+            String tipoCasoSplit = tipoCaso.split(":")[0];
+            intermediateCode.add("if t" + tTemp + " == t" + (currentTemp - contador--) + " goto case_" + tipoCasoSplit);
+        }
+        intermediateCode.add("goto default");
+        // Generar una etiqueta para el caso default
+        for (String tipoCaso : tiposCasos) {
+            String tipoCasoSplit = tipoCaso.split(":")[0];
+            intermediateCode.add("case_" + tipoCasoSplit + " :");
+        }
+        intermediateCode.add("default:");
+        //intermediateCode.add("goto end_switch");
+        //intermediateCode.add("end_switch:");
+:};
+
+
 
 
 /** STATEMENTS **/
@@ -388,8 +600,23 @@ callFunction ::= IDENTIFIER LPAREN RPAREN;
 
 callFunction_statement ::= callFunction ENDLINE;
 
-return_statement ::= RETURN SEPARATOR expression ENDLINE;
-return_statement ::= RETURN ENDLINE;
+return_statement ::= RETURN SEPARATOR expression:e ENDLINE
+{:
+
+// Verificar que el tipo de retorno coincida con el tipo de dato de la funcion
+
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
+    String[] infoTabla = tabla.get(0);
+    String tipoFuncion = infoTabla[1];
+    String tipoExpresion = e.toString().split(":")[1];
+
+    if (!tipoFuncion.equals(tipoExpresion)) {
+        System.out.println("Error semantico en la linea x: Tipo de retorno no valido");
+    }
+
+
+:}
+| RETURN ENDLINE;
 
 break_statement ::= BREAK ENDLINE;
 

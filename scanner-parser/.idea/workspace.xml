@@ -10,25 +10,14 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/fuente.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/fuente.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/tokens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/tokens.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/fuente.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/fuente.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser$CUP$parser$actions.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/sym.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser$CUP$parser$actions.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/parser$CUP$parser$actions.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/parser.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/tokens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/tokens.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/cup/com/compiladores/parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/cup/com/compiladores/parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scanner-parser-1.0-SNAPSHOT.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.compiladores.AppTest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.compiladores.AppTest.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/compiladores/AppTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/compiladores/AppTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/App.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/App.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/Lexer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/Lexer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser$CUP$parser$actions.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/sym.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/compiladores/AppTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/compiladores/AppTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scanner-parser-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/scanner-parser-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.compiladores.AppTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.compiladores.AppTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.compiladores.AppTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.compiladores.AppTest.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +30,13 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/main/cup/parser.cup" root0="SKIP_HIGHLIGHTING" />
   </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -49,20 +45,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "facu",
-    "last_opened_file_path": "C:/Users/kevin/Desktop/Proyecto 2-Compiladores/Proyecto-2-Compiladores/scanner-parser",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/kevin/Desktop/Proyecto 2-Compiladores/Proyecto-2-Compiladores/scanner-parser&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Projects\Working\Proyecto-1-Compiladores\scanner-parser\src\main\java\com\compiladores" />
@@ -146,13 +141,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <list>
-      <item itemvalue="Application.App" />
-      <item itemvalue="JUnit.AppTest.shouldAnswerWithTrue" />
-      <item itemvalue="JUnit.ParserTest.TestLexer" />
-      <item itemvalue="JUnit.ParserTest.TestLexerParser" />
-      <item itemvalue="JUnit.ParserTest.TestParser" />
-    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.App" />
@@ -181,7 +169,7 @@
       <workItem from="1697205067709" duration="5626000" />
       <workItem from="1697853376690" duration="1805000" />
       <workItem from="1698281455525" duration="20896000" />
-      <workItem from="1698604843176" duration="17743000" />
+      <workItem from="1698604843176" duration="21298000" />
     </task>
     <servers />
   </component>

@@ -4,6 +4,10 @@ int#main(char#perro){
 	string#b1;
 }
 
+float#vaca(char#perro){
+	string#b1;
+}
+
 int#getName(char#vava,int#monoArana){
 	string#b1;
     char#s1;
@@ -22,9 +26,9 @@ int#getName(char#vava,int#monoArana){
     		hola = 10;
     		break;
     	default:
-    		cuca = var+134-23;
+    		hola = var+134-23+vaca('d');
     }
-    hola=10+12.5;
+    //hola=10+12.5;
 
 }
 

@@ -31,7 +31,6 @@ parser code  {:
         tipo[1] = "Globales";
         tabla.add(tipo);
         tablasDeSimbolos.put(currentHash, tabla);
-
     }
 
 //Metodo para imprimir la tabla de simbolos
@@ -134,6 +133,7 @@ precedence left EQUALS, DIFFERENT, GREATER, LESS, GREATEREQUAL, LESSEQUAL;
 precedence left PLUS, MINUS;
 precedence left TIMES, DIVIDE, MODULE, POWER;
 precedence right NOT;
+precedence left LPAREN;
 
 start with program;
 
@@ -157,13 +157,12 @@ aritmeticOp ::= PLUS:plus {: RESULT = plus; :}
 | MODULE:module {: RESULT = module; :}
 | POWER:power {: RESULT = power; :};
 
-operand ::= literal:n
+operand ::= literal:n    
 {:
-    RESULT = n;
-    //intermediateCode.add("t"+currentTemp++ +" = "+n);
-:}
+    RESULT = n;    
+:} 
 
-| IDENTIFIER:id
+| IDENTIFIER:id 
 {:
 
     ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
@@ -177,16 +176,15 @@ operand ::= literal:n
         intermediateCode.add("t"+currentTemp++ +" = "+id);
     }
                                                        
-:} ;
-/*
+:}
+
 | callFunction:cf
 {:
     RESULT = cf;
 
 :};
-*/
-  
-           
+
+
 relationalOp ::= EQUALS | DIFFERENT | GREATER | LESS | GREATEREQUAL | LESSEQUAL;
 logicalOp ::= AND | OR;
 
@@ -198,8 +196,6 @@ aritmeticExpression ::= operand:n
 {:
 
     RESULT = n; 
-    //cod 3d
-
 
 :}
 | MINUS literal:n 
@@ -235,7 +231,6 @@ aritmeticExpression ::= operand:n
     intermediateCode.add(tempPP2 +" = "+tempId+" + "+tempPP1);
     intermediateCode.add(id +" = "+tempPP2);
     RESULT = id+":"+tipoId;
-
 :}
 
 | IDENTIFIER:id DECREMENT 
@@ -260,7 +255,6 @@ aritmeticExpression ::= operand:n
     intermediateCode.add(id +" = "+tempPP2);
 
     RESULT = id+":"+tipoId;
-
 
 :};
 
@@ -288,9 +282,7 @@ aritmeticExpression ::= aritmeticExpression:e1 aritmeticOp:op aritmeticExpressio
           operationType = tipo1;
     }
     RESULT = operand1+op.toString()+operand2+":"+operationType;
-    
-    //cod 3d
-
+    // --->Para el codigo intermedio puede sacar el signo de la operacion de la variable op.toString()
 
 :};
 
@@ -308,15 +300,11 @@ logicalExpression ::= NOT logicalExpression;
 expression ::= aritmeticExpression:e
 {:
     RESULT = e; 
-    RESULT = e; //Enviar solo el tipo de dato
-    //intermediateCode.add("aritmetical2");
-    //intermediateCode.add("\t"+currentTemp++ +" = "+e);
 :} 
 
 | logicalExpression:e
 {:
-    RESULT = e; 
-    RESULT = e; //Enviar solo el tipo de dato
+    RESULT = e;
     intermediateCode.add("logical");
     intermediateCode.add("t"+currentTemp++ +" = "+e);
 :};
@@ -331,7 +319,6 @@ if_else_struct ::= if_struct ELSE BLOCKSTART statements BLOCKEND;
 while_struct ::= WHILE LPAREN logicalExpression RPAREN BLOCKSTART statements BLOCKEND;
 
 while_else_struct ::= while_struct ELSE BLOCKSTART statements BLOCKEND;
-
 
 for_range_struct ::= FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression:e1 COMMA
                      aritmeticExpression:e2 COMMA aritmeticExpression:e3 RPAREN BLOCKSTART statements BLOCKEND
@@ -369,7 +356,7 @@ for_range_struct ::= FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LP
     intermediateCode.add("For_bloque");
     //intermediateCode.add("goto For_inc");
     //intermediateCode.add("For_end");
-    
+
 :}
 
 | FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression:e1 COMMA
@@ -511,7 +498,7 @@ switch_struct ::= SWITCH LPAREN expression:e1 RPAREN BLOCKSTART case_statements:
 
 
 
-    
+
 :};
 
 switch_struct ::= SWITCH LPAREN expression:e1 RPAREN BLOCKSTART case_statements:types default_statement BLOCKEND
@@ -554,7 +541,7 @@ switch_struct ::= SWITCH LPAREN expression:e1 RPAREN BLOCKSTART case_statements:
         //intermediateCode.add("end_switch:");
 :};
 
-
+switch_struct ::= SWITCH LPAREN expression RPAREN BLOCKSTART default_statement BLOCKEND;
 
 
 /** STATEMENTS **/
@@ -563,7 +550,7 @@ varIdentifier ::= type:t SEPARATOR IDENTIFIER:idVar
 {:
 
     // Verificar si la variable ya existe en el ámbito actual
-
+    
     String varName = idVar.toString();
     String varType = t.toString();
     List<String[]> tabla = tablasDeSimbolos.get(currentHash);
@@ -665,53 +652,61 @@ sendParameters ::= expression:e
 
 callFunction ::= IDENTIFIER:id LPAREN sendParameters:actualParams  RPAREN 
 {: 
+
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(id.toString()); //Obtener la tabla de simbolos de la funcion
+    String[] funcInfo = tabla.get(0); //Obtener la info de la tabla de simbolos de la funcion
+
      //Verificar si la funcion existe
     if (tablasDeSimbolos.containsKey(id.toString())) {
-        ArrayList<String[]> tabla = tablasDeSimbolos.get(id.toString()); //Obtener la tabla de simbolos de la funcion
-        String[] funcInfo = tabla.get(0); //Obtener la info de la tabla de simbolos de la funcion
-
 
         // Verificar si los parametros enviados coinciden con los parametros de la funcion
         ArrayList<String> funcParamstypes = getFuncParamsTypes(tabla);
         String[] sendParams = actualParams.toString().split(",");
 
-
+    
         if (funcParamstypes.size() != sendParams.length) {
             System.out.println("Error semantico en la linea x: La cantidad de parametros enviados no coincide con la cantidad de parametros de la funcion: "+ id.toString());
         } else {
             for (int i = 0; i < funcParamstypes.size(); i++) {
                 if (sendParams[i].equals("null")) {
-                    break;   // No se muestra el error ya que en operand se mostró al validar el id
+                    break;   // No se muestra el error ya que en operand se mostró al validar el id 
                 }
                 String paramType1 = funcParamstypes.get(i); // Tipo de dato del parametro de la funcion
                 String paramType2 = sendParams[i].split(":")[1]; // Tipo de dato del parametro enviado
 
                 if (!paramType1.equals(paramType2)) { // Verificar si los tipos de datos coinciden
                     System.out.println("Error semantico en la linea x: Se esperaba un parametro de tipo "+paramType1+" y se recibio uno de tipo "+paramType2);
-                }
+                }   
             }
         }
-
-        RESULT = id.toString()+":"+funcInfo[1];   
     
     }else{
         System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" no existe");
     }
-  
+
+    RESULT = id.toString()+":"+funcInfo[1];
 
 
 :};
 
 callFunction ::= IDENTIFIER:id LPAREN RPAREN
 {:
+
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(id.toString()); //Obtener la tabla de simbolos de la funcion
+    String[] funcInfo = tabla.get(0); //Obtener la info de la tabla de simbolos de la funcion
+
     //Verificar si la funcion existe
-    if (!tablasDeSimbolos.containsKey(id.toString())) { 
+    if (tablasDeSimbolos.containsKey(id.toString())) {
+        // Verificar si la funcion requiere parametros
+        if (getFuncParamsTypes(tabla).size() != 0) {
+            System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" requiere parametros");
+        }
+    } else {
         System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" no existe");
     }
-    else{
-        ArrayList<String[]> tabla = tablasDeSimbolos.get(id.toString());
-        RESULT = id.toString()+":"+tabla.get(0)[1];
-    }
+
+    RESULT = id.toString()+":"+funcInfo[1];
+
 :};
 
 callFunction_statement ::= callFunction ENDLINE;
@@ -803,9 +798,6 @@ functionIdentifier ::= type:t SEPARATOR IDENTIFIER :idFunc
         intermediateCode.add("\n\nbegin_func_ "+idFunc.toString()+":");
     }
 
-
-
-
 :}; 
 
 function ::= functionIdentifier LPAREN parameters RPAREN BLOCKSTART statements BLOCKEND
@@ -819,7 +811,6 @@ functions ::= errors; // Error cuando hay algo fuera de una funcion
 globalVariable ::= decl | decl_and_assignment;
 globalVariables ::= globalVariable;
 globalVariables ::= globalVariables globalVariable;
-
 
 
 /** PUNTO DE ENTRADA **/

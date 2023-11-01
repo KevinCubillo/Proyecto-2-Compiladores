@@ -1,32 +1,26 @@
 int#variable;
 
-int#main(char#perro){
+/*int#main(char#perro){
 	string#b1;
 }
 
 float#vaca(char#perro){
 	string#b1;
-}
+}*/
 
 int#getName(char#vava,int#monoArana){
-	string#b1;
-    char#s1;
+
     int#hola;
-    int#var;
-    return#1;
-    main(s1);
-	
-	hola = 1+2;
-	//hola++;
+
     switch(hola) //semantico
     {
     	case#7:
-    		print<<"!#";
+    		hola=5;
     	case#2:
-    		hola = 10;
+    		hola = 111;
     		break;
     	default:
-    		hola = var+134-23+vaca('d');
+    		hola = 33;
     }
     //hola=10+12.5;
 

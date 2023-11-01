@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Stack;
 
 parser code  {:
 
@@ -16,6 +16,8 @@ parser code  {:
     String currentHash = "";
     List<String> intermediateCode = new ArrayList<>();
     int currentTemp = 1;
+    int structs = 1;
+    Stack<Integer> indices= new Stack<>();
 
 
     @SuppressWarnings("deprecation")
@@ -173,7 +175,7 @@ operand ::= literal:n
         String tipoId = symbol[2];
         RESULT = id+":"+tipoId;
         //cod 3d
-        intermediateCode.add("t"+currentTemp++ +" = "+id);
+        //intermediateCode.add("t"+currentTemp++ +" = "+id);
     }
                                                        
 :}
@@ -199,16 +201,16 @@ aritmeticExpression ::= operand:n
 
 :}
 | MINUS literal:n 
-
 {: 
 
     if (!String.valueOf(n).endsWith("int") && !String.valueOf(n).endsWith("float")) {
         System.out.println("Error semantico en la linea x: Operacion aritmetica no valida");
     }
-    RESULT = "-"+n; 
+    
     //cod 3d
-    intermediateCode.add("t"+currentTemp++ +" =- "+n);
-
+    String temp = "t"+currentTemp++;
+    intermediateCode.add(temp +" = "+n.toString().split(":")[0]);
+    RESULT = "-"+n + ":"+n.toString().split(":")[1]+":"+temp;; 
 
 :}
 
@@ -247,11 +249,11 @@ aritmeticExpression ::= operand:n
     //cod 3d
         String tempId= "t"+currentTemp++;
     intermediateCode.add(tempId +" = "+id);
-    //cod 3d ++
+    //cod 3d --
     String tempPP1= "t"+currentTemp++;
     String tempPP2= "t"+currentTemp++;
     intermediateCode.add(tempPP1 +" = 1");
-    intermediateCode.add(tempPP2 +" = "+tempId+" + "+tempPP1);
+    intermediateCode.add(tempPP2 +" = "+tempId+" - "+tempPP1);
     intermediateCode.add(id +" = "+tempPP2);
 
     RESULT = id+":"+tipoId;
@@ -283,6 +285,16 @@ aritmeticExpression ::= aritmeticExpression:e1 aritmeticOp:op aritmeticExpressio
     }
     RESULT = operand1+op.toString()+operand2+":"+operationType;
     // --->Para el codigo intermedio puede sacar el signo de la operacion de la variable op.toString()
+    String operador= op.toString();
+
+    intermediateCode.add("t" + currentTemp++ +" = "+operand1);
+ 
+    intermediateCode.add("t" + currentTemp++  +" = "+operand2);
+    intermediateCode.add("t" + currentTemp++ + "=" + "t" +(currentTemp -3) +" " + operador + " " + "t"+(currentTemp-2));
+
+
+
+    //RESULT ="result"+":"+tipo1+":" + "t" + currentTemp;
 
 :};
 
@@ -305,16 +317,33 @@ expression ::= aritmeticExpression:e
 | logicalExpression:e
 {:
     RESULT = e;
-    intermediateCode.add("logical");
-    intermediateCode.add("t"+currentTemp++ +" = "+e);
+    //intermediateCode.add("logical");
+    //intermediateCode.add("t"+currentTemp++ +" = "+e);
 :};
 
 
 /** CONTROL STRUCTURES **/
 
 if_struct ::= IF LPAREN logicalExpression RPAREN BLOCKSTART statements BLOCKEND;
+{:
+    //cod 3d
+    int ind=indices.pop();
+    intermediateCode.add("if T 7 goto " );
+    intermediateCode.add("t"+currentTemp++ +" = "+logicalExpression);
+    intermediateCode.add("if t"+(currentTemp-1)+" goto if_true");
+    intermediateCode.add("goto if_false");
+    intermediateCode.add("if_true:");
+:}
 
 if_else_struct ::= if_struct ELSE BLOCKSTART statements BLOCKEND;
+{:
+    //cod 3d
+    intermediateCode.add("if");
+    intermediateCode.add("t"+currentTemp++ +" = "+logicalExpression);
+    intermediateCode.add("if t"+(currentTemp-1)+" goto if_true");
+    intermediateCode.add("goto if_false");
+    intermediateCode.add("if_true:");
+:};
 
 while_struct ::= WHILE LPAREN logicalExpression RPAREN BLOCKSTART statements BLOCKEND;
 
@@ -442,6 +471,7 @@ default_statement ::= DEFAULT DOTS statements;
 case_statement ::= CASE SEPARATOR literal:lit DOTS statements
 {:
     RESULT = lit;
+    intermediateCode.add(0,"case_"+lit.toString().split(":")[0]+":");
 :};
 
 case_statements ::= case_statement:cs
@@ -468,32 +498,32 @@ switch_struct ::= SWITCH LPAREN expression:e1 RPAREN BLOCKSTART case_statements:
             System.out.println("Error semantico en la linea x: El tipo de dato de la expresion no coincide con el tipo de dato de los casos");
         }
     }
-            //cod 3d
-           intermediateCode.add("Switch:");
-           String e1Split = e1.toString().split(":")[0];
-           int tTemp= currentTemp;
-           intermediateCode.add("t" + currentTemp++ + " = " + e1Split);
+        //cod 3d
+        intermediateCode.add("Switch:");
+        String e1Split = e1.toString().split(":")[0];
+        int tTemp= currentTemp;
+        intermediateCode.add("t" + currentTemp++ + " = " + e1Split);
 
-           int contador= 0;
-           for (String tipoCaso : tiposCasos) {
-                       String tipoCasoSplit = tipoCaso.split(":")[0];
-                       intermediateCode.add("t" + currentTemp++ + " = " + tipoCasoSplit);
-                       contador++;
-           }
-           // Generar una etiqueta para cada caso
-           for (String tipoCaso : tiposCasos) {
-               String tipoCasoSplit = tipoCaso.split(":")[0];
-               intermediateCode.add("if t" + tTemp + " == t" + (currentTemp - contador--) + " goto case_" + tipoCasoSplit);
-           }
-           intermediateCode.add("goto default");
-           // Generar una etiqueta para el caso default
-           for (String tipoCaso : tiposCasos) {
-               String tipoCasoSplit = tipoCaso.split(":")[0];
-               intermediateCode.add("case_" + tipoCasoSplit + " :");
-           }
-           intermediateCode.add("default:");
-           //intermediateCode.add("goto end_switch");
-           //intermediateCode.add("end_switch:");
+        int contador= 0;
+        for (String tipoCaso : tiposCasos) {
+                    String tipoCasoSplit = tipoCaso.split(":")[0];
+                    intermediateCode.add("t" + currentTemp++ + " = " + tipoCasoSplit);
+                    contador++;
+        }
+        // Generar una etiqueta para cada caso
+        for (String tipoCaso : tiposCasos) {
+            String tipoCasoSplit = tipoCaso.split(":")[0];
+            intermediateCode.add("if t" + tTemp + " == t" + (currentTemp - contador--) + " goto case_" + tipoCasoSplit);
+        }
+        intermediateCode.add("goto default");
+        // Generar una etiqueta para el caso default
+        for (String tipoCaso : tiposCasos) {
+            String tipoCasoSplit = tipoCaso.split(":")[0];
+            intermediateCode.add("case_" + tipoCasoSplit + " :");
+        }
+        intermediateCode.add("default:");
+        //intermediateCode.add("goto end_switch");
+        //intermediateCode.add("end_switch:");
 
 
 
@@ -532,10 +562,10 @@ switch_struct ::= SWITCH LPAREN expression:e1 RPAREN BLOCKSTART case_statements:
         }
         intermediateCode.add("goto default");
         // Generar una etiqueta para el caso default
-        for (String tipoCaso : tiposCasos) {
+        /*for (String tipoCaso : tiposCasos) {
             String tipoCasoSplit = tipoCaso.split(":")[0];
             intermediateCode.add("case_" + tipoCasoSplit + " :");
-        }
+        }*/
         intermediateCode.add("default:");
         //intermediateCode.add("goto end_switch");
         //intermediateCode.add("end_switch:");
@@ -575,6 +605,7 @@ varIdentifier ::= type:t SEPARATOR IDENTIFIER:idVar
         symbol[2] = varType;
         tabla.add(symbol);
         intermediateCode.add("data_"+t.toString()+" "+idVar.toString());
+        indices.push(intermediateCode.size());
     }
     
     RESULT = idVar.toString()+":"+t.toString();
@@ -582,6 +613,7 @@ varIdentifier ::= type:t SEPARATOR IDENTIFIER:idVar
 :}; 
 
 decl ::= varIdentifier ENDLINE;
+
 
 assignment ::= IDENTIFIER:id ASSIGN expression:e ENDLINE
 {:
@@ -599,7 +631,8 @@ assignment ::= IDENTIFIER:id ASSIGN expression:e ENDLINE
             System.out.println("Error semantico en la linea x: El tipo de dato de la expresion no coincide con el tipo de dato de la variable");
         }
     }
-    
+    intermediateCode.add("t"+ currentTemp++ +" = "+e.toString().split(":")[0]);
+    intermediateCode.add(id.toString()+" = t"+(currentTemp-1));
 :};
 
 decl_and_assignment ::= varIdentifier:id ASSIGN  expression:e ENDLINE
@@ -618,6 +651,8 @@ decl_and_assignment ::= varIdentifier:id ASSIGN  expression:e ENDLINE
             System.out.println("Error semantico en la linea x: El tipo de dato de la expresion no coincide con el tipo de dato de la variable");
         }
     }
+    intermediateCode.add("t"+ currentTemp++ +" = "+e.toString().split(":")[0]);
+    indices.push(intermediateCode.size());
 :};
 
 readData ::= READ READSYMBOL IDENTIFIER:id ENDLINE
@@ -634,9 +669,15 @@ readData ::= READ READSYMBOL IDENTIFIER:id ENDLINE
             System.out.println("Error semantico en la linea x: Tipo de dato no valido");
         }
     }
+    intermediateCode.add("READ "+ id.toString()+ currentTemp++);
+    indices.push(intermediateCode.size());
 :};
 
 printData ::= PRINT PRINTSYMBOL expression ENDLINE;
+{:
+    intermediateCode.add("PRINT "+ "t" + currentTemp-1);
+    indices.push(intermediateCode.size());
+:};
 
 
 sendParameters ::= expression:e 
@@ -683,7 +724,8 @@ callFunction ::= IDENTIFIER:id LPAREN sendParameters:actualParams  RPAREN
     }else{
         System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" no existe");
     }
-
+    intermediateCode.add("goto "+id.toString());
+    indices.push(intermediateCode.size());
     RESULT = id.toString()+":"+funcInfo[1];
 
 
@@ -704,7 +746,8 @@ callFunction ::= IDENTIFIER:id LPAREN RPAREN
     } else {
         System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" no existe");
     }
-
+    intermediateCode.add("goto "+id.toString());
+    indices.push(intermediateCode.size());
     RESULT = id.toString()+":"+funcInfo[1];
 
 :};
@@ -724,12 +767,18 @@ return_statement ::= RETURN SEPARATOR expression:e ENDLINE
     if (!tipoFuncion.equals(tipoExpresion)) {
         System.out.println("Error semantico en la linea x: Tipo de retorno no valido");
     }
+    intermediateCode.add("tReturn"+ currentTemp++ +" = "+e.toString().split(":")[0]);
+    indices.push(intermediateCode.size());
 
 
 :}
 | RETURN ENDLINE;
 
 break_statement ::= BREAK ENDLINE;
+{:
+    intermediateCode.add("goto end");
+    indices.push(intermediateCode.size());
+:}
 
 statement ::=   decl | assignment | decl_and_assignment | readData | printData | return_statement | break_statement |
                 callFunction_statement | if_struct | if_else_struct| while_struct | while_else_struct | for_range_struct
@@ -737,7 +786,6 @@ statement ::=   decl | assignment | decl_and_assignment | readData | printData |
 
 statements ::= statement; //retornar solo el returnstatyement y preguntar si es null o no, para saber si hay un return o no.
 statements ::= statements statement;
-
 
 /** PARAMETERS **/
 
@@ -758,6 +806,8 @@ parameter ::= type:t SEPARATOR IDENTIFIER:idParam
         symbol[2] = t.toString();
         tabla.add(symbol);
     }
+    intermediateCode.add("data_"+t.toString()+" "+idParam.toString());
+    indices.push(intermediateCode.size());
 
 :};
 
@@ -796,6 +846,7 @@ functionIdentifier ::= type:t SEPARATOR IDENTIFIER :idFunc
         //cod 3d
         currentTemp = 1;
         intermediateCode.add("\n\nbegin_func_ "+idFunc.toString()+":");
+        indices.push(intermediateCode.size());
     }
 
 :}; 

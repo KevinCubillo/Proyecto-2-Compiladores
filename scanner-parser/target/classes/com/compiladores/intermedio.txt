@@ -1,15 +1,31 @@
 
 
-begin_func_getName:
-param_char vava
-param_int monoArana
-getName_if_1:
-t1 = 15
-t2 = 10
-t3 t1 > t2
-t4 = 88
-iftAlgo goto getName_if_1_bloque
-goto getName_if_1_bloque_end:
-getName_if_1_bloque:
-getName_if_1_bloque_end:
-getName_if_1_end:
+begin_func_main:
+data_int b1
+data_int b2
+t1 = 10
+b1 = t1
+main_if_2:
+t2 = b1
+t3 = 15
+t4 = t2>t3
+if t4 goto main_if_2_bloque
+goto main_if_2_bloque_end
+main_if_2_bloque:
+t5 = 10
+b2 = t5
+main_if_1:
+t6 = b1
+t7 = b2
+t8 = t6!=t7
+if t8 goto main_if_1_bloque
+goto main_if_1_bloque_end
+main_if_1_bloque:
+data_int b3
+main_if_1_bloque_end:
+data_int b4
+t9 = 10
+b4 = t9
+main_if_2_bloque_end:
+t10 = 99
+b2 = t10

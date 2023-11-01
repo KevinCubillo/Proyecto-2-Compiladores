@@ -14,6 +14,7 @@ public class App
 
         testLexer(archivoFuente); // PRUEBA LEXER
         testParser(archivoFuente); // PRUEBA PARSER
+
     }
 
 
@@ -48,14 +49,11 @@ public class App
         intermediateCode(p.getIntermediateCode());
     }
 
-    public static void intermediateCode(ArrayList<String> intermediateCode) {
+    public static void intermediateCode(StringBuffer intermediateCode) {
         try {
             BufferedWriter escritor = new BufferedWriter(new FileWriter("src/main/java/com/compiladores/Intermedio.txt"));
 
-            for (String elemento : intermediateCode) {
-                escritor.write(elemento);
-                escritor.newLine();
-            }
+            escritor.write(intermediateCode.toString());
 
             escritor.close();
         } catch (IOException e) {

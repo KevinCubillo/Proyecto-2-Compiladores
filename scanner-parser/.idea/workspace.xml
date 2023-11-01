@@ -9,6 +9,7 @@
       <change beforePath="$PROJECT_DIR$/src/main/cup/parser.cup" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cup/parser.cup" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/App.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/fuente.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/fuente.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/intermedio.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/intermedio.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/tokens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/tokens.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/App.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/App.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/fuente.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/fuente.txt" afterDir="false" />
@@ -62,6 +63,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\kevin\Desktop\Proyecto 2-Compiladores\Proyecto-2-Compiladores\scanner-parser\src\main" />
       <recent name="D:\Projects\Working\Proyecto-1-Compiladores\scanner-parser\src\main\java\com\compiladores" />
     </key>
   </component>
@@ -171,7 +173,8 @@
       <workItem from="1697205067709" duration="5626000" />
       <workItem from="1697853376690" duration="1805000" />
       <workItem from="1698281455525" duration="20896000" />
-      <workItem from="1698604843176" duration="29667000" />
+      <workItem from="1698604843176" duration="32337000" />
+      <workItem from="1698866946139" duration="5125000" />
     </task>
     <servers />
   </component>

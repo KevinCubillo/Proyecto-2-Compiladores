@@ -1,7 +1,15 @@
-int#getName(char#vava,int#monoArana){
-    int#hola;
-    if(15>10){
-        hola=88;
-    }
-}
+int#main(){
+	int#b1;
+	int#b2;
+	b1 = 10;
 
+	if(b1>15){
+	    b2 = 10;
+		if(b1 != b2){
+		    int#b3;
+		}
+		int#b4;
+		b4 = 10;
+	}
+	b2 = 99;
+}

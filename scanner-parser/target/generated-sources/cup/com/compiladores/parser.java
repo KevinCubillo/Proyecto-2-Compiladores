@@ -1237,7 +1237,7 @@ class CUP$parser$actions {
     String[] lineas = e1.toString().split("\n");  // Divide la cadena en líneas
     String temporale1 = lineas[lineas.length - 1];
     temporale1 = temporale1.split(" = ")[0]; // Obtiene el último temporal generado
-    String codigo = e1.toString() + "\n" + e2.toString() + "\n" + "t"+ currentTemp++ +" = " + temporale1 + op + "t"+(currentTemp-1);
+    String codigo = e1.toString() + "\n" + e2.toString() + "\n" + "t"+ currentTemp++ +" = " + temporale1 + op + "t"+(currentTemp-2);
 
     RESULT = codigo;
   
@@ -1646,14 +1646,15 @@ class CUP$parser$actions {
           case 58: // decl_and_assignment ::= varIdentifier ASSIGN expression ENDLINE 
             {
               Object RESULT =null;
-		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
-		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
-		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
-		int eleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		Object e = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		int vileft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
+		int viright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
+		Object vi = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
+		int e1left = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object e1 = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		
-
+    String code = vi.toString() + "\n" + e1.toString() + "\n" + vi.toString().split(" ")[1] + " = " + "t"+(currentTemp-1);  
+    RESULT = code;
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("decl_and_assignment",16, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1668,6 +1669,9 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		
+    //cod 3d
+    String codigo = "READ "+id.toString();
+    RESULT = codigo;
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("readData",17, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1678,6 +1682,13 @@ class CUP$parser$actions {
           case 60: // printData ::= PRINT PRINTSYMBOL expression ENDLINE 
             {
               Object RESULT =null;
+		int e1left = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object e1 = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		
+    String codigo = e1.toString() + "\n" + "PRINT t"+(currentTemp-1)+"\n";
+    RESULT = codigo;
+
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("printData",18, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1691,7 +1702,11 @@ class CUP$parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
- 
+
+    //code 3d
+    String codigo = e.toString()+"\nParam "+ "t"+(currentTemp-1)+"\n"+"1";
+    RESULT = codigo;
+
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("sendParameters",41, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1701,13 +1716,19 @@ class CUP$parser$actions {
           case 62: // sendParameters ::= sendParameters COMMA expression 
             {
               Object RESULT =null;
-		int paramsleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int paramsright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		Object params = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int spleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int spright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Object sp = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 		int eleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
+    //code 3d
+    String cantParameters = sp.toString().split("\n")[sp.toString().split("\n").length-1];
+    String sp1 = sp.toString().substring(0, sp.toString().lastIndexOf("\n"));
+
+    String codigo = sp1.toString() + "\n" + e.toString()+"\nParam "+ "t"+(currentTemp-1)+"\n"+(Integer.parseInt(cantParameters)+1);
+    RESULT = codigo;
  
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("sendParameters",41, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1721,12 +1742,17 @@ class CUP$parser$actions {
 		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
-		int actualParamsleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int actualParamsright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		Object actualParams = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		int spleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int spright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object sp = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		 
 
- 
+    //code 3d
+    String cantParameters = sp.toString().split("\n")[sp.toString().split("\n").length-1];
+    String sp1 = sp.toString().substring(0, sp.toString().lastIndexOf("\n"));
+
+    String codigo = sp1.toString() + "\nt"+(currentTemp++)+ " = call "+id.toString()+", "+cantParameters;
+    RESULT = codigo;
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("callFunction",19, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1740,10 +1766,6 @@ class CUP$parser$actions {
 		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		
-
-  
-
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("callFunction",19, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1753,6 +1775,12 @@ class CUP$parser$actions {
           case 65: // callFunction_statement ::= callFunction ENDLINE 
             {
               Object RESULT =null;
+		int cfleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int cfright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object cf = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		
+        //code 3d
+        RESULT = cf;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("callFunction_statement",36, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1819,7 +1847,10 @@ class CUP$parser$actions {
           case 71: // statement ::= decl_and_assignment 
             {
               Object RESULT =null;
-
+		int dclaleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int dclaright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object dcla = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = dcla; 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("statement",7, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1828,7 +1859,10 @@ class CUP$parser$actions {
           case 72: // statement ::= readData 
             {
               Object RESULT =null;
-
+		int rdleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int rdright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object rd = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = rd; 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("statement",7, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1837,7 +1871,10 @@ class CUP$parser$actions {
           case 73: // statement ::= printData 
             {
               Object RESULT =null;
-
+		int pdleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int pdright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object pd = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = pd; 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("statement",7, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1864,7 +1901,10 @@ class CUP$parser$actions {
           case 76: // statement ::= callFunction_statement 
             {
               Object RESULT =null;
-
+		int cfsleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int cfsright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object cfs = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = cfs; 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("statement",7, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;

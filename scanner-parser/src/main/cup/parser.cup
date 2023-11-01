@@ -214,7 +214,7 @@ aritmeticExpression ::= aritmeticExpression:e1 aritmeticOp:op aritmeticExpressio
     String[] lineas = e1.toString().split("\n");  // Divide la cadena en líneas
     String temporale1 = lineas[lineas.length - 1];
     temporale1 = temporale1.split(" = ")[0]; // Obtiene el último temporal generado
-    String codigo = e1.toString() + "\n" + e2.toString() + "\n" + "t"+ currentTemp++ +" = " + temporale1 + op + "t"+(currentTemp-1);
+    String codigo = e1.toString() + "\n" + e2.toString() + "\n" + "t"+ currentTemp++ +" = " + temporale1 + op + "t"+(currentTemp-2);
 
     RESULT = codigo;
   
@@ -377,45 +377,67 @@ assignment ::= IDENTIFIER:id ASSIGN expression:e1 ENDLINE
 
 decl_and_assignment ::= varIdentifier:vi ASSIGN expression:e1 ENDLINE
 {:
-    String code = vi.toString()+"\n"+e1.toString()+"\n"+id.toString()+" = "+"t"+(currentTemp-1);
+    String code = vi.toString() + "\n" + e1.toString() + "\n" + vi.toString().split(" ")[1] + " = " + "t"+(currentTemp-1);  
     RESULT = code;
 
 :};
 
 readData ::= READ READSYMBOL IDENTIFIER:id ENDLINE
 {:
+    //cod 3d
+    String codigo = "READ "+id.toString();
+    RESULT = codigo;
 
 :};
 
-printData ::= PRINT PRINTSYMBOL expression ENDLINE;
+printData ::= PRINT PRINTSYMBOL expression:e1 ENDLINE
+{:
+    String codigo = e1.toString() + "\n" + "PRINT t"+(currentTemp-1)+"\n";
+    RESULT = codigo;
+
+:};
 
 
 sendParameters ::= expression:e 
 {:
- 
+
+    //code 3d
+    String codigo = e.toString()+"\nParam "+ "t"+(currentTemp-1)+"\n"+"1";
+    RESULT = codigo;
+
 :}
 
-| sendParameters:params COMMA expression:e
-
+| sendParameters:sp COMMA expression:e
 {:
+    //code 3d
+    String cantParameters = sp.toString().split("\n")[sp.toString().split("\n").length-1];
+    String sp1 = sp.toString().substring(0, sp.toString().lastIndexOf("\n"));
+
+    String codigo = sp1.toString() + "\n" + e.toString()+"\nParam "+ "t"+(currentTemp-1)+"\n"+(Integer.parseInt(cantParameters)+1);
+    RESULT = codigo;
  
 :};
 
-callFunction ::= IDENTIFIER:id LPAREN sendParameters:actualParams  RPAREN 
+callFunction ::= IDENTIFIER:id LPAREN sendParameters:sp  RPAREN 
 {: 
 
- 
+    //code 3d
+    String cantParameters = sp.toString().split("\n")[sp.toString().split("\n").length-1];
+    String sp1 = sp.toString().substring(0, sp.toString().lastIndexOf("\n"));
+
+    String codigo = sp1.toString() + "\nt"+(currentTemp++)+ " = call "+id.toString()+", "+cantParameters;
+    RESULT = codigo;
 
 :};
 
-callFunction ::= IDENTIFIER:id LPAREN RPAREN
+callFunction ::= IDENTIFIER:id LPAREN RPAREN;
+
+
+callFunction_statement ::= callFunction:cf ENDLINE
 {:
-
-  
-
+        //code 3d
+        RESULT = cf;
 :};
-
-callFunction_statement ::= callFunction ENDLINE;
 
 return_statement ::= RETURN SEPARATOR expression:e ENDLINE
 {:
@@ -423,12 +445,23 @@ return_statement ::= RETURN SEPARATOR expression:e ENDLINE
 
 :}
 | RETURN ENDLINE;
-
 break_statement ::= BREAK ENDLINE;
 
-statement ::=   decl:decl{: RESULT = decl; :} | assignment:assig {: RESULT = assig; :} | decl_and_assignment | readData | printData | return_statement | break_statement |
-                callFunction_statement | if_struct:if_str {: RESULT = if_str; :} | if_else_struct| while_struct | while_else_struct | for_range_struct
-                | switch_struct;
+
+statement ::=   decl:decl {: RESULT = decl; :} 
+| assignment:assig {: RESULT = assig; :} 
+| decl_and_assignment:dcla {: RESULT = dcla; :} 
+| readData:rd {: RESULT = rd; :} 
+| printData: pd {: RESULT = pd; :}
+| return_statement 
+| break_statement 
+| callFunction_statement:cfs {: RESULT = cfs; :} 
+| if_struct:if_str {: RESULT = if_str; :} 
+| if_else_struct 
+| while_struct 
+| while_else_struct 
+| for_range_struct
+| switch_struct;
 
 statements ::= statement:st 
 {: 

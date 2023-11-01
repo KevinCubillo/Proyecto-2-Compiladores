@@ -7,14 +7,12 @@
     <list default="true" id="d7af08d1-e724-4b2a-92b5-4c63bf52ddc3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/cup/parser.cup" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cup/parser.cup" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/App.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/fuente.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/fuente.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/intermedio.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/intermedio.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/tokens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/tokens.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/App.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/App.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/fuente.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/fuente.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser$CUP$parser$actions.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/parser$CUP$parser$actions.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/parser.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/tokens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/tokens.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/cup/com/compiladores/parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/cup/com/compiladores/parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
@@ -174,7 +172,7 @@
       <workItem from="1697853376690" duration="1805000" />
       <workItem from="1698281455525" duration="20896000" />
       <workItem from="1698604843176" duration="32337000" />
-      <workItem from="1698866946139" duration="5125000" />
+      <workItem from="1698866946139" duration="8942000" />
     </task>
     <servers />
   </component>

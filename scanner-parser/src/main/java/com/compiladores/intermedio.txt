@@ -1,0 +1,15 @@
+
+
+begin_func_getName:
+param_char vava
+param_int monoArana
+getName_if_1:
+t1 = 15
+t2 = 10
+t3 t1 > t2
+t4 = 88
+iftAlgo goto getName_if_1_bloque
+goto getName_if_1_bloque_end:
+getName_if_1_bloque:
+getName_if_1_bloque_end:
+getName_if_1_end:

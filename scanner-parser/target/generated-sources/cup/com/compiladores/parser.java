@@ -1682,6 +1682,7 @@ class CUP$parser$actions {
     //Verificar si la variable existe en el ambito actual 
     ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
     String[] symbol = getSymbol(tabla, id.toString());
+
     if (symbol == null) {
 
         //Buscar en la tabla global
@@ -1728,7 +1729,9 @@ class CUP$parser$actions {
 
   //Verificar si la variable existe en el ambito actual 
     ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-    String[] symbol = getSymbol(tabla, id.toString());
+    String[] symbol = getSymbol(tabla, id.toString().split(":")[0]);
+
+    
     if (symbol == null) {
 
         //Buscar en la tabla global

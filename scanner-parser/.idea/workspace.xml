@@ -9,16 +9,14 @@
       <change beforePath="$PROJECT_DIR$/src/main/cup/parser.cup" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cup/parser.cup" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/App.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/fuente.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/fuente.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/intermedio.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/intermedio.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/tokens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/tokens.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/App.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/App.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/fuente.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/fuente.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/intermedio.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/intermedio.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser$CUP$parser$actions.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/parser$CUP$parser$actions.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/tokens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/tokens.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/cup/com/compiladores/parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/cup/com/compiladores/parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scanner-parser-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/scanner-parser-1.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/2023-11-01T22-11-46_198.dumpstream" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/2023-11-01T22-44-08_554.dumpstream" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.compiladores.AppTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.compiladores.AppTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.compiladores.AppTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.compiladores.AppTest.txt" afterDir="false" />
     </list>
@@ -211,7 +209,7 @@
       <workItem from="1698281455525" duration="20896000" />
       <workItem from="1698604843176" duration="32337000" />
       <workItem from="1698866946139" duration="8942000" />
-      <workItem from="1698897787350" duration="2462000" />
+      <workItem from="1698897787350" duration="4524000" />
     </task>
     <servers />
   </component>

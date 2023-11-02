@@ -5,20 +5,31 @@ data_int b1
 t1 = 45
 b1 = t1
 data_int b2
+main_for_1:
+data_Int ini_main_for_1
 t2 = 10
-b1 = t2
-t3 = 56
-t4 = 89
-t5 = 454
-t6 = t4+t5
-t7 = t3+t6
-PRINT t7
-
-READ b1
-t8 = 23
-Param t8
-t9 = "perra"
-Param t9
-t10 = b2
-Param t10
-t11 = call hola, 3
+ini_main_for_1 = t2
+data_Int fin_main_for_1
+t3 = 300
+fin_main_for_1 = t3
+data_Int step_main_for_1
+t4 = 2
+step_main_for_1 = t4
+main_for_1_condition:
+t8 = ini_main_for_1
+t9 = fin_main_for_1
+t10 = t8 < t9
+if t10 goto main_for_1_bloque
+goto main_for_1_bloque_end
+main_for_1_inc: 
+t11 =step_main_for_1
+t12= ini_main_for_1
+t13 = t12 + t11
+ini_main_for_1 = t13
+goto main_for_1_condition
+main_for_1_bloque:
+t5 = b1
+t6 = 1
+t7 = t5+t6
+b1 = t7goto main_for_1_inc
+main_for_1_bloque_end:

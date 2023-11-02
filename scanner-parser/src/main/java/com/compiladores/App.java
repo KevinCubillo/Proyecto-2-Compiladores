@@ -6,13 +6,13 @@ import java.io.*;
 import java.util.ArrayList;
 
 
-public class App 
+public class App
 {
     public static void main( String[] args ) throws Exception
     {
         String archivoFuente = "src/main/java/com/compiladores/fuente.txt";
 
-        //testLexer(archivoFuente); // PRUEBA LEXER
+        testLexer(archivoFuente); // PRUEBA LEXER
         testParser(archivoFuente); // PRUEBA PARSER
 
     }

@@ -1,11 +1,10 @@
 int#main(){
 	int#b1 = 45;
 	int#b2;
-	b1 = 10;
-	print<<56+89+454;
-	read>>b1;
-
-	hola(23,"perra", b2);
+    for#x#in#range(10,300,2)
+    {
+        b1 = b1 + 1;
+    }
 
 
 

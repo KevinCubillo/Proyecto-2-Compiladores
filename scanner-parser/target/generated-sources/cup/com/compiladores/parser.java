@@ -1437,8 +1437,59 @@ class CUP$parser$actions {
 		int e3left = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).left;
 		int e3right = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).right;
 		Object e3 = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-4)).value;
+		int stleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int stright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object st = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		
+    String idFunc = currentHash;
 
+    String[] lineas = e1.toString().split("\n");  // Divide la cadena en líneas
+    String [] lineas2 = e2.toString().split("\n");
+    String [] lineas3 = e3.toString().split("\n");
+    String temporale1 = lineas[lineas.length - 1];
+    temporale1 = temporale1.split(" = ")[0]; // Obtiene el último temporal generado
+    String temporale2 = lineas2[lineas2.length - 1];
+    temporale2 = temporale2.split(" = ")[0]; // Obtiene el último temporal generado
+    String  temporale3 = lineas3[lineas3.length - 1];
+    temporale3 = temporale3.split(" = ")[0]; // Obtiene el último temporal generado
+
+    //moverme a antes de la expresion logica
+    String etiquetaIni= idFunc+"_for_"+ ++structs+":\ndata_Int ini_" +idFunc+"_for_"+ structs+ "\n";
+
+    String operacionLogica = e1.toString();
+
+    String etiquetaIni2 = "\nini_" +idFunc+"_for_"+ structs + " = " + temporale1;
+
+    String etiquetaFin= "\ndata_Int fin_" +idFunc+"_for_"+ structs+ "\n";
+
+    String operacionLogica2 = e2.toString();
+
+    String etiquetaFin2 = "\nfin_" +idFunc+"_for_"+ structs + " = " + temporale2;
+
+    String etiquetaStep= "\ndata_Int step_" +idFunc+"_for_"+ structs+ "\n";
+
+    String operacionLogica3 = e3.toString();
+
+    String etiquetaStep2 = "\nstep_" +idFunc+"_for_"+ structs + " = " + temporale3;
+
+    String operacionLogica4 = "\n" + idFunc + "_for_"+ structs + "_condition:\n" 
+    + "t"+currentTemp++ +" = ini_" +idFunc+"_for_"+ structs +"\nt"+ currentTemp++ +" = fin_" +idFunc+"_for_"+ structs +"\nt" + currentTemp++ 
+    + " = t"+(currentTemp-3)+" < t"+(currentTemp-2);
+    String saltoAfirmativo = "\nif t"+(currentTemp-1) + " goto "+ idFunc + "_for_"+ structs + "_bloque";
+    String saltoNegativo = "\ngoto "+ idFunc + "_for_"+ structs + "_bloque_end";
+    String etiqueteInc= "\n"+ idFunc + "_for_"+ structs + "_inc: \nt" + currentTemp++ + " ="+ "step_" +idFunc+"_for_"+ structs + "\nt"
+    + currentTemp++ + "= ini_" +idFunc+"_for_"+ structs + "\nt" + currentTemp++ + " = t"+(currentTemp-2)+" + t"+(currentTemp-3)
+    +"\nini_" +idFunc+"_for_"+ structs + " = t"+(currentTemp-1)+ "\ngoto "+ idFunc + "_for_"+ structs + "_condition";
+
+    String etiquetaBloque = "\n"+ idFunc + "_for_"+ structs + "_bloque:\n";
+
+    //escribir todo lo de statements
+    String statements = st.toString();
+
+    String etiquetaBloqueEnd = "goto "+ idFunc + "_for_"+ structs + "_inc\n"+ idFunc + "_for_"+ structs + "_bloque_end:";
+
+    RESULT = etiquetaIni + operacionLogica + etiquetaIni2 + etiquetaFin + operacionLogica2 + etiquetaFin2 + etiquetaStep + operacionLogica3 + etiquetaStep2 + 
+    operacionLogica4 +saltoAfirmativo + saltoNegativo + etiqueteInc + etiquetaBloque + statements + etiquetaBloqueEnd;
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("for_range_struct",13, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-16)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1458,7 +1509,58 @@ class CUP$parser$actions {
 		int e2left = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).right;
 		Object e2 = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-4)).value;
+		int stleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int stright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object st = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		
+        String idFunc = currentHash;
+
+    String[] lineas = e1.toString().split("\n");  // Divide la cadena en líneas
+    String [] lineas2 = e2.toString().split("\n");
+
+    String temporale1 = lineas[lineas.length - 1];
+    temporale1 = temporale1.split(" = ")[0]; // Obtiene el último temporal generado
+    String temporale2 = lineas2[lineas2.length - 1];
+    temporale2 = temporale2.split(" = ")[0]; // Obtiene el último temporal generado
+
+
+    //moverme a antes de la expresion logica
+    String etiquetaIni= idFunc+"_for_"+ ++structs+":\ndata_Int ini_" +idFunc+"_for_"+ structs+ "\n";
+
+    String operacionLogica = e1.toString();
+
+    String etiquetaIni2 = "\nini_" +idFunc+"_for_"+ structs + " = " + temporale1;
+
+    String etiquetaFin= "\ndata_Int fin_" +idFunc+"_for_"+ structs+ "\n";
+
+    String operacionLogica2 = e2.toString();
+
+    String etiquetaFin2 = "\nfin_" +idFunc+"_for_"+ structs + " = " + temporale2;
+
+    String etiquetaStep= "\ndata_Int step_" +idFunc+"_for_"+ structs+ "\nt" + currentTemp++ + " = 1";
+
+
+    String etiquetaStep2 = "\nstep_" +idFunc+"_for_"+ structs + " = " + "t" + (currentTemp-1);
+
+    String operacionLogica4 = "\n" + idFunc + "_for_"+ structs + "_condition:\n" 
+    + "t"+currentTemp++ +" = ini_" +idFunc+"_for_"+ structs +"\nt"+ currentTemp++ +" = fin_" +idFunc+"_for_"+ structs +"\nt" + currentTemp++ 
+    + " = t"+(currentTemp-3)+" < t"+(currentTemp-2);
+    String saltoAfirmativo = "\nif t"+(currentTemp-1) + " goto "+ idFunc + "_for_"+ structs + "_bloque";
+    String saltoNegativo = "\ngoto "+ idFunc + "_for_"+ structs + "_bloque_end";
+    String etiqueteInc= "\n"+ idFunc + "_for_"+ structs + "_inc: \nt" + currentTemp++ + " ="+ "step_" +idFunc+"_for_"+ structs + "\nt"
+    + currentTemp++ + "= ini_" +idFunc+"_for_"+ structs + "\nt" + currentTemp++ + " = t"+(currentTemp-2)+" + t"+(currentTemp-3)
+    +"\nini_" +idFunc+"_for_"+ structs + " = t"+(currentTemp-1)+ "\ngoto "+ idFunc + "_for_"+ structs + "_condition";
+    String etiquetaBloque = "\n"+ idFunc + "_for_"+ structs + "_bloque:\n";
+
+    //escribir todo lo de statements
+    String statements = st.toString();
+
+     String etiquetaBloqueEnd = "goto "+ idFunc + "_for_"+ structs + "_inc\n"+ idFunc + "_for_"+ structs + "_bloque_end:";
+
+    RESULT = etiquetaIni + operacionLogica + etiquetaIni2 + etiquetaFin + operacionLogica2 + etiquetaFin2 + etiquetaStep  + etiquetaStep2 + 
+    operacionLogica4 +saltoAfirmativo + saltoNegativo +etiqueteInc+ etiquetaBloque + statements + etiquetaBloqueEnd;
+
+
 
 
 
@@ -1476,8 +1578,53 @@ class CUP$parser$actions {
 		int e1left = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).right;
 		Object e1 = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-4)).value;
+		int stleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int stright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object st = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		
+            String idFunc = currentHash;
 
+    String[] lineas2 = e1.toString().split("\n");  // Divide la cadena en líneas
+
+
+
+    String temporale2 = lineas2[lineas2.length - 1];
+    temporale2 = temporale2.split(" = ")[0]; // Obtiene el último temporal generado
+
+
+    //moverme a antes de la expresion logica
+    String etiquetaIni= idFunc+"_for_"+ ++structs+":\ndata_Int ini_" +idFunc+"_for_"+ structs+ "\nt" + currentTemp++ + " = 1";
+
+    String etiquetaIni2 = "\nini_" +idFunc+"_for_"+ structs + " = " + "t" + (currentTemp-1);
+
+    String etiquetaFin= "\ndata_Int fin_" +idFunc+"_for_"+ structs+ "\n";
+
+    String operacionLogica2 = e1.toString();
+
+    String etiquetaFin2 = "\nfin_" +idFunc+"_for_"+ structs + " = " + temporale2;
+
+    String etiquetaStep= "\ndata_Int step_" +idFunc+"_for_"+ structs+ "\nt" + currentTemp++ + " = 1";
+
+
+    String etiquetaStep2 = "\nstep_" +idFunc+"_for_"+ structs + " = " + "t" + (currentTemp-1);
+
+    String operacionLogica4 = "\n" + idFunc + "_for_"+ structs + "_condition:\n" 
+    + "t"+currentTemp++ +" = ini_" +idFunc+"_for_"+ structs +"\nt"+ currentTemp++ +" = fin_" +idFunc+"_for_"+ structs +"\nt" + currentTemp++ 
+    + " = t"+(currentTemp-3)+" < t"+(currentTemp-2);
+    String saltoAfirmativo = "\nif t"+(currentTemp-1) + " goto "+ idFunc + "_for_"+ structs + "_bloque";
+    String saltoNegativo = "\ngoto "+ idFunc + "_for_"+ structs + "_bloque_end";
+    String etiqueteInc= "\n"+ idFunc + "_for_"+ structs + "_inc: \nt" + currentTemp++ + " ="+ "step_" +idFunc+"_for_"+ structs + "\nt"
+    + currentTemp++ + "= ini_" +idFunc+"_for_"+ structs + "\nt" + currentTemp++ + " = t"+(currentTemp-2)+" + t"+(currentTemp-3)
+    +"\nini_" +idFunc+"_for_"+ structs + " = t"+(currentTemp-1)+ "\ngoto "+ idFunc + "_for_"+ structs + "_condition";
+    String etiquetaBloque = "\n"+ idFunc + "_for_"+ structs + "_bloque:\n";
+
+    //escribir todo lo de statements
+    String statements = st.toString();
+
+     String etiquetaBloqueEnd = "goto "+ idFunc + "_for_"+ structs + "_inc\n"+ idFunc + "_for_"+ structs + "_bloque_end:";
+
+    RESULT = etiquetaIni  + etiquetaIni2 + etiquetaFin + operacionLogica2 + etiquetaFin2 + etiquetaStep  + etiquetaStep2 + 
+    operacionLogica4 +saltoAfirmativo + saltoNegativo +etiqueteInc+ etiquetaBloque + statements + etiquetaBloqueEnd;
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("for_range_struct",13, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-12)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1952,7 +2099,10 @@ class CUP$parser$actions {
           case 81: // statement ::= for_range_struct 
             {
               Object RESULT =null;
-
+		int frsleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int frsright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object frs = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = frs; 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("statement",7, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;

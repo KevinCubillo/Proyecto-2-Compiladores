@@ -637,7 +637,7 @@ public class Intermedio extends java_cup.runtime.lr_parser {
     String currentHash = "";
 
     @SuppressWarnings("deprecation")
-    public  Intermedio(Lexer lexer) {
+    public Intermedio(Lexer lexer) {
         this.lexer = lexer;
         this.symbolFactory = new DefaultSymbolFactory();
 
@@ -923,9 +923,9 @@ class CUP$Intermedio$actions {
 		int nright = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()).right;
 		Object n = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.peek()).value;
 		
-    String codigo = "t"+currentTemp++ +" = "+n.toString().split(":")[0];  
+    String codigo = "t"+currentTemp++ +" = "+n.toString().split(":")[0];
     RESULT = codigo;
-   
+
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("operand",31, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -942,7 +942,7 @@ class CUP$Intermedio$actions {
     //code 3d
     String codigo = "t"+currentTemp++ +" = "+id.toString();
     RESULT = codigo;
-                                                       
+
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("operand",31, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -1066,9 +1066,9 @@ class CUP$Intermedio$actions {
 		int nleft = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()).left;
 		int nright = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()).right;
 		Object n = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.peek()).value;
-		  
-    
-    RESULT = n; 
+		
+
+    RESULT = n;
 
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("aritmeticExpression",24, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
@@ -1082,7 +1082,7 @@ class CUP$Intermedio$actions {
 		int nleft = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()).left;
 		int nright = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()).right;
 		Object n = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.peek()).value;
-		 
+		
     //cod 3d
     String code = "t"+currentTemp++ + " = -"+n.toString().split(":")[0];
     RESULT = code;
@@ -1100,7 +1100,7 @@ class CUP$Intermedio$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).value;
 		
-     //cod 3d 
+     //cod 3d
     String tempId= "t"+currentTemp++;
     String tempPP1= "t"+currentTemp++;
     String tempPP2= "t"+currentTemp++;
@@ -1122,7 +1122,7 @@ class CUP$Intermedio$actions {
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).value;
 		
 
-    //cod 3d 
+    //cod 3d
     String tempId= "t"+currentTemp++;
     String tempPP1= "t"+currentTemp++;
     String tempPP2= "t"+currentTemp++;
@@ -1155,7 +1155,7 @@ class CUP$Intermedio$actions {
     String codigo = e1.toString() + "\n" + e2.toString() + "\n" + "t"+ currentTemp++ +" = " + temporale1 + op + "t"+(currentTemp-2);
 
     RESULT = codigo;
-  
+
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("aritmeticExpression",24, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-2)), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -1165,6 +1165,12 @@ class CUP$Intermedio$actions {
           case 33: // aritmeticExpression ::= LPAREN aritmeticExpression RPAREN 
             {
               Object RESULT =null;
+		int e1left = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).right;
+		Object e1 = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).value;
+		
+
+    RESULT = e1;   
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("aritmeticExpression",24, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-2)), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -1205,9 +1211,7 @@ class CUP$Intermedio$actions {
 		int e1right = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()).right;
 		Object e1 = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.peek()).value;
 		
-
     RESULT = e1;
-
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("logicalExpression",26, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -1217,6 +1221,24 @@ class CUP$Intermedio$actions {
           case 36: // logicalExpression ::= logicalExpression logicalOp logicalExpression 
             {
               Object RESULT =null;
+		int e1left = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-2)).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-2)).right;
+		Object e1 = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-2)).value;
+		int opleft = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).left;
+		int opright = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).right;
+		Object op = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).value;
+		int e2left = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()).left;
+		int e2right = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()).right;
+		Object e2 = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.peek()).value;
+		
+
+    String[] lineas = e1.toString().split("\n");  // Divide la cadena en líneas
+    String temporale1 = lineas[lineas.length - 1];
+    temporale1 = temporale1.split(" = ")[0]; // Obtiene el último temporal generado
+    String codigo = e1.toString() + "\n" + e2.toString() + "\n" + "t"+ currentTemp++ +" = " + temporale1 + op + "t"+(currentTemp-2);
+
+    RESULT = codigo;
+
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("logicalExpression",26, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-2)), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -1226,6 +1248,13 @@ class CUP$Intermedio$actions {
           case 37: // logicalExpression ::= LPAREN logicalExpression RPAREN 
             {
               Object RESULT =null;
+		int e1left = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).right;
+		Object e1 = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).value;
+		
+    
+    RESULT = e1;
+
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("logicalExpression",26, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-2)), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -1235,6 +1264,13 @@ class CUP$Intermedio$actions {
           case 38: // logicalExpression ::= NOT logicalExpression 
             {
               Object RESULT =null;
+		int e1left = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()).left;
+		int e1right = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()).right;
+		Object e1 = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.peek()).value;
+		
+    
+    String codigo = e1.toString() + "\n" + "t"+currentTemp++ +" = !t"+(currentTemp-2);
+    RESULT = codigo;
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("logicalExpression",26, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -1248,7 +1284,7 @@ class CUP$Intermedio$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.peek()).value;
 		
-    RESULT = e; 
+    RESULT = e;
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("expression",6, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -1262,7 +1298,7 @@ class CUP$Intermedio$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.peek()).value;
 		
-    RESULT = e; 
+    RESULT = e;
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("expression",6, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -1321,7 +1357,7 @@ class CUP$Intermedio$actions {
 		int stright = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).right;
 		Object st = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).value;
 		
-    
+
     //cod 3d
     String idFunc = currentHash;
     String ifCode = if_strc.toString();
@@ -1336,7 +1372,7 @@ class CUP$Intermedio$actions {
     String codigo = ifCode + "\n" + etiquetaElse + st.toString() + "\n" + etiquetaElseEnd+ etiquetaEndIf;
 
     RESULT = codigo;
-  
+
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("if_else_struct",10, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-4)), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -1370,7 +1406,7 @@ class CUP$Intermedio$actions {
     //escribir todo lo de statements
     String statements = st.toString();
 
-    String etiquetaBloqueEnd = "\ngoto "+ idFunc + "_while_"+ structs + "_condition\n"+ idFunc + 
+    String etiquetaBloqueEnd = "\ngoto "+ idFunc + "_while_"+ structs + "_condition\n"+ idFunc +
     "_while_"+ structs + "_bloque_end:" + "\n" + idFunc + "_while_"+ structs + "_end:";
 
     RESULT = etiquetaPrincipal + etiquetaCondicion + operacionLogica + saltoAfirmativo + saltoNegativo + etiquetaBloque + statements + etiquetaBloqueEnd;
@@ -1462,8 +1498,8 @@ class CUP$Intermedio$actions {
 
     String etiquetaStep2 = "\nstep_" +idFunc+"_for_"+ structs + " = " + temporale3;
 
-    String operacionLogica4 = "\n" + idFunc + "_for_"+ structs + "_condition:\n" 
-    + "t"+currentTemp++ +" = ini_" +idFunc+"_for_"+ structs +"\nt"+ currentTemp++ +" = fin_" +idFunc+"_for_"+ structs +"\nt" + currentTemp++ 
+    String operacionLogica4 = "\n" + idFunc + "_for_"+ structs + "_condition:\n"
+    + "t"+currentTemp++ +" = ini_" +idFunc+"_for_"+ structs +"\nt"+ currentTemp++ +" = fin_" +idFunc+"_for_"+ structs +"\nt" + currentTemp++
     + " = t"+(currentTemp-3)+" < t"+(currentTemp-2);
     String saltoAfirmativo = "\nif t"+(currentTemp-1) + " goto "+ idFunc + "_for_"+ structs + "_bloque";
     String saltoNegativo = "\ngoto "+ idFunc + "_for_"+ structs + "_bloque_end";
@@ -1478,7 +1514,7 @@ class CUP$Intermedio$actions {
 
     String etiquetaBloqueEnd = "\ngoto "+ idFunc + "_for_"+ structs + "_inc\n"+ idFunc + "_for_"+ structs + "_bloque_end:";
 
-    RESULT = etiquetaIni + operacionLogica + etiquetaIni2 + etiquetaFin + operacionLogica2 + etiquetaFin2 + etiquetaStep + operacionLogica3 + etiquetaStep2 + 
+    RESULT = etiquetaIni + operacionLogica + etiquetaIni2 + etiquetaFin + operacionLogica2 + etiquetaFin2 + etiquetaStep + operacionLogica3 + etiquetaStep2 +
     operacionLogica4 +saltoAfirmativo + saltoNegativo + etiqueteInc + etiquetaBloque + statements + etiquetaBloqueEnd;
 
 
@@ -1532,8 +1568,8 @@ class CUP$Intermedio$actions {
 
     String etiquetaStep2 = "\nstep_" +idFunc+"_for_"+ structs + " = " + "t" + (currentTemp-1);
 
-    String operacionLogica4 = "\n" + idFunc + "_for_"+ structs + "_condition:\n" 
-    + "t"+currentTemp++ +" = ini_" +idFunc+"_for_"+ structs +"\nt"+ currentTemp++ +" = fin_" +idFunc+"_for_"+ structs +"\nt" + currentTemp++ 
+    String operacionLogica4 = "\n" + idFunc + "_for_"+ structs + "_condition:\n"
+    + "t"+currentTemp++ +" = ini_" +idFunc+"_for_"+ structs +"\nt"+ currentTemp++ +" = fin_" +idFunc+"_for_"+ structs +"\nt" + currentTemp++
     + " = t"+(currentTemp-3)+" < t"+(currentTemp-2);
     String saltoAfirmativo = "\nif t"+(currentTemp-1) + " goto "+ idFunc + "_for_"+ structs + "_bloque";
     String saltoNegativo = "\ngoto "+ idFunc + "_for_"+ structs + "_bloque_end";
@@ -1547,7 +1583,7 @@ class CUP$Intermedio$actions {
 
     String etiquetaBloqueEnd = "\ngoto "+ idFunc + "_for_"+ structs + "_inc\n"+ idFunc + "_for_"+ structs + "_bloque_end:";
 
-    RESULT = etiquetaIni + operacionLogica + etiquetaIni2 + etiquetaFin + operacionLogica2 + etiquetaFin2 + etiquetaStep  + etiquetaStep2 + 
+    RESULT = etiquetaIni + operacionLogica + etiquetaIni2 + etiquetaFin + operacionLogica2 + etiquetaFin2 + etiquetaStep  + etiquetaStep2 +
     operacionLogica4 +saltoAfirmativo + saltoNegativo +etiqueteInc+ etiquetaBloque + statements + etiquetaBloqueEnd;
 
 
@@ -1598,8 +1634,8 @@ class CUP$Intermedio$actions {
 
     String etiquetaStep2 = "\nstep_" +idFunc+"_for_"+ structs + " = " + "t" + (currentTemp-1);
 
-    String operacionLogica4 = "\n" + idFunc + "_for_"+ structs + "_condition:\n" 
-    + "t"+currentTemp++ +" = ini_" +idFunc+"_for_"+ structs +"\nt"+ currentTemp++ +" = fin_" +idFunc+"_for_"+ structs +"\nt" + currentTemp++ 
+    String operacionLogica4 = "\n" + idFunc + "_for_"+ structs + "_condition:\n"
+    + "t"+currentTemp++ +" = ini_" +idFunc+"_for_"+ structs +"\nt"+ currentTemp++ +" = fin_" +idFunc+"_for_"+ structs +"\nt" + currentTemp++
     + " = t"+(currentTemp-3)+" < t"+(currentTemp-2);
     String saltoAfirmativo = "\nif t"+(currentTemp-1) + " goto "+ idFunc + "_for_"+ structs + "_bloque";
     String saltoNegativo = "\ngoto "+ idFunc + "_for_"+ structs + "_bloque_end";
@@ -1613,7 +1649,7 @@ class CUP$Intermedio$actions {
 
      String etiquetaBloqueEnd = "\ngoto "+ idFunc + "_for_"+ structs + "_inc\n"+ idFunc + "_for_"+ structs + "_bloque_end:";
 
-    RESULT = etiquetaIni  + etiquetaIni2 + etiquetaFin + operacionLogica2 + etiquetaFin2 + etiquetaStep  + etiquetaStep2 + 
+    RESULT = etiquetaIni  + etiquetaIni2 + etiquetaFin + operacionLogica2 + etiquetaFin2 + etiquetaStep  + etiquetaStep2 +
     operacionLogica4 +saltoAfirmativo + saltoNegativo +etiqueteInc+ etiquetaBloque + statements + etiquetaBloqueEnd;
 
 
@@ -1638,7 +1674,7 @@ class CUP$Intermedio$actions {
 		int litright = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-2)).right;
 		Object lit = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-2)).value;
 		
-  //code 3d 
+  //code 3d
     String codigo = ++structs+"case_"+lit.toString().split(":")[0]+":";
 
 
@@ -1701,8 +1737,8 @@ class CUP$Intermedio$actions {
 		int typesright = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-2)).right;
 		Object types = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-2)).value;
 		
-    
-      
+
+
 
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("switch_struct",23, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-7)), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
@@ -1732,7 +1768,7 @@ class CUP$Intermedio$actions {
     //code 3d
     String code =  "data_"+t.toString()+" "+idVar.toString();
     RESULT = code;
-  
+
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("varIdentifier",33, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-2)), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -1768,9 +1804,9 @@ class CUP$Intermedio$actions {
 
     //code 3d
     String code = e1.toString()+"\n"+id.toString()+" = "+"t"+(currentTemp-1);
-    
-    RESULT = code;  
-       
+
+    RESULT = code;
+
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("assignment",15, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-3)), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -1788,7 +1824,7 @@ class CUP$Intermedio$actions {
 		Object e1 = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).value;
 		
     //code 3d
-    String code = vi.toString() + "\n" + e1.toString() + "\n" + vi.toString().split(" ")[1] + " = " + "t"+(currentTemp-1);  
+    String code = vi.toString() + "\n" + e1.toString() + "\n" + vi.toString().split(" ")[1] + " = " + "t"+(currentTemp-1);
     RESULT = code;
 
 
@@ -1865,7 +1901,7 @@ class CUP$Intermedio$actions {
 
     String codigo = sp1.toString() + "\n" + e.toString()+"\nparam "+ "t"+(currentTemp-1)+"\n"+(Integer.parseInt(cantParameters)+1);
     RESULT = codigo;
- 
+
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("sendParameters",41, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-2)), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -1881,7 +1917,7 @@ class CUP$Intermedio$actions {
 		int spleft = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).left;
 		int spright = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).right;
 		Object sp = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).value;
-		 
+		
 
     //code 3d
     String cantParameters = sp.toString().split("\n")[sp.toString().split("\n").length-1];
@@ -1936,7 +1972,7 @@ class CUP$Intermedio$actions {
 		
     //code 3d
     String codigo = e.toString()+"\n"+"return t"+(currentTemp-1);
-    RESULT = codigo;    
+    RESULT = codigo;
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("return_statement",34, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-3)), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -1960,7 +1996,7 @@ class CUP$Intermedio$actions {
             {
               Object RESULT =null;
 		
-  
+
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("break_statement",35, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -2138,7 +2174,7 @@ class CUP$Intermedio$actions {
 		int stleft = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()).left;
 		int stright = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()).right;
 		Object st = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.peek()).value;
-		 
+		
     RESULT = st;
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("statements",8, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
@@ -2158,7 +2194,7 @@ class CUP$Intermedio$actions {
 		
 
     RESULT = sts + "\n" + st;
-    
+
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("statements",8, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -2191,7 +2227,7 @@ class CUP$Intermedio$actions {
 		Object p = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.peek()).value;
 		
     RESULT = p;
-    
+
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("parameters",5, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -2226,7 +2262,7 @@ class CUP$Intermedio$actions {
 		Object idFunc = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.peek()).value;
 		
 
- 
+
     //  Definir el tipo de tabla
         String tipoTabla = "main";
         if (idFunc.toString().equals("main")){
@@ -2250,7 +2286,7 @@ class CUP$Intermedio$actions {
         String codigo = "\nbegin_func_"+idFunc.toString()+":\n";
         RESULT = codigo;
 
-        
+
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("functionIdentifier",32, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-2)), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }
@@ -2269,7 +2305,7 @@ class CUP$Intermedio$actions {
 		int stleft = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).left;
 		int stright = ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).right;
 		Object st = (Object)((java_cup.runtime.Symbol) CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-1)).value;
-		 
+		
     //code 3d
     String code = fi.toString() + ps.toString()+ st.toString();
     RESULT = code;
@@ -2293,7 +2329,7 @@ class CUP$Intermedio$actions {
     //code 3d
     String code = fi.toString() + st.toString();
     RESULT = code;
-           
+
 
               CUP$Intermedio$result = parser.getSymbolFactory().newSymbol("function",1, ((java_cup.runtime.Symbol)CUP$Intermedio$stack.elementAt(CUP$Intermedio$top-5)), ((java_cup.runtime.Symbol)CUP$Intermedio$stack.peek()), RESULT);
             }

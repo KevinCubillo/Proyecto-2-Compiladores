@@ -1,111 +1,76 @@
-
+data_string holadata_int perro
 begin_func_main:
 data_int x
 data_int y
 t1 = 10
 x = t1
-t2 = hola
+t2 = "20"
 y = t2
-t3 = adios
+t3 = tomate
 param t3
 t4 = call func, 1
 main_if_1:
-t5 = x
-t6 = 5
-t7 = t5>t6
-if t7 goto main_if_1_bloque
+t5 = y
+t6 = 30
+t7 = t5<t6
+t8 = x
+t9 = 32
+t10 = t8==t9
+t11 = t7||t10
+if t11 goto main_if_1_bloque
 goto main_if_1_bloque_end
 main_if_1_bloque:
-t8 = x
-t9 = 1
-t10 = t8+t9
-x = t10
+t12 = x
+t13 = 1
+t14 = t12+t13
+x = t14
 main_if_1_bloque_end:
 main_if_1_else:
-t11 = y
-t12 = 1
-t13 = t11-t12
-y = t13
+t15 = y
+t16 = 1
+t17 = t15-t16
+y = t17
 main_if_1_else_end:
 main_if_1_end:
 main_while_3:
 main_while_3_condition:
-t14 = x
-t15 = 15
-t16 = t14<t15
-if t16 goto main_while_3_bloque
+t18 = y
+t19 = 10
+t20 = t18>t19
+t21 = 20
+t22 = x
+t23 = t21>t22
+t24 = t20&&t23
+if t24 goto main_while_3_bloque
 goto main_while_3_bloque_end
 main_while_3_bloque:
 main_if_2:
-t17 = x
-t18 = 10
-t19 = t17<t18
-if t19 goto main_if_2_bloque
+t25 = x
+t26 = 10
+t27 = t25<t26
+if t27 goto main_if_2_bloque
 goto main_if_2_bloque_end
 main_if_2_bloque:
-t20 = x
-t21 = 1
-t22 = t20+t21
-x = t22
+t28 = x
+t29 = 1
+t30 = t28+t29
+x = t30
 main_if_2_bloque_end:
 main_if_2_else:
-t23 = y
-t24 = 1
-t25 = t23-t24
-y = t25
+t31 = y
+t32 = 1
+t33 = t31-t32
+y = t33
 main_if_2_else_end:
 main_if_2_end:
 goto main_while_3_condition
 main_while_3_bloque_end:
 main_while_3_end:
 data_int i
-t26 = 0
-return t26
-begin_func_probarReadAndPrint:
+t34 = hola
+return t34
+begin_func_func:
 data_int x
-data_int var
-param x
-t1 = call read, 1
-probarReadAndPrint_if_4:
-t2 = x
-t3 = 5
-t4 = t2>t3
-if t4 goto probarReadAndPrint_if_4_bloque
-goto probarReadAndPrint_if_4_bloque_end
-probarReadAndPrint_if_4_bloque:
-t5 = "Es mayor a 5"
-PRINT t5
-
-probarReadAndPrint_if_4_bloque_end:
-probarReadAndPrint_if_4_else:
-t6 = "Es menor a 5"
-PRINT t6
-
-probarReadAndPrint_if_4_else_end:
-probarReadAndPrint_if_4_end:
-data_string s
-t7 = "Hola mundo"
-s = t7
-t8 = s
-PRINT t8
-
-t9 = 2
-t10 = 2
-t11 = 2
-t12 = var
-t13 = 1
-t14 = t12 - t13
-var = t14
-t15 = 2
-t16 = 3
-t17 = -5
-t18 = t16^t17
-t19 = t15/t18
-t20 = var*t19
-t21 = t11+t20
-t22 = t10-t21
-t23 = t9+t22
-PRINT t23
-
-t24 = s
-return t24
+data_int adios
+t1 call main, 0
+adios = t1

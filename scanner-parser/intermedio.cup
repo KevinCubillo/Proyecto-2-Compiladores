@@ -1,0 +1,821 @@
+package com.compiladores;
+
+import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+
+
+class Intermedio;
+
+parser code  {:
+
+    //Connect to the lexer
+    Lexer lexer;
+    Map<String, ArrayList<String[]>> tablasDeSimbolos = new HashMap<>();
+    String currentHash = "";
+
+    @SuppressWarnings("deprecation")
+    public Intermedio(Lexer lexer) {
+        this.lexer = lexer;
+        this.symbolFactory = new DefaultSymbolFactory();
+
+        //Inicializar tabla de simbolos Global
+        currentHash = "Tabla Global";
+        ArrayList<String[]> tabla = new ArrayList<>();
+        String[] tipo = new String[2];
+        tipo[0] = "Variables";
+        tipo[1] = "Globales";
+        tabla.add(tipo);
+        tablasDeSimbolos.put(currentHash, tabla);
+    }
+
+
+//Metodo para obtener un symbolo
+public String[] getSymbol(List<String[]> tabla, String id) {
+    for (int i = 1; i < tabla.size(); i++) {
+        String[] symbol = tabla.get(i);
+        if (symbol[1].equals(id)) {
+            return symbol; // Devuelve el símbolo que coincide con el ID.
+        }
+    }
+    return null; // Si no se encuentra el símbolo, devuelve null o maneja el caso según tus necesidades.
+}
+
+//Metodo para buscar si existe un parametro
+public boolean existParam(List<String[]> tabla, String id) {
+    for (int i = 1; i < tabla.size(); i++) {
+        String[] symbol = tabla.get(i);
+        if (symbol[0].equals("Param") && symbol[1].equals(id)) {
+            return true; // si encontró el parametro
+        }
+    }
+    return false; //  no encontró el parametro
+}
+
+//Metodo que devuelve los tipos de los parametros de una funcion
+public ArrayList<String> getFuncParamsTypes(List<String[]> tabla) {
+    ArrayList<String> paramsTypes = new ArrayList<>();
+    for (int i = 1; i < tabla.size(); i++) {
+        String[] symbol = tabla.get(i);
+        if (symbol[0].equals("Parametro")) {
+            paramsTypes.add(symbol[2]);
+        }
+    }
+    return paramsTypes;
+}
+
+ //Codigo intermedio
+    //List<String> intermediateCode = new ArrayList<>();
+
+    StringBuffer intermediateCode = new StringBuffer(); // Para concatenar el código intermedio
+    int currentTemp = 1; // Para generar los temporales
+    int structs = 0; // Para generar las etiquetas de las estructuras de control
+
+
+public StringBuffer getIntermediateCode() { // Para obtener el código intermedio
+    return  intermediateCode;
+}
+
+:};
+
+
+
+
+init with {: :};
+scan with {: return lexer.next_token(); :};
+
+
+
+/** TERMINALES **/
+terminal PLUS, MINUS, TIMES, LPAREN, RPAREN, DIVIDE, MODULE, POWER, INCREMENT, DECREMENT, ASSIGN, ENDLINE, EQUALS, DIFFERENT, GREATER,
+ LESS, GREATEREQUAL, LESSEQUAL, AND, OR, NOT, BLOCKSTART, BLOCKEND, COMMA, SEPARATOR, IF, ELSE, IDENTIFIER, RETURN, BREAK, FOR, IN,
+ RANGE, WHILE, SWITCH, CASE, DOTS, DEFAULT, READ, READSYMBOL, PRINT, PRINTSYMBOL, INTEGERTYPE, FLOATTYPE, BOOLEANTYPE, CHARTYPE,
+ STRINGTYPE, BOOLEAN, INTEGER, FLOAT, CHAR, STRING;
+
+terminal ERROR_RECOVERY;
+
+
+/** NO TERMINALES **/
+non terminal type;
+
+non terminal  function, functions, program, parameter, parameters, expression, statement, statements, if_struct, if_else_struct, while_struct,
+              while_else_struct, for_range_struct, decl, assignment, decl_and_assignment, readData, printData, callFunction, case_statement,
+              case_statements, default_statement, switch_struct,aritmeticExpression, relationalExpression, logicalExpression, literal, aritmeticOp,
+              relationalOp, logicalOp, operand, functionIdentifier,varIdentifier, return_statement, break_statement, callFunction_statement,
+              error_recovery,errors, globalVariable, globalVariables,sendParameters;
+
+
+//PRECEDENCIA
+precedence left OR;
+precedence left AND;
+precedence left EQUALS, DIFFERENT, GREATER, LESS, GREATEREQUAL, LESSEQUAL;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE, MODULE, POWER;
+precedence right NOT;
+precedence left LPAREN;
+
+start with program;
+
+
+type ::= INTEGERTYPE {:RESULT = "int"; :}
+       | FLOATTYPE {:RESULT = "float"; :}
+       | BOOLEANTYPE {:RESULT = "bool"; :}
+       | CHARTYPE {:RESULT = "char"; :}
+       | STRINGTYPE {:RESULT = "string"; :};
+
+literal ::= INTEGER:n {: RESULT = n+":int"; :}
+          | FLOAT:n {: RESULT = n+":float"; :}
+          | CHAR:n {: RESULT = n+":char"; :}
+          | STRING:n {: RESULT = n+":string"; :}
+          | BOOLEAN:n {: RESULT = n+":bool"; :};
+
+aritmeticOp ::= PLUS:plus {: RESULT = plus; :}
+| MINUS:minus {: RESULT = minus; :}
+| TIMES:times {: RESULT = times; :}
+| DIVIDE:divide {: RESULT = divide; :}
+| MODULE:module {: RESULT = module; :}
+| POWER:power {: RESULT = power; :};
+
+operand ::= literal:n
+{:
+    String codigo = "t"+currentTemp++ +" = "+n.toString().split(":")[0]; // Obtiene el valor del literal
+    RESULT = codigo;
+
+:}
+
+| IDENTIFIER:id
+{:
+    //code 3d
+    String codigo = "t"+currentTemp++ +" = "+id.toString(); // Obtiene el valor del literal
+    RESULT = codigo;
+
+:}
+
+| callFunction:cf
+{:
+    RESULT = cf;
+
+:};
+
+
+relationalOp ::= EQUALS:eq {: RESULT = eq; :}  | DIFFERENT:dif {: RESULT = dif; :}  | GREATER:gr {: RESULT = gr; :}
+| LESS:less {: RESULT = less; :}  | GREATEREQUAL:gre {: RESULT = gre; :} | LESSEQUAL:leq {: RESULT = leq; :};
+
+logicalOp ::= AND:and {: RESULT = and; :}  | OR:or {: RESULT = or; :} ;
+
+
+/** EXPRESSIONS **/
+
+// EXPRESIONES ARITMETICAS
+aritmeticExpression ::= operand:n
+{:
+
+    RESULT = n;
+
+:}
+| MINUS literal:n
+
+{:
+    //cod 3d
+    String code = "t"+currentTemp++ + " = -"+n.toString().split(":")[0]; // Obtiene el valor del literal
+    RESULT = code;
+
+:}
+
+| IDENTIFIER:id INCREMENT
+{:
+     //cod 3d
+    String tempId= "t"+currentTemp++;
+    String tempPP1= "t"+currentTemp++;
+    String tempPP2= "t"+currentTemp++;
+    String codigo = tempId +" = "+ id + "\n" + tempPP1 +" = 1"+"\n"+tempPP2 +" = "+tempId+" + "+tempPP1+"\n"+id +" = "+tempPP2; // Escritura de los terminales
+    RESULT = codigo;
+
+
+:}
+
+| IDENTIFIER:id DECREMENT
+{:
+
+    //cod 3d
+    String tempId= "t"+currentTemp++;
+    String tempPP1= "t"+currentTemp++;
+    String tempPP2= "t"+currentTemp++;
+    String codigo = tempId +" = "+ id + "\n" + tempPP1 +" = 1"+"\n"+tempPP2 +" = "+tempId+" - "+tempPP1+"\n"+id +" = "+tempPP2; // Escritura de los terminales
+    RESULT = codigo;
+
+:};
+
+
+aritmeticExpression ::= aritmeticExpression:e1 aritmeticOp:op aritmeticExpression:e2
+{:
+
+    String[] lineas = e1.toString().split("\n");  // Divide la cadena en líneas
+    String temporale1 = lineas[lineas.length - 1];
+    temporale1 = temporale1.split(" = ")[0]; // Obtiene el último temporal generado
+    String codigo = e1.toString() + "\n" + e2.toString() + "\n" + "t"+ currentTemp++ +" = " + temporale1 + op + "t"+(currentTemp-2); // Escritura de los terminales
+
+    RESULT = codigo;
+
+:};
+
+aritmeticExpression ::= LPAREN aritmeticExpression:e1 RPAREN
+{:
+
+    RESULT = e1;      // Retorna la expresión 
+:};
+
+//EXPRESIONES RELACIONALES
+relationalExpression ::= aritmeticExpression:e1 relationalOp:op aritmeticExpression:e2
+{:
+
+    String[] lineas = e1.toString().split("\n");  // Divide la cadena en líneas
+    String temporale1 = lineas[lineas.length - 1]; // Obtiene la última línea
+    temporale1 = temporale1.split(" = ")[0]; // Obtiene el último temporal generado
+    String codigo = e1.toString() + "\n" + e2.toString() + "\n" + "t"+currentTemp++ +" = " + temporale1 + op + "t"+(currentTemp-2); // Escritura de los terminales
+
+    RESULT = codigo;
+
+:};
+
+// EXPRESIONES LOGICAS
+logicalExpression ::= relationalExpression:e1
+{:
+    RESULT = e1; // Retorna la expresión
+:};
+
+logicalExpression ::= logicalExpression:e1 logicalOp:op logicalExpression:e2
+{:
+
+    String[] lineas = e1.toString().split("\n");  // Divide la cadena en líneas
+    String temporale1 = lineas[lineas.length - 1];
+    temporale1 = temporale1.split(" = ")[0]; // Obtiene el último temporal generado
+    String codigo = e1.toString() + "\n" + e2.toString() + "\n" + "t"+ currentTemp++ +" = " + temporale1 + op + "t"+(currentTemp-2); // Escritura de los terminales
+
+    RESULT = codigo;
+
+:};
+logicalExpression ::= LPAREN logicalExpression:e1 RPAREN // Expresión lógica entre paréntesis
+{:
+    
+    RESULT = e1;
+
+:};
+logicalExpression ::= NOT logicalExpression:e1 // Expresión lógica negada
+{:
+    
+    String codigo = e1.toString() + "\n" + "t"+currentTemp++ +" = !t"+(currentTemp-2); // Escritura de los terminales
+    RESULT = codigo;
+:};
+
+expression ::= aritmeticExpression:e // Expresión aritmética
+{:
+    RESULT = e;
+{:
+    RESULT = e;
+:}
+
+| logicalExpression:e // Expresión lógica
+{:
+    RESULT = e;
+{:
+    RESULT = e;
+:};
+
+
+/** CONTROL STRUCTURES **/
+
+if_struct ::= IF LPAREN logicalExpression:e1 RPAREN BLOCKSTART statements:st BLOCKEND
+{:
+
+     //cod 3d
+
+    String idFunc = currentHash; // Obtiene el nombre de la función actual
+
+    String[] lineas = e1.toString().split("\n");  // Divide la cadena en líneas
+    String temporale1 = lineas[lineas.length - 1];
+    temporale1 = temporale1.split(" = ")[0]; // Obtiene el último temporal generado
+
+
+    //moverme a antes de la expresion logica
+    String etiquetaPrincipal = idFunc+"_if_"+ ++structs+":\n"; // Genera la etiqueta principal
+    String operacionLogica = e1.toString(); // Obtiene la expresión lógica
+    String saltoAfirmativo = "\nif " + temporale1 + " goto "+ idFunc + "_if_"+ structs + "_bloque"; // Genera el salto afirmativo
+    String saltoNegativo = "\ngoto "+ idFunc + "_if_"+ structs + "_bloque_end"; // Genera el salto negativo
+    String etiquetaBloque = "\n"+ idFunc + "_if_"+ structs + "_bloque:\n"; // Genera la etiqueta del bloque
+
+    //escribir todo lo de statements
+    String statements = st.toString(); // Obtiene los statements
+
+    String etiquetaBloqueEnd = "\n"+ idFunc + "_if_"+ structs + "_bloque_end:"; // Genera la etiqueta del bloque end
+    String etiquetaEndIf = "\n"+ idFunc + "_if_"+ structs + "_end:"; // Genera la etiqueta del if end
+
+    RESULT = etiquetaPrincipal + operacionLogica + saltoAfirmativo + saltoNegativo + etiquetaBloque + statements + etiquetaBloqueEnd + etiquetaEndIf; // Concatena el código
+
+
+:};
+
+if_else_struct ::= if_struct:if_strc ELSE BLOCKSTART statements:st BLOCKEND
+{:
+
+    //cod 3d
+    String idFunc = currentHash;
+    String ifCode = if_strc.toString();
+
+    //insertar codigo del else antes de la ultima linea de ifCode
+    String[] lineas = ifCode.split("\n");  // Divide la cadena en líneas
+    String etiquetaEndIf = lineas[lineas.length - 1]; // Obtiene la última línea
+    String etiquetaElse = etiquetaEndIf.replace("end", "else")+"\n"; // Genera la etiqueta del else
+    String etiquetaElseEnd = etiquetaElse.replace(":", "_end:"); // Genera la etiqueta del else end
+    ifCode = ifCode.substring(0, ifCode.lastIndexOf("\n")); // Elimina la última línea
+
+    String codigo = ifCode + "\n" + etiquetaElse + st.toString() + "\n" + etiquetaElseEnd+ etiquetaEndIf; // Concatena el código
+
+    RESULT = codigo; // Retorna el código
+
+:};
+
+while_struct ::= WHILE LPAREN logicalExpression:e1 RPAREN BLOCKSTART statements:st BLOCKEND
+{:
+    String idFunc = currentHash;
+    String[] lineas = e1.toString().split("\n");  // Divide la cadena en líneas
+    String temporale1 = lineas[lineas.length - 1];
+    temporale1 = temporale1.split(" = ")[0]; // Obtiene el último temporal generado
+
+
+    //moverme a antes de la expresion logica
+    String etiquetaPrincipal = idFunc+"_while_"+ ++structs+":"; // Genera la etiqueta principal
+    String etiquetaCondicion = "\n" + idFunc + "_while_"+ structs + "_condition:\n" ;   // Genera la etiqueta de la condición
+    String operacionLogica = e1.toString(); // Obtiene la expresión lógica
+    String saltoAfirmativo = "\nif " + temporale1 + " goto "+ idFunc + "_while_"+ structs + "_bloque"; // Genera el salto afirmativo
+    String saltoNegativo = "\ngoto "+ idFunc + "_while_"+ structs + "_bloque_end"; // Genera el salto negativo
+    String etiquetaBloque = "\n"+ idFunc + "_while_"+ structs + "_bloque:\n";   // Genera la etiqueta del bloque
+
+    //escribir todo lo de statements
+    String statements = st.toString(); // Obtiene los statements
+
+    String etiquetaBloqueEnd = "\ngoto "+ idFunc + "_while_"+ structs + "_condition\n"+ idFunc +
+    "_while_"+ structs + "_bloque_end:" + "\n" + idFunc + "_while_"+ structs + "_end:"; // Genera la etiqueta del bloque end
+ 
+    RESULT = etiquetaPrincipal + etiquetaCondicion + operacionLogica + saltoAfirmativo + saltoNegativo + etiquetaBloque + statements + etiquetaBloqueEnd;   // Concatena el código
+
+:};
+
+while_else_struct ::= while_struct:while_stc ELSE BLOCKSTART statements:st BLOCKEND
+{:
+    //cod 3d
+    String idFunc = currentHash; // Obtiene el nombre de la función actual
+    String whilecode = while_stc.toString(); // Obtiene el código del while
+
+    //insertar codigo del else antes de la ultima linea de whilecode
+    String[] lineas = whilecode.split("\n");  // Divide la cadena en líneas
+    String etiquetaEndWhile = lineas[lineas.length - 1]; // Obtiene la última línea
+    String etiquetaElse = etiquetaEndWhile.replace("end", "else")+"\n"; // Genera la etiqueta del else
+    String etiquetaElseEnd = etiquetaElse.replace(":", "_end:"); // Genera la etiqueta del else end
+    whilecode = whilecode.substring(0, whilecode.lastIndexOf("\n")); // Elimina la última línea
+
+    String codigo = whilecode + "\n" + etiquetaElse + st.toString() + "\n" + etiquetaElseEnd+ etiquetaEndWhile; // Concatena el código
+
+    RESULT = codigo;
+
+:};
+
+for_range_struct ::= FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression:e1 COMMA
+                     aritmeticExpression:e2 COMMA aritmeticExpression:e3 RPAREN BLOCKSTART statements:st BLOCKEND
+{:
+    String idFunc = currentHash;
+
+    String[] lineas = e1.toString().split("\n");  // Divide la cadena en líneas
+    String [] lineas2 = e2.toString().split("\n"); // Divide la cadena en líneas
+    String [] lineas3 = e3.toString().split("\n"); // Divide la cadena en líneas
+    String temporale1 = lineas[lineas.length - 1]; // Obtiene la última línea
+    temporale1 = temporale1.split(" = ")[0]; // Obtiene el último temporal generado
+    String temporale2 = lineas2[lineas2.length - 1];
+    temporale2 = temporale2.split(" = ")[0]; // Obtiene el último temporal generado
+    String  temporale3 = lineas3[lineas3.length - 1];
+    temporale3 = temporale3.split(" = ")[0]; // Obtiene el último temporal generado
+
+    //moverme a antes de la expresion logica
+    String etiquetaIni= idFunc+"_for_"+ ++structs+":\ndata_Int ini_" +idFunc+"_for_"+ structs+ "\n"; // Genera la etiqueta del inicio
+
+    String operacionLogica = e1.toString(); // Obtiene la expresión lógica
+
+    String etiquetaIni2 = "\nini_" +idFunc+"_for_"+ structs + " = " + temporale1; // Genera la etiqueta del inicio 2
+
+    String etiquetaFin= "\ndata_Int fin_" +idFunc+"_for_"+ structs+ "\n"; // Genera la etiqueta del fin
+
+    String operacionLogica2 = e2.toString(); // Obtiene la expresión lógica
+
+    String etiquetaFin2 = "\nfin_" +idFunc+"_for_"+ structs + " = " + temporale2; // Genera la etiqueta del fin 2
+
+    String etiquetaStep= "\ndata_Int step_" +idFunc+"_for_"+ structs+ "\n"; // Genera la etiqueta del step
+
+    String operacionLogica3 = e3.toString(); // Obtiene la expresión lógica
+
+    String etiquetaStep2 = "\nstep_" +idFunc+"_for_"+ structs + " = " + temporale3; // Genera la etiqueta del step 2
+
+    String operacionLogica4 = "\n" + idFunc + "_for_"+ structs + "_condition:\n"
+    + "t"+currentTemp++ +" = ini_" +idFunc+"_for_"+ structs +"\nt"+ currentTemp++ +" = fin_" +idFunc+"_for_"+ structs +"\nt" + currentTemp++
+    + " = t"+(currentTemp-3)+" < t"+(currentTemp-2); // Genera la expresión lógica
+    String saltoAfirmativo = "\nif t"+(currentTemp-1) + " goto "+ idFunc + "_for_"+ structs + "_bloque";
+    String saltoNegativo = "\ngoto "+ idFunc + "_for_"+ structs + "_bloque_end"; // Genera el salto negativo
+    String etiqueteInc= "\n"+ idFunc + "_for_"+ structs + "_inc: \nt" + currentTemp++ + " ="+ "step_" +idFunc+"_for_"+ structs + "\nt"
+    + currentTemp++ + "= ini_" +idFunc+"_for_"+ structs + "\nt" + currentTemp++ + " = t"+(currentTemp-2)+" + t"+(currentTemp-3)
+    +"\nini_" +idFunc+"_for_"+ structs + " = t"+(currentTemp-1)+ "\ngoto "+ idFunc + "_for_"+ structs + "_condition"; // Genera la etiqueta del incremento
+
+    String etiquetaBloque = "\n"+ idFunc + "_for_"+ structs + "_bloque:\n"; // Genera la etiqueta del bloque
+
+    //escribir todo lo de statements
+    String statements = st.toString(); // Obtiene los statements
+
+    String etiquetaBloqueEnd = "\ngoto "+ idFunc + "_for_"+ structs + "_inc\n"+ idFunc + "_for_"+ structs + "_bloque_end:"; // Genera la etiqueta del bloque end
+
+    RESULT = etiquetaIni + operacionLogica + etiquetaIni2 + etiquetaFin + operacionLogica2 + etiquetaFin2 + etiquetaStep + operacionLogica3 + etiquetaStep2 +
+    operacionLogica4 +saltoAfirmativo + saltoNegativo + etiqueteInc + etiquetaBloque + statements + etiquetaBloqueEnd; // Concatena el código
+
+:}
+
+| FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression:e1 COMMA
+                     aritmeticExpression:e2 RPAREN BLOCKSTART statements:st BLOCKEND
+{:
+        String idFunc = currentHash; // Obtiene el nombre de la función actual
+
+    String[] lineas = e1.toString().split("\n");  // Divide la cadena en líneas
+    String [] lineas2 = e2.toString().split("\n"); // Divide la cadena en líneas
+
+    String temporale1 = lineas[lineas.length - 1]; // Obtiene la última línea
+    temporale1 = temporale1.split(" = ")[0]; // Obtiene el último temporal generado
+    String temporale2 = lineas2[lineas2.length - 1];
+    temporale2 = temporale2.split(" = ")[0]; // Obtiene el último temporal generado
+
+
+    //moverme a antes de la expresion logica
+    String etiquetaIni= idFunc+"_for_"+ ++structs+":\ndata_Int ini_" +idFunc+"_for_"+ structs+ "\n"; // Genera la etiqueta del inicio
+
+    String operacionLogica = e1.toString(); // Obtiene la expresión lógica
+
+    String etiquetaIni2 = "\nini_" +idFunc+"_for_"+ structs + " = " + temporale1; // Genera la etiqueta del inicio 2
+
+    String etiquetaFin= "\ndata_Int fin_" +idFunc+"_for_"+ structs+ "\n"; // Genera la etiqueta del fin
+
+    String operacionLogica2 = e2.toString(); // Obtiene la expresión lógica
+
+    String etiquetaFin2 = "\nfin_" +idFunc+"_for_"+ structs + " = " + temporale2; // Genera la etiqueta del fin 2
+
+    String etiquetaStep= "\ndata_Int step_" +idFunc+"_for_"+ structs+ "\nt" + currentTemp++ + " = 1"; // Genera la etiqueta del step
+
+
+    String etiquetaStep2 = "\nstep_" +idFunc+"_for_"+ structs + " = " + "t" + (currentTemp-1); // Genera la etiqueta del step 2
+
+    String operacionLogica4 = "\n" + idFunc + "_for_"+ structs + "_condition:\n"
+    + "t"+currentTemp++ +" = ini_" +idFunc+"_for_"+ structs +"\nt"+ currentTemp++ +" = fin_" +idFunc+"_for_"+ structs +"\nt" + currentTemp++
+    + " = t"+(currentTemp-3)+" < t"+(currentTemp-2); // Genera la expresión lógica
+    String saltoAfirmativo = "\nif t"+(currentTemp-1) + " goto "+ idFunc + "_for_"+ structs + "_bloque";
+    String saltoNegativo = "\ngoto "+ idFunc + "_for_"+ structs + "_bloque_end"; // Genera el salto negativo
+    String etiqueteInc= "\n"+ idFunc + "_for_"+ structs + "_inc: \nt" + currentTemp++ + " ="+ "step_" +idFunc+"_for_"+ structs + "\nt"
+    + currentTemp++ + "= ini_" +idFunc+"_for_"+ structs + "\nt" + currentTemp++ + " = t"+(currentTemp-2)+" + t"+(currentTemp-3)
+    +"\nini_" +idFunc+"_for_"+ structs + " = t"+(currentTemp-1)+ "\ngoto "+ idFunc + "_for_"+ structs + "_condition"; // Genera la etiqueta del incremento
+    String etiquetaBloque = "\n"+ idFunc + "_for_"+ structs + "_bloque:\n";
+
+    //escribir todo lo de statements
+    String statements = st.toString();
+
+    String etiquetaBloqueEnd = "\ngoto "+ idFunc + "_for_"+ structs + "_inc\n"+ idFunc + "_for_"+ structs + "_bloque_end:"; // Genera la etiqueta del bloque end
+
+    RESULT = etiquetaIni + operacionLogica + etiquetaIni2 + etiquetaFin + operacionLogica2 + etiquetaFin2 + etiquetaStep  + etiquetaStep2 +
+    operacionLogica4 +saltoAfirmativo + saltoNegativo +etiqueteInc+ etiquetaBloque + statements + etiquetaBloqueEnd;
+
+
+
+
+:}
+
+| FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression:e1 RPAREN BLOCKSTART statements:st BLOCKEND
+{:
+            String idFunc = currentHash;
+
+    String[] lineas2 = e1.toString().split("\n");  // Divide la cadena en líneas 
+
+
+
+    String temporale2 = lineas2[lineas2.length - 1];
+    temporale2 = temporale2.split(" = ")[0]; // Obtiene el último temporal generado
+
+
+    //moverme a antes de la expresion logica
+    String etiquetaIni= idFunc+"_for_"+ ++structs+":\ndata_Int ini_" +idFunc+"_for_"+ structs+ "\nt" + currentTemp++ + " = 1"; // Genera la etiqueta del inicio
+
+    String etiquetaIni2 = "\nini_" +idFunc+"_for_"+ structs + " = " + "t" + (currentTemp-1); // Genera la etiqueta del inicio 2
+
+    String etiquetaFin= "\ndata_Int fin_" +idFunc+"_for_"+ structs+ "\n"; // Genera la etiqueta del fin
+
+    String operacionLogica2 = e1.toString(); // Obtiene la expresión lógica
+
+    String etiquetaFin2 = "\nfin_" +idFunc+"_for_"+ structs + " = " + temporale2; // Genera la etiqueta del fin 2
+
+    String etiquetaStep= "\ndata_Int step_" +idFunc+"_for_"+ structs+ "\nt" + currentTemp++ + " = 1"; // Genera la etiqueta del step
+
+
+    String etiquetaStep2 = "\nstep_" +idFunc+"_for_"+ structs + " = " + "t" + (currentTemp-1); // Genera la etiqueta del step 2
+
+    String operacionLogica4 = "\n" + idFunc + "_for_"+ structs + "_condition:\n"
+    + "t"+currentTemp++ +" = ini_" +idFunc+"_for_"+ structs +"\nt"+ currentTemp++ +" = fin_" +idFunc+"_for_"+ structs +"\nt" + currentTemp++
+    + " = t"+(currentTemp-3)+" < t"+(currentTemp-2); // Genera la expresión lógica
+    String saltoAfirmativo = "\nif t"+(currentTemp-1) + " goto "+ idFunc + "_for_"+ structs + "_bloque";
+    String saltoNegativo = "\ngoto "+ idFunc + "_for_"+ structs + "_bloque_end"; // Genera el salto negativo
+    String etiqueteInc= "\n"+ idFunc + "_for_"+ structs + "_inc: \nt" + currentTemp++ + " ="+ "step_" +idFunc+"_for_"+ structs + "\nt"
+    + currentTemp++ + "= ini_" +idFunc+"_for_"+ structs + "\nt" + currentTemp++ + " = t"+(currentTemp-2)+" + t"+(currentTemp-3)
+    +"\nini_" +idFunc+"_for_"+ structs + " = t"+(currentTemp-1)+ "\ngoto "+ idFunc + "_for_"+ structs + "_condition";
+    String etiquetaBloque = "\n"+ idFunc + "_for_"+ structs + "_bloque:\n";
+
+    //escribir todo lo de statements
+    String statements = st.toString();
+
+     String etiquetaBloqueEnd = "\ngoto "+ idFunc + "_for_"+ structs + "_inc\n"+ idFunc + "_for_"+ structs + "_bloque_end:";
+
+    RESULT = etiquetaIni  + etiquetaIni2 + etiquetaFin + operacionLogica2 + etiquetaFin2 + etiquetaStep  + etiquetaStep2 +
+    operacionLogica4 +saltoAfirmativo + saltoNegativo +etiqueteInc+ etiquetaBloque + statements + etiquetaBloqueEnd;
+
+:};
+
+default_statement ::= DEFAULT DOTS statements;
+
+case_statement ::= CASE SEPARATOR literal:lit DOTS statements
+{:
+  //code 3d
+    String codigo = ++structs+"case_"+lit.toString().split(":")[0]+":";
+
+:};
+
+case_statements ::= case_statement:cs{::};
+
+case_statements ::= case_statements:css case_statement:cs
+{:
+    RESULT = css + "," + cs;
+:};
+
+switch_struct ::= SWITCH LPAREN expression:e1 RPAREN BLOCKSTART case_statements:cs BLOCKEND
+{::};
+
+switch_struct ::= SWITCH LPAREN expression:e1 RPAREN BLOCKSTART case_statements:types default_statement BLOCKEND
+{:
+
+
+
+:};
+
+switch_struct ::= SWITCH LPAREN expression RPAREN BLOCKSTART default_statement BLOCKEND;
+
+
+/** STATEMENTS **/
+
+varIdentifier ::= type:t SEPARATOR IDENTIFIER:idVar
+{:
+    //code 3d
+    String code =  "data_"+t.toString()+" "+idVar.toString();
+    RESULT = code;
+
+:};
+
+decl ::= varIdentifier:vi ENDLINE
+{:
+
+    RESULT = vi;
+
+:};
+
+assignment ::= IDENTIFIER:id ASSIGN expression:e1 ENDLINE
+{:
+
+    //code 3d
+    String code = e1.toString()+"\n"+id.toString()+" = "+"t"+(currentTemp-1);
+
+    RESULT = code;
+
+:};
+
+decl_and_assignment ::= varIdentifier:vi ASSIGN expression:e1 ENDLINE
+{:
+    //code 3d
+    String code = vi.toString() + "\n" + e1.toString() + "\n" + vi.toString().split(" ")[1] + " = " + "t"+(currentTemp-1);
+    RESULT = code;
+
+:};
+
+readData ::= READ READSYMBOL IDENTIFIER:id ENDLINE
+{:
+    //cod 3d
+    String codigo = "param "+id.toString()+"\nt"+currentTemp++ +" = call read, 1";
+    RESULT = codigo;
+
+:};
+
+printData ::= PRINT PRINTSYMBOL expression:e1 ENDLINE
+{:
+    //code 3d
+    String codigo = e1.toString() + "\n" + "PRINT t"+(currentTemp-1)+"\n";
+    RESULT = codigo;
+
+:};
+
+
+sendParameters ::= expression:e
+{:
+
+    //code 3d
+    String codigo = e.toString()+"\nparam "+ "t"+(currentTemp-1)+"\n"+"1";
+    RESULT = codigo;
+
+:}
+
+| sendParameters:sp COMMA expression:e
+{:
+    //code 3d
+    String cantParameters = sp.toString().split("\n")[sp.toString().split("\n").length-1];
+    String sp1 = sp.toString().substring(0, sp.toString().lastIndexOf("\n"));
+
+    String codigo = sp1.toString() + "\n" + e.toString()+"\nparam "+ "t"+(currentTemp-1)+"\n"+(Integer.parseInt(cantParameters)+1);
+    RESULT = codigo;
+
+:};
+
+callFunction ::= IDENTIFIER:id LPAREN sendParameters:sp  RPAREN
+{:
+
+    //code 3d
+    String cantParameters = sp.toString().split("\n")[sp.toString().split("\n").length-1];
+    String sp1 = sp.toString().substring(0, sp.toString().lastIndexOf("\n"));
+
+    String codigo = sp1.toString() + "\nt"+(currentTemp++)+ " = call "+id.toString()+", "+cantParameters;
+    RESULT = codigo;
+
+:};
+
+callFunction ::= IDENTIFIER:id LPAREN RPAREN
+{:
+    String codigo = "t"+currentTemp++ +" call "+id.toString()+", 0";
+    RESULT = codigo;
+
+:};
+
+
+callFunction_statement ::= callFunction:cf ENDLINE
+{:
+        //code 3d
+        RESULT = cf;
+:};
+
+return_statement ::= RETURN SEPARATOR expression:e ENDLINE
+{:
+    //code 3d
+    String codigo = e.toString()+"\n"+"return t"+(currentTemp-1);
+    RESULT = codigo;
+:}
+| RETURN ENDLINE
+{:
+    //code 3d
+    String codigo = "return";
+    RESULT = codigo;
+:}
+
+;
+break_statement ::= BREAK ENDLINE
+{:
+
+:};
+
+
+statement ::=   decl:decl {: RESULT = decl; :}
+| assignment:assig {: RESULT = assig; :}
+| decl_and_assignment:dcla {: RESULT = dcla; :}
+| readData:rd {: RESULT = rd; :}
+| printData: pd {: RESULT = pd; :}
+| return_statement:rtn {: RESULT = rtn; :}
+| break_statement
+| callFunction_statement:cfs {: RESULT = cfs; :}
+| if_struct:if_str {: RESULT = if_str; :}
+| if_else_struct:if_else {: RESULT = if_else; :}
+| while_struct:ws {: RESULT = ws; :}
+| while_else_struct:wel {: RESULT = wel; :}
+| for_range_struct:fr {: RESULT = fr; :}
+| switch_struct:ss {: RESULT = ss; :};
+
+statements ::= statement:st
+{:
+    RESULT = st;
+:};
+
+statements ::= statements:sts statement:st
+{:
+
+    RESULT = sts + "\n" + st;
+
+:};
+
+/** PARAMETERS **/
+
+parameter ::= type:t SEPARATOR IDENTIFIER:idParam
+{:
+    String code = "data_"+t.toString()+" "+idParam.toString()+"\n";
+    RESULT = code;
+:};
+
+parameters ::= parameter:p
+{:
+    RESULT = p;
+
+:};
+parameters ::= parameters:ps COMMA parameter:p
+{:
+    RESULT = ps.toString() + p.toString();
+:};
+
+
+/** FUNCTIONS **/
+
+functionIdentifier ::= type:t SEPARATOR IDENTIFIER :idFunc
+{:
+
+
+    //  Definir el tipo de tabla
+        String tipoTabla = "main";
+        if (idFunc.toString().equals("main")){
+        tipoTabla = "Tipo: main ";
+        }
+        else{
+        tipoTabla = "Tipo: funcion ";
+        }
+
+    // Crear tabla de simbolos para la funcion
+        currentHash = idFunc.toString();
+        ArrayList<String[]> tabla = new ArrayList<>();
+        String[] tipo = new String[2];
+        tipo[0] = tipoTabla;
+        tipo[1] = t.toString();
+        tabla.add(tipo);
+        tablasDeSimbolos.put(currentHash, tabla);
+
+        //code 3d
+        currentTemp = 1;
+        String codigo = "\nbegin_func_"+idFunc.toString()+":\n";
+        RESULT = codigo;
+
+
+:};
+
+function ::= functionIdentifier:fi LPAREN parameters:ps RPAREN BLOCKSTART statements:st BLOCKEND
+{:
+    //code 3d
+    String code = fi.toString() + ps.toString()+ st.toString();
+    RESULT = code;
+
+:}
+| functionIdentifier:fi LPAREN  RPAREN BLOCKSTART statements:st BLOCKEND
+{:
+    //code 3d
+    String code = fi.toString() + st.toString();
+    RESULT = code;
+
+:};
+
+functions ::= function: f {: RESULT = f; :};
+functions ::= functions:fs function:f {: RESULT = fs.toString()+f.toString(); :};
+functions ::= errors;
+
+
+globalVariable ::=  decl:decl
+{: RESULT = decl; :}
+| decl_and_assignment:dcla
+{: RESULT = dcla; :};
+
+globalVariables ::= globalVariable: gv
+{: RESULT = gv; :};
+
+globalVariables ::= globalVariables:gvs globalVariable:gv
+{: RESULT = gvs.toString()+gv.toString(); :};
+
+
+/** PUNTO DE ENTRADA **/
+program ::= globalVariables:gvs
+{:
+    String code = gvs.toString();
+    intermediateCode.append(code);
+:}
+| functions:fs
+{:
+    String code = fs.toString();
+    intermediateCode.append(code);
+:};
+
+program ::= globalVariables:gvs functions:fs
+{:
+    String code = gvs.toString()+fs.toString();
+    intermediateCode.append(code);
+:};
+
+error_recovery ::= ERROR_RECOVERY;
+errors ::= error_recovery;
+errors ::= errors error_recovery;

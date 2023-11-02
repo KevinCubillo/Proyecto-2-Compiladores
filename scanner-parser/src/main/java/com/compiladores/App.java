@@ -42,12 +42,12 @@ public class App
         Reader reader = new BufferedReader(new FileReader(archivoFuente));
         Lexer lexer = new Lexer(reader);
 
-        parser p = new parser(lexer);
-        p.parse();
-        //Intermedio i = new Intermedio(lexer);
-        //i.parse();
+        //parser p = new parser(lexer);
+        //p.parse();
+        Intermedio i = new Intermedio(lexer);
+        i.parse();
         //Escribir en archivo de codigo intermedio
-       //intermediateCode(i.getIntermediateCode());
+       intermediateCode(i.getIntermediateCode());
     }
 
     public static void intermediateCode(StringBuffer intermediateCode) {

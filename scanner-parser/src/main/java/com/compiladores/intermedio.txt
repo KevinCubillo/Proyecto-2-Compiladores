@@ -1,35 +1,60 @@
 
-
 begin_func_main:
-data_int b1
-t1 = 45
-b1 = t1
-data_int b2
-main_for_1:
-data_Int ini_main_for_1
-t2 = 10
-ini_main_for_1 = t2
-data_Int fin_main_for_1
-t3 = 300
-fin_main_for_1 = t3
-data_Int step_main_for_1
-t4 = 2
-step_main_for_1 = t4
-main_for_1_condition:
-t8 = ini_main_for_1
-t9 = fin_main_for_1
-t10 = t8 < t9
-if t10 goto main_for_1_bloque
-goto main_for_1_bloque_end
-main_for_1_inc: 
-t11 =step_main_for_1
-t12= ini_main_for_1
-t13 = t12 + t11
-ini_main_for_1 = t13
-goto main_for_1_condition
-main_for_1_bloque:
-t5 = b1
-t6 = 1
-t7 = t5+t6
-b1 = t7goto main_for_1_inc
-main_for_1_bloque_end:
+data_int x
+data_int y
+t1 = 10
+x = t1
+t2 = 20
+y = t2
+main_if_1:
+t3 = x
+t4 = 5
+t5 = t3>t4
+if t5 goto main_if_1_bloque
+goto main_if_1_bloque_end
+main_if_1_bloque:
+t6 = x
+t7 = 1
+t8 = t6+t7
+x = t8
+main_if_1_bloque_end:
+main_if_1_else:
+t9 = y
+t10 = 1
+t11 = t9-t10
+y = t11
+main_if_1_else_end:
+main_if_1_end:
+main_while_3:
+main_while_3_condition:
+t12 = x
+t13 = 15
+t14 = t12<t13
+if t14 goto main_while_3_bloque
+goto main_while_3_bloque_end
+main_while_3_bloque:
+main_if_2:
+t15 = x
+t16 = 10
+t17 = t15<t16
+if t17 goto main_if_2_bloque
+goto main_if_2_bloque_end
+main_if_2_bloque:
+t18 = x
+t19 = 1
+t20 = t18+t19
+x = t20
+main_if_2_bloque_end:
+main_if_2_else:
+t21 = y
+t22 = 1
+t23 = t21-t22
+y = t23
+main_if_2_else_end:
+main_if_2_end:
+goto main_while_3_condition
+main_while_3_bloque_end:
+main_while_3_end:
+data_int i
+t24 = 0
+return t24

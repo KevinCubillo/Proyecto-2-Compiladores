@@ -1,21 +1,27 @@
-int#main(){
-	int#b1 = 45;
-	int#b2;
-    for#x#in#range(10,300,2)
-    {
-        b1 = b1 + 1;
+
+
+int#main() {
+    int#x;
+    int#y;
+
+    x = 10;
+    y = 20;
+
+    if (x > 5) {
+        x = x + 1;
+    } else {
+        y = y - 1;
     }
 
+    while (x < 15) {
+        if (x < 10) {
+            x = x + 1;
+        } else {
+            y = y - 1;
+        }
+    }
 
-
-/*
-	if(b1>15){
-	    b2 = 10;
-		if(b1 != b2){
-		    int#b3=99;
-		}
-		int#b4;
-		b4 = 10;
-	}
-	b2 = 99;*/
+    int#i;
+    return#0;
 }
+

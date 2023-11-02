@@ -5,8 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d7af08d1-e724-4b2a-92b5-4c63bf52ddc3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_28_10_2023_17_40__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_28_10_2023_17_40__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_30_10_2023_9_16__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_30_10_2023_9_16__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/cup/parser.cup" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cup/parser.cup" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/App.java" afterDir="false" />
@@ -14,23 +12,23 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/intermedio.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/intermedio.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/tokens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/tokens.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/App.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/App.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/Lexer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/Lexer.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/fuente.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/fuente.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/intermedio.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/intermedio.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser$CUP$parser$actions.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/parser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/sym.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/tokens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/tokens.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/cup/com/compiladores/parser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/cup/com/compiladores/sym.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/jflex/com/compiladores/Lexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/jflex/com/compiladores/Lexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/cup/com/compiladores/parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/cup/com/compiladores/parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scanner-parser-1.0-SNAPSHOT.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/2023-10-28T17-50-45_407.dumpstream" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.compiladores.AppTest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.compiladores.AppTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scanner-parser-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/scanner-parser-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/2023-11-01T19-14-36_355.dumpstream" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.compiladores.AppTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.compiladores.AppTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.compiladores.AppTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.compiladores.AppTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/compiladores/AppTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/compiladores/AppTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,27 +44,31 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2
+}]]></component>
   <component name="ProjectId" id="2VipFqU9W8HAT4VFSzZx4RqzzIV" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "facu",
-    "last_opened_file_path": "C:/Users/kevin/Desktop/Proyecto 2-Compiladores/Proyecto-2-Compiladores/scanner-parser",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;facu&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/kevin/Desktop/Proyecto 2-Compiladores/Proyecto-2-Compiladores/scanner-parser&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Casa\Fabricio\TEC\Compi\Proyecto 2\Proyecto-2-Compiladores\scanner-parser\src\main\java\com\compiladores" />
       <recent name="C:\Users\kevin\Desktop\Proyecto 2-Compiladores\Proyecto-2-Compiladores\scanner-parser\src\main" />
       <recent name="D:\Projects\Working\Proyecto-1-Compiladores\scanner-parser\src\main\java\com\compiladores" />
     </key>
@@ -217,6 +219,7 @@
       <workItem from="1698281455525" duration="20896000" />
       <workItem from="1698604843176" duration="32337000" />
       <workItem from="1698866946139" duration="8942000" />
+      <workItem from="1698897787350" duration="605000" />
     </task>
     <servers />
   </component>

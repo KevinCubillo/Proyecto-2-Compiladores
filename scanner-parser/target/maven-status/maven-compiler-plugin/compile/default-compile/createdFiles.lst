@@ -1,7 +1,3 @@
-com\compiladores\intermedio.txt
-com\compiladores\Lexer.class
 com\compiladores\parser.class
 com\compiladores\sym.class
-com\compiladores\fuente.txt
-com\compiladores\tokens.txt
 com\compiladores\parser$CUP$parser$actions.class

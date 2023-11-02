@@ -35,37 +35,6 @@ parser code  {:
         tablasDeSimbolos.put(currentHash, tabla);
     }
 
-//Metodo para imprimir la tabla de simbolos
-public void imprimirTablaSimbolos() {
-    System.out.println("\n##### TABLAS DE SIMBOLOS #####");
-    for (Map.Entry<String, ArrayList<String[]>> entry : tablasDeSimbolos.entrySet()) {
-        String tablaNombre = entry.getKey();
-        System.out.println("\n##### " + tablaNombre + " #####");
-
-        ArrayList<String[]> symbols = entry.getValue();
-
-        // Imprimir el tipo de tabla
-        System.out.println(symbols.get(0)[0]+" "+symbols.get(0)[1]);
-
-        for (int i = 1; i < symbols.size(); i++) {
-            System.out.println(symbols.get(i)[0] + ", ID:" + symbols.get(i)[1] + ", Tipo:" + symbols.get(i)[2]);
-        }
-    }
-}
-
-//Metodo para imprimir el codigo intermedio
-public void imprimirCodigoIntermedio() {
-    System.out.println("\n##### CODIGO INTERMEDIO #####");
-    for (String code : intermediateCode) {
-        System.out.println(code);
-    }
-}
-
-public ArrayList<String> getIntermediateCode() {
-    return (ArrayList<String>) intermediateCode;
-}
-
-
 
 //Metodo para obtener un symbolo
 public String[] getSymbol(List<String[]> tabla, String id) {
@@ -101,7 +70,21 @@ public ArrayList<String> getFuncParamsTypes(List<String[]> tabla) {
     return paramsTypes;
 }
 
+ //Codigo intermedio
+    //List<String> intermediateCode = new ArrayList<>();
+
+    StringBuffer intermediateCode = new StringBuffer();
+    int currentTemp = 1;
+    int structs = 0;
+
+
+public StringBuffer getIntermediateCode() {
+    return  intermediateCode;
+}
+
 :};
+
+
 
 
 init with {: :};
@@ -161,22 +144,16 @@ aritmeticOp ::= PLUS:plus {: RESULT = plus; :}
 
 operand ::= literal:n    
 {:
-    RESULT = n;    
+    String codigo = "t"+currentTemp++ +" = "+n.toString().split(":")[0];  
+    RESULT = codigo;
+   
 :} 
 
 | IDENTIFIER:id 
 {:
-
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-    String[] symbol = getSymbol(tabla, id.toString());
-    if (symbol == null) {
-        System.out.println("Error semantico en la linea x: "+id.toString()+" no ha sido declarado");
-    }else{
-        String tipoId = symbol[2];
-        RESULT = id+":"+tipoId;
-        //cod 3d
-        //intermediateCode.add("t"+currentTemp++ +" = "+id);
-    }
+    //code 3d
+    String codigo = "t"+currentTemp++ +" = "+id.toString();
+    RESULT = codigo;
                                                        
 :}
 
@@ -186,125 +163,90 @@ operand ::= literal:n
 
 :};
 
+            
+relationalOp ::= EQUALS:eq {: RESULT = eq; :}  | DIFFERENT:dif {: RESULT = dif; :}  | GREATER:gr {: RESULT = gr; :} 
+| LESS:less {: RESULT = less; :}  | GREATEREQUAL:gre {: RESULT = gre; :} | LESSEQUAL:leq {: RESULT = leq; :};
 
-relationalOp ::= EQUALS | DIFFERENT | GREATER | LESS | GREATEREQUAL | LESSEQUAL;
-logicalOp ::= AND | OR;
+logicalOp ::= AND:and {: RESULT = and; :}  | OR:or {: RESULT = or; :} ;
 
 
 /** EXPRESSIONS **/
 
 // EXPRESIONES ARITMETICAS
 aritmeticExpression ::= operand:n 
-{:
-
+{:  
+    
     RESULT = n; 
 
 :}
 | MINUS literal:n 
 {: 
-
-    if (!String.valueOf(n).endsWith("int") && !String.valueOf(n).endsWith("float")) {
-        System.out.println("Error semantico en la linea x: Operacion aritmetica no valida");
-    }
-    
     //cod 3d
-    String temp = "t"+currentTemp++;
-    intermediateCode.add(temp +" = "+n.toString().split(":")[0]);
-    RESULT = "-"+n + ":"+n.toString().split(":")[1]+":"+temp;; 
+    String code = "t"+currentTemp++ + " = -"+n.toString().split(":")[0];
+    RESULT = code;
 
 :}
 
 | IDENTIFIER:id INCREMENT 
 {:
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-    String[] symbol = getSymbol(tabla, id.toString());
-    String tipoId = symbol[2];
-
-    System.out.println("tipo encontado para id: "+id+" es: "+tipoId);
-    if (!tipoId.equals("int"))
-    System.out.println("Error semantico en la linea x: No se permite el uso de incremento en variables de tipo: "+tipoId);  
-
+     //cod 3d 
     String tempId= "t"+currentTemp++;
-    intermediateCode.add(tempId +" = "+id);
-    //cod 3d ++
     String tempPP1= "t"+currentTemp++;
     String tempPP2= "t"+currentTemp++;
-    intermediateCode.add(tempPP1 +" = 1");
-    intermediateCode.add(tempPP2 +" = "+tempId+" + "+tempPP1);
-    intermediateCode.add(id +" = "+tempPP2);
-    RESULT = id+":"+tipoId;
+    String codigo = tempId +" = "+ id + "\n" + tempPP1 +" = 1"+"\n"+tempPP2 +" = "+tempId+" + "+tempPP1+"\n"+id +" = "+tempPP2;
+    RESULT = codigo;
+
+
 :}
 
 | IDENTIFIER:id DECREMENT 
 {:
 
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-    String[] symbol = getSymbol(tabla, id.toString());
-    String tipoId = symbol[2];
-
-    System.out.println("tipo encontado para id: "+id+" es: "+tipoId);
-    if (!tipoId.equals("int")){
-        System.out.println("Error semantico en la linea x: No se permite el uso de decremento en variables de tipo: "+tipoId);  
-    }
-    //cod 3d
-        String tempId= "t"+currentTemp++;
-    intermediateCode.add(tempId +" = "+id);
-    //cod 3d --
+    //cod 3d 
+    String tempId= "t"+currentTemp++;
     String tempPP1= "t"+currentTemp++;
     String tempPP2= "t"+currentTemp++;
-    intermediateCode.add(tempPP1 +" = 1");
-    intermediateCode.add(tempPP2 +" = "+tempId+" - "+tempPP1);
-    intermediateCode.add(id +" = "+tempPP2);
-
-    RESULT = id+":"+tipoId;
+    String codigo = tempId +" = "+ id + "\n" + tempPP1 +" = 1"+"\n"+tempPP2 +" = "+tempId+" - "+tempPP1+"\n"+id +" = "+tempPP2;
+    RESULT = codigo;
 
 :};
 
 
 aritmeticExpression ::= aritmeticExpression:e1 aritmeticOp:op aritmeticExpression:e2
 {:
-    //Verificar que los operandos sean iguales y que sean de tipo int o float
 
-    String operand1 = e1.toString().split(":")[0];
-    String operand2 = e2.toString().split(":")[0];
-    String tipo1 = e1.toString().split(":")[1];
-    String tipo2 = e2.toString().split(":")[1];
+    String[] lineas = e1.toString().split("\n");  // Divide la cadena en líneas
+    String temporale1 = lineas[lineas.length - 1];
+    temporale1 = temporale1.split(" = ")[0]; // Obtiene el último temporal generado
+    String codigo = e1.toString() + "\n" + e2.toString() + "\n" + "t"+ currentTemp++ +" = " + temporale1 + op + "t"+(currentTemp-2);
 
-    String operationType = "null";
-
-    // Verificar que los operandos sean de tipo int o float
-    if ((!tipo1.equals("int") && !tipo1.equals("float")) || (!tipo2.equals("int") && !tipo2.equals("float"))) {
-        System.out.println("Error semantico en la linea x: Tipos de operandos invalidos en operacion aritmetica: "+operand1+op.toString()+operand2);
-    }
-    // Verificar que los operandos sean iguales
-    else if (!tipo1.equals(tipo2)){
-        System.out.println("Error semantico en la linea x: Los operandos deben ser del mismo tipo en operacion aritmetica: "+operand1+op.toString()+operand2);
-    }
-    else{
-          operationType = tipo1;
-    }
-    RESULT = operand1+op.toString()+operand2+":"+operationType;
-    // --->Para el codigo intermedio puede sacar el signo de la operacion de la variable op.toString()
-    String operador= op.toString();
-
-    intermediateCode.add("t" + currentTemp++ +" = "+operand1);
- 
-    intermediateCode.add("t" + currentTemp++  +" = "+operand2);
-    intermediateCode.add("t" + currentTemp++ + "=" + "t" +(currentTemp -3) +" " + operador + " " + "t"+(currentTemp-2));
-
-
-
-    //RESULT ="result"+":"+tipo1+":" + "t" + currentTemp;
-
+    RESULT = codigo;
+  
 :};
 
 aritmeticExpression ::= LPAREN aritmeticExpression RPAREN;
 
 //EXPRESIONES RELACIONALES
-relationalExpression ::= aritmeticExpression relationalOp aritmeticExpression;
+relationalExpression ::= aritmeticExpression:e1 relationalOp:op aritmeticExpression:e2
+{:
+
+    String[] lineas = e1.toString().split("\n");  // Divide la cadena en líneas
+    String temporale1 = lineas[lineas.length - 1];
+    temporale1 = temporale1.split(" = ")[0]; // Obtiene el último temporal generado
+    String codigo = e1.toString() + "\n" + e2.toString() + "\n" + "t"+currentTemp++ +" = " + temporale1 + op + "t"+(currentTemp-2);
+
+    RESULT = codigo;
+
+:};
 
 // EXPRESIONES LOGICAS
-logicalExpression ::= relationalExpression;//| operand;
+logicalExpression ::= relationalExpression:e1
+{:
+
+    RESULT = e1;
+
+:};
+
 logicalExpression ::= logicalExpression logicalOp logicalExpression;
 logicalExpression ::= LPAREN logicalExpression RPAREN;
 logicalExpression ::= NOT logicalExpression;
@@ -324,16 +266,34 @@ expression ::= aritmeticExpression:e
 
 /** CONTROL STRUCTURES **/
 
-if_struct ::= IF LPAREN logicalExpression RPAREN BLOCKSTART statements BLOCKEND;
+if_struct ::= IF LPAREN logicalExpression:e1 RPAREN BLOCKSTART statements:st BLOCKEND
 {:
-    //cod 3d
-    int ind=indices.pop();
-    intermediateCode.add("if T 7 goto " );
-    intermediateCode.add("t"+currentTemp++ +" = "+logicalExpression);
-    intermediateCode.add("if t"+(currentTemp-1)+" goto if_true");
-    intermediateCode.add("goto if_false");
-    intermediateCode.add("if_true:");
-:}
+
+     //cod 3d
+
+    String idFunc = currentHash;
+
+    String[] lineas = e1.toString().split("\n");  // Divide la cadena en líneas
+    String temporale1 = lineas[lineas.length - 1];
+    temporale1 = temporale1.split(" = ")[0]; // Obtiene el último temporal generado
+
+
+    //moverme a antes de la expresion logica
+    String etiquetaPrincipal = idFunc+"_if_"+ ++structs+":\n";
+    String operacionLogica = e1.toString();
+    String saltoAfirmativo = "\nif " + temporale1 + " goto "+ idFunc + "_if_"+ structs + "_bloque";
+    String saltoNegativo = "\ngoto "+ idFunc + "_if_"+ structs + "_bloque_end";
+    String etiquetaBloque = "\n"+ idFunc + "_if_"+ structs + "_bloque:\n";
+
+    //escribir todo lo de statements
+    String statements = st.toString();
+
+    String etiquetaBloqueEnd = "\n"+ idFunc + "_if_"+ structs + "_bloque_end:";
+
+    RESULT = etiquetaPrincipal + operacionLogica + saltoAfirmativo + saltoNegativo + etiquetaBloque + statements + etiquetaBloqueEnd;
+
+
+:};
 
 if_else_struct ::= if_struct ELSE BLOCKSTART statements BLOCKEND;
 {:
@@ -352,39 +312,7 @@ while_else_struct ::= while_struct ELSE BLOCKSTART statements BLOCKEND;
 for_range_struct ::= FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression:e1 COMMA
                      aritmeticExpression:e2 COMMA aritmeticExpression:e3 RPAREN BLOCKSTART statements BLOCKEND
 {:
-    //Comprobar que el iterador sea entero
-    if (id.toString().endsWith("int")) {
-        System.out.println("Error semantico en la linea x: El iterador del for range debe ser de tipo entero");
-    }
-  
-    //Comprobar que el tipo de dato de la los argumentos sea entero
-    if (!String.valueOf(e1).endsWith("int") || !String.valueOf(e2).endsWith("int") || !String.valueOf(e3).endsWith("int")) {
-        System.out.println("Error semantico en la linea x: Los argumentos del for range deben ser de tipo entero");
-    }
-    //cod 3d
-    intermediateCode.add("For:");
-    intermediateCode.add("dataInt forIni");
-    intermediateCode.add("forIni = "+e1);
-    intermediateCode.add("dataInt forFin");
-    intermediateCode.add("forFin = "+e2);
-    intermediateCode.add("dataInt forStep");
-    intermediateCode.add("forStep = "+e3);
-    intermediateCode.add("For_Condition");
-    intermediateCode.add("t"+currentTemp++ +" = forIni");
-    intermediateCode.add("t"+currentTemp++ +" = forFin");
-    intermediateCode.add("t"+currentTemp++ +" = t"+(currentTemp-2)+" <= t"+(currentTemp-1));
-    intermediateCode.add("if t"+(currentTemp-1)+" goto For_bloque");
-    intermediateCode.add("goto For_end");
 
-    intermediateCode.add("For_inc");
-    intermediateCode.add("t"+currentTemp++ +" = forStep");
-    intermediateCode.add("t"+currentTemp++ +" = forIni");
-    intermediateCode.add("t"+currentTemp++ +" = t"+(currentTemp-2)+" + t"+(currentTemp-1));
-    intermediateCode.add("forIni = t"+(currentTemp-1));
-    intermediateCode.add("goto For_Condition");
-    intermediateCode.add("For_bloque");
-    //intermediateCode.add("goto For_inc");
-    //intermediateCode.add("For_end");
 
 :}
 
@@ -392,29 +320,6 @@ for_range_struct ::= FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LP
                      aritmeticExpression:e2 RPAREN BLOCKSTART statements BLOCKEND
 {:
 
-    //Comprobar que el iterador sea entero
-    if (id.toString().endsWith("int")) {
-        System.out.println("Error semantico en la linea x: El iterador del for range debe ser de tipo entero");
-    }
-  
-    //Comprobar que el tipo de dato de la los argumentos sea entero
-    if (!String.valueOf(e1).endsWith("int") || !String.valueOf(e2).endsWith("int")) {
-        System.out.println("Error semantico en la linea x: Los argumentos del for range deben ser de tipo entero");
-    }
-        //cod 3d
-    intermediateCode.add("For:");
-    intermediateCode.add("dataInt forIni");
-    intermediateCode.add("forIni = "+e1);
-    intermediateCode.add("dataInt forFin");
-    intermediateCode.add("forFin = "+e2);
-    intermediateCode.add("dataInt forStep");
-    intermediateCode.add("forStep = 1");
-    intermediateCode.add("For_Condition");
-    intermediateCode.add("t"+currentTemp++ +" = forIni");
-    intermediateCode.add("t"+currentTemp++ +" = forFin");
-    intermediateCode.add("t"+currentTemp++ +" = t"+(currentTemp-2)+" <= t"+(currentTemp-1));
-    intermediateCode.add("if t"+(currentTemp-1)+" goto For_bloque");
-    intermediateCode.add("goto For_end");
 
     intermediateCode.add("For_inc");
     intermediateCode.add("t"+currentTemp++ +" = forStep");
@@ -431,29 +336,6 @@ for_range_struct ::= FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LP
 | FOR SEPARATOR IDENTIFIER:id SEPARATOR IN SEPARATOR RANGE LPAREN aritmeticExpression:e1 RPAREN BLOCKSTART statements BLOCKEND
 {:
 
-    //Comprobar que el iterador sea entero
-    if (id.toString().endsWith("int")) {
-        System.out.println("Error semantico en la linea x: El iterador del for range debe ser de tipo entero");
-    }
-  
-    //Comprobar que el tipo de dato de la los argumentos sea entero
-    if (!String.valueOf(e1).endsWith("int")) {
-        System.out.println("Error semantico en la linea x: Los argumentos del for range deben ser de tipo entero");
-    }
-            //cod 3d
-    intermediateCode.add("For:");
-    intermediateCode.add("dataInt forIni");
-    intermediateCode.add("forIni = 1");
-    intermediateCode.add("dataInt forFin");
-    intermediateCode.add("forFin = "+e1);
-    intermediateCode.add("dataInt forStep");
-    intermediateCode.add("forStep = 1");
-    intermediateCode.add("For_Condition");
-    intermediateCode.add("t"+currentTemp++ +" = forIni");
-    intermediateCode.add("t"+currentTemp++ +" = forFin");
-    intermediateCode.add("t"+currentTemp++ +" = t"+(currentTemp-2)+" <= t"+(currentTemp-1));
-    intermediateCode.add("if t"+(currentTemp-1)+" goto For_bloque");
-    intermediateCode.add("goto For_end");
 
     intermediateCode.add("For_inc");
     intermediateCode.add("t"+currentTemp++ +" = forStep");
@@ -470,13 +352,14 @@ default_statement ::= DEFAULT DOTS statements;
 
 case_statement ::= CASE SEPARATOR literal:lit DOTS statements
 {:
+  
     RESULT = lit;
     intermediateCode.add(0,"case_"+lit.toString().split(":")[0]+":");
 :};
 
 case_statements ::= case_statement:cs
 {:
-    RESULT = cs;
+    
 :};
 
 case_statements ::= case_statements:css case_statement:cs
@@ -488,87 +371,13 @@ case_statements ::= case_statements:css case_statement:cs
 switch_struct ::= SWITCH LPAREN expression:e1 RPAREN BLOCKSTART case_statements:types BLOCKEND
 {:
 
-    // Verificar que el tipo de dato de la expresion coincida con el tipo de dato de los casos
-    String tipoSwitch = e1.toString().split(":")[1];
-    String[] tiposCasos = types.toString().split(",");
-
-    for (String tipoCaso : tiposCasos) {
-        String tipoCaso1 = tipoCaso.split(":")[1];
-        if (!tipoSwitch.equals(tipoCaso1)) {
-            System.out.println("Error semantico en la linea x: El tipo de dato de la expresion no coincide con el tipo de dato de los casos");
-        }
-    }
-        //cod 3d
-        intermediateCode.add("Switch:");
-        String e1Split = e1.toString().split(":")[0];
-        int tTemp= currentTemp;
-        intermediateCode.add("t" + currentTemp++ + " = " + e1Split);
-
-        int contador= 0;
-        for (String tipoCaso : tiposCasos) {
-                    String tipoCasoSplit = tipoCaso.split(":")[0];
-                    intermediateCode.add("t" + currentTemp++ + " = " + tipoCasoSplit);
-                    contador++;
-        }
-        // Generar una etiqueta para cada caso
-        for (String tipoCaso : tiposCasos) {
-            String tipoCasoSplit = tipoCaso.split(":")[0];
-            intermediateCode.add("if t" + tTemp + " == t" + (currentTemp - contador--) + " goto case_" + tipoCasoSplit);
-        }
-        intermediateCode.add("goto default");
-        // Generar una etiqueta para el caso default
-        for (String tipoCaso : tiposCasos) {
-            String tipoCasoSplit = tipoCaso.split(":")[0];
-            intermediateCode.add("case_" + tipoCasoSplit + " :");
-        }
-        intermediateCode.add("default:");
-        //intermediateCode.add("goto end_switch");
-        //intermediateCode.add("end_switch:");
-
-
-
-
 
 :};
 
 switch_struct ::= SWITCH LPAREN expression:e1 RPAREN BLOCKSTART case_statements:types default_statement BLOCKEND
 {:
 
-    // Verificar que el tipo de dato de la expresion coincida con el tipo de dato de los casos
-    String tipoSwitch = e1.toString().split(":")[1];
-    String[] tiposCasos = types.toString().split(",");
 
-    for (String tipoCaso : tiposCasos) {
-        String tipoCaso1 = tipoCaso.split(":")[1];
-        if (!tipoSwitch.equals(tipoCaso1)) {
-            System.out.println("Error semantico en la linea x: El tipo de dato de la expresion no coincide con el tipo de dato de los casos");
-        }
-    }
-        intermediateCode.add("Switch:");
-        String e1Split = e1.toString().split(":")[0];
-        int tTemp= currentTemp;
-        intermediateCode.add("t" + currentTemp++ + " = " + e1Split);
-
-        int contador= 0;
-        for (String tipoCaso : tiposCasos) {
-                    String tipoCasoSplit = tipoCaso.split(":")[0];
-                    intermediateCode.add("t" + currentTemp++ + " = " + tipoCasoSplit);
-                    contador++;
-        }
-        // Generar una etiqueta para cada caso
-        for (String tipoCaso : tiposCasos) {
-            String tipoCasoSplit = tipoCaso.split(":")[0];
-            intermediateCode.add("if t" + tTemp + " == t" + (currentTemp - contador--) + " goto case_" + tipoCasoSplit);
-        }
-        intermediateCode.add("goto default");
-        // Generar una etiqueta para el caso default
-        /*for (String tipoCaso : tiposCasos) {
-            String tipoCasoSplit = tipoCaso.split(":")[0];
-            intermediateCode.add("case_" + tipoCasoSplit + " :");
-        }*/
-        intermediateCode.add("default:");
-        //intermediateCode.add("goto end_switch");
-        //intermediateCode.add("end_switch:");
 :};
 
 switch_struct ::= SWITCH LPAREN expression RPAREN BLOCKSTART default_statement BLOCKEND;
@@ -579,235 +388,137 @@ switch_struct ::= SWITCH LPAREN expression RPAREN BLOCKSTART default_statement B
 varIdentifier ::= type:t SEPARATOR IDENTIFIER:idVar 
 {:
 
-    // Verificar si la variable ya existe en el ámbito actual
-    
-    String varName = idVar.toString();
-    String varType = t.toString();
-    List<String[]> tabla = tablasDeSimbolos.get(currentHash);
-    boolean variableExist = false;
-
-    // Busca en la tabla de símbolos si la variable ya existe en el ámbito actual
-    for (String[] symbol : tabla) {
-        if (symbol[0].equals("Variable") && symbol[1].equals(varName)) {
-            // La variable ya existe en el ámbito actual
-            variableExist = true;
-            break;
-        }
-    }
-    if (variableExist) {
-        System.out.println("Error: La variable '" + varName + "' ya ha sido declarada en este ámbito.");
-
-    } else {
-        // Agregar la variable a la tabla de símbolos
-        String[] symbol = new String[3];
-        symbol[0] = "Variable";
-        symbol[1] = varName;
-        symbol[2] = varType;
-        tabla.add(symbol);
-        intermediateCode.add("data_"+t.toString()+" "+idVar.toString());
-        indices.push(intermediateCode.size());
-    }
-    
-    RESULT = idVar.toString()+":"+t.toString();
-    
+    String code =  "data_"+t.toString()+" "+idVar.toString();
+    RESULT = code;
+  
 :}; 
 
-decl ::= varIdentifier ENDLINE;
-
-
-assignment ::= IDENTIFIER:id ASSIGN expression:e ENDLINE
+decl ::= varIdentifier:vi ENDLINE
 {:
-    //Verificar si la variable existe
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-    String[] symbol = getSymbol(tabla, id.toString());
-    if (symbol == null) {
-        System.out.println("Error semantico en la linea x: "+id.toString()+" no ha sido declarado");
-    }else{
-        String tipoId = symbol[2];
-        String tipoExpresion = e.toString().split(":")[1];
 
-        // Verificar que el tipo de dato de la expresion coincida con el tipo de dato de la variable
-        if (!tipoId.equals(tipoExpresion)) {
-            System.out.println("Error semantico en la linea x: El tipo de dato de la expresion no coincide con el tipo de dato de la variable");
-        }
-    }
-    intermediateCode.add("t"+ currentTemp++ +" = "+e.toString().split(":")[0]);
-    intermediateCode.add(id.toString()+" = t"+(currentTemp-1));
+    RESULT = vi;
+
 :};
 
-decl_and_assignment ::= varIdentifier:id ASSIGN  expression:e ENDLINE
+assignment ::= IDENTIFIER:id ASSIGN expression:e1 ENDLINE
 {:
-    //Verificar si la variable existe
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-    String[] symbol = getSymbol(tabla, id.toString());
-    if (symbol == null) {
-        System.out.println("Error semantico en la linea x: "+id.toString()+" no ha sido declarado");
-    }else{
-        String tipoId = symbol[2];
-        String tipoExpresion = e.toString().split(":")[1];
 
-        // Verificar que el tipo de dato de la expresion coincida con el tipo de dato de la variable
-        if (!tipoId.equals(tipoExpresion)) {
-            System.out.println("Error semantico en la linea x: El tipo de dato de la expresion no coincide con el tipo de dato de la variable");
-        }
-    }
-    intermediateCode.add("t"+ currentTemp++ +" = "+e.toString().split(":")[0]);
-    indices.push(intermediateCode.size());
+    String code = e1.toString()+"\n"+id.toString()+" = "+"t"+(currentTemp-1);
+    
+    RESULT = code;  
+       
+:};
+
+decl_and_assignment ::= varIdentifier:vi ASSIGN expression:e1 ENDLINE
+{:
+    String code = vi.toString() + "\n" + e1.toString() + "\n" + vi.toString().split(" ")[1] + " = " + "t"+(currentTemp-1);  
+    RESULT = code;
+
 :};
 
 readData ::= READ READSYMBOL IDENTIFIER:id ENDLINE
 {:
-    //Verificar si la variable existe
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-    String[] symbol = getSymbol(tabla, id.toString());
-    if (symbol == null) {
-        System.out.println("Error semantico en la linea x: "+id.toString()+" no ha sido declarado");
-    }else{
-        String tipoId = symbol[2];
-        // Verificar que el tipo de dato de la variable sea int o float
-        if (!tipoId.equals("int") && !tipoId.equals("float")) {
-            System.out.println("Error semantico en la linea x: Tipo de dato no valido");
-        }
-    }
-    intermediateCode.add("READ "+ id.toString()+ currentTemp++);
-    indices.push(intermediateCode.size());
+    //cod 3d
+    String codigo = "READ "+id.toString();
+    RESULT = codigo;
+
 :};
 
-printData ::= PRINT PRINTSYMBOL expression ENDLINE;
+printData ::= PRINT PRINTSYMBOL expression:e1 ENDLINE
 {:
-    intermediateCode.add("PRINT "+ "t" + currentTemp-1);
-    indices.push(intermediateCode.size());
+    String codigo = e1.toString() + "\n" + "PRINT t"+(currentTemp-1)+"\n";
+    RESULT = codigo;
+
 :};
 
 
 sendParameters ::= expression:e 
 {:
-    RESULT = e;
+
+    //code 3d
+    String codigo = e.toString()+"\nParam "+ "t"+(currentTemp-1)+"\n"+"1";
+    RESULT = codigo;
+
 :}
 
-| sendParameters:params COMMA expression:e
-
+| sendParameters:sp COMMA expression:e
 {:
-    RESULT = params + "," + e;
+    //code 3d
+    String cantParameters = sp.toString().split("\n")[sp.toString().split("\n").length-1];
+    String sp1 = sp.toString().substring(0, sp.toString().lastIndexOf("\n"));
+
+    String codigo = sp1.toString() + "\n" + e.toString()+"\nParam "+ "t"+(currentTemp-1)+"\n"+(Integer.parseInt(cantParameters)+1);
+    RESULT = codigo;
+ 
 :};
 
-callFunction ::= IDENTIFIER:id LPAREN sendParameters:actualParams  RPAREN 
+callFunction ::= IDENTIFIER:id LPAREN sendParameters:sp  RPAREN 
 {: 
 
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(id.toString()); //Obtener la tabla de simbolos de la funcion
-    String[] funcInfo = tabla.get(0); //Obtener la info de la tabla de simbolos de la funcion
+    //code 3d
+    String cantParameters = sp.toString().split("\n")[sp.toString().split("\n").length-1];
+    String sp1 = sp.toString().substring(0, sp.toString().lastIndexOf("\n"));
 
-     //Verificar si la funcion existe
-    if (tablasDeSimbolos.containsKey(id.toString())) {
-
-        // Verificar si los parametros enviados coinciden con los parametros de la funcion
-        ArrayList<String> funcParamstypes = getFuncParamsTypes(tabla);
-        String[] sendParams = actualParams.toString().split(",");
-
-    
-        if (funcParamstypes.size() != sendParams.length) {
-            System.out.println("Error semantico en la linea x: La cantidad de parametros enviados no coincide con la cantidad de parametros de la funcion: "+ id.toString());
-        } else {
-            for (int i = 0; i < funcParamstypes.size(); i++) {
-                if (sendParams[i].equals("null")) {
-                    break;   // No se muestra el error ya que en operand se mostró al validar el id 
-                }
-                String paramType1 = funcParamstypes.get(i); // Tipo de dato del parametro de la funcion
-                String paramType2 = sendParams[i].split(":")[1]; // Tipo de dato del parametro enviado
-
-                if (!paramType1.equals(paramType2)) { // Verificar si los tipos de datos coinciden
-                    System.out.println("Error semantico en la linea x: Se esperaba un parametro de tipo "+paramType1+" y se recibio uno de tipo "+paramType2);
-                }   
-            }
-        }
-    
-    }else{
-        System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" no existe");
-    }
-    intermediateCode.add("goto "+id.toString());
-    indices.push(intermediateCode.size());
-    RESULT = id.toString()+":"+funcInfo[1];
-
+    String codigo = sp1.toString() + "\nt"+(currentTemp++)+ " = call "+id.toString()+", "+cantParameters;
+    RESULT = codigo;
 
 :};
 
-callFunction ::= IDENTIFIER:id LPAREN RPAREN
+callFunction ::= IDENTIFIER:id LPAREN RPAREN;
+
+
+callFunction_statement ::= callFunction:cf ENDLINE
 {:
-
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(id.toString()); //Obtener la tabla de simbolos de la funcion
-    String[] funcInfo = tabla.get(0); //Obtener la info de la tabla de simbolos de la funcion
-
-    //Verificar si la funcion existe
-    if (tablasDeSimbolos.containsKey(id.toString())) {
-        // Verificar si la funcion requiere parametros
-        if (getFuncParamsTypes(tabla).size() != 0) {
-            System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" requiere parametros");
-        }
-    } else {
-        System.out.println("Error semantico en la linea x: La funcion "+id.toString()+" no existe");
-    }
-    intermediateCode.add("goto "+id.toString());
-    indices.push(intermediateCode.size());
-    RESULT = id.toString()+":"+funcInfo[1];
-
+        //code 3d
+        RESULT = cf;
 :};
-
-callFunction_statement ::= callFunction ENDLINE;
 
 return_statement ::= RETURN SEPARATOR expression:e ENDLINE
 {:
 
-// Verificar que el tipo de retorno coincida con el tipo de dato de la funcion
-
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-    String[] infoTabla = tabla.get(0);
-    String tipoFuncion = infoTabla[1];
-    String tipoExpresion = e.toString().split(":")[1];
-
-    if (!tipoFuncion.equals(tipoExpresion)) {
-        System.out.println("Error semantico en la linea x: Tipo de retorno no valido");
-    }
-    intermediateCode.add("tReturn"+ currentTemp++ +" = "+e.toString().split(":")[0]);
-    indices.push(intermediateCode.size());
-
 
 :}
 | RETURN ENDLINE;
-
 break_statement ::= BREAK ENDLINE;
 {:
     intermediateCode.add("goto end");
     indices.push(intermediateCode.size());
 :}
 
-statement ::=   decl | assignment | decl_and_assignment | readData | printData | return_statement | break_statement |
-                callFunction_statement | if_struct | if_else_struct| while_struct | while_else_struct | for_range_struct
-                | switch_struct;
 
-statements ::= statement; //retornar solo el returnstatyement y preguntar si es null o no, para saber si hay un return o no.
-statements ::= statements statement;
+statement ::=   decl:decl {: RESULT = decl; :} 
+| assignment:assig {: RESULT = assig; :} 
+| decl_and_assignment:dcla {: RESULT = dcla; :} 
+| readData:rd {: RESULT = rd; :} 
+| printData: pd {: RESULT = pd; :}
+| return_statement 
+| break_statement 
+| callFunction_statement:cfs {: RESULT = cfs; :} 
+| if_struct:if_str {: RESULT = if_str; :} 
+| if_else_struct 
+| while_struct 
+| while_else_struct 
+| for_range_struct
+| switch_struct;
+
+statements ::= statement:st 
+{: 
+    RESULT = st;
+:};
+
+statements ::= statements:sts statement:st
+{:
+
+    RESULT = sts + "\n" + st;
+    
+:};
+
 
 /** PARAMETERS **/
 
 parameter ::= type:t SEPARATOR IDENTIFIER:idParam 
 {:
 
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-
-     // Verificar si el parámetro ya existe en la tabla
-    if (existParam(tabla, idParam.toString())) {
-        System.out.println("Error semantico en la linea x: Nombre de parametro duplicado: " + idParam.toString());
-    } else{
-
-        // Agregar el parámetro en la tabla
-        String[] symbol = new String[3];
-        symbol[0] = "Parametro";
-        symbol[1] = idParam.toString();
-        symbol[2] = t.toString();
-        tabla.add(symbol);
-    }
-    intermediateCode.add("data_"+t.toString()+" "+idParam.toString());
-    indices.push(intermediateCode.size());
 
 :};
 
@@ -821,11 +532,7 @@ parameters ::= errors; //  parmetros no válidos
 functionIdentifier ::= type:t SEPARATOR IDENTIFIER :idFunc 
 {:
 
-    // Verificar si la funcion ya existe en la tabla de simbolos
-    if (tablasDeSimbolos.containsKey(idFunc.toString())) {
-        System.out.println("Error semantico en la linea x: La funcion "+idFunc.toString()+" ya ha sido declarada");
-    } else {   
-
+ 
     //  Definir el tipo de tabla
         String tipoTabla = "main";
         if (idFunc.toString().equals("main")){
@@ -843,16 +550,24 @@ functionIdentifier ::= type:t SEPARATOR IDENTIFIER :idFunc
         tipo[1] = t.toString();
         tabla.add(tipo);
         tablasDeSimbolos.put(currentHash, tabla);
-        //cod 3d
-        currentTemp = 1;
-        intermediateCode.add("\n\nbegin_func_ "+idFunc.toString()+":");
-        indices.push(intermediateCode.size());
-    }
 
+        //code 3d
+        currentTemp = 1;
+        String codigo = "\n\nbegin_func_"+idFunc.toString()+":\n";
+        RESULT = codigo;
+
+        
 :}; 
 
 function ::= functionIdentifier LPAREN parameters RPAREN BLOCKSTART statements BLOCKEND
-           | functionIdentifier LPAREN  RPAREN BLOCKSTART statements BLOCKEND;
+| functionIdentifier:fi LPAREN  RPAREN BLOCKSTART statements:st BLOCKEND
+           
+{:
+
+String code = fi.toString() + st.toString();
+intermediateCode.append(code);
+           
+:};
 
 functions ::= function;
 functions ::= functions function;
@@ -867,12 +582,12 @@ globalVariables ::= globalVariables globalVariable;
 /** PUNTO DE ENTRADA **/
 program ::= globalVariables | functions
 {:
-    imprimirTablaSimbolos();
+
 :};
 
 program ::= globalVariables functions  
 {:
-    imprimirTablaSimbolos();
+
 :};
 
 error_recovery ::= ERROR_RECOVERY:err 

@@ -1,78 +1,22 @@
-int#variable;
+int#main(){
+	int#b1 = 45;
+	int#b2;
+	b1 = 10;
+	print<<56+89+454;
+	read>>b1;
 
-/*int#main(char#perro){
-	string#b1;
-}
+	hola(23,"perra", b2);
 
-float#vaca(char#perro){
-	string#b1;
-}*/
-
-int#getName(char#vava,int#monoArana){
-
-    int#hola;
-
-    switch(hola) //semantico
-    {
-    	case#7:
-    		hola=5;
-    	case#2:
-    		hola = 111;
-    		break;
-    	default:
-    		hola = 33;
-    }
-    //hola=10+12.5;
-
-}
 
 
 /*
-float#miFunc(int#dif,char#otra){
-	int#otra;
-	string#str="Hola $%&/#$&) mundo";
-	for#x#in#range(10,300,2) //for i in range(i+10,300,2)
-	{
-		while(var2>12.2 || (34+34)>12) //semantico
-		{
-			var = var - 1; //semantico
-		}else{
-			read>>var2;
-			break;
+	if(b1>15){
+	    b2 = 10;
+		if(b1 != b2){
+		    int#b3=99;
 		}
-
-		if (var==0)
-		{
-			print<<"entra al if";
-		}
-		if(10>12 && var!=0)
-		{
-			print<<var;
-		}
-		else
-		{
-			switch(otra) //semantico
-			{
-				case#1:
-					print<<"!#";
-				case#2:
-					otra = 10;
-					break;
-				default:
-					otra = -10.5 * -1.9;
-			}
-			switch(otra2) //semantico
-			{
-				case#10:
-					print<<"un case";
-			}
-		}
+		int#b4;
+		b4 = 10;
 	}
-	return#1; //semantico
+	b2 = 99;*/
 }
-
-bool#miOtraFun(){
-	return#-5.6; //semantico
-}
-
-*/

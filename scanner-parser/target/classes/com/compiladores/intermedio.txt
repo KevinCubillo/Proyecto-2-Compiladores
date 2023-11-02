@@ -1,0 +1,24 @@
+
+
+begin_func_main:
+data_int b1
+t1 = 45
+b1 = t1
+data_int b2
+t2 = 10
+b1 = t2
+t3 = 56
+t4 = 89
+t5 = 454
+t6 = t4+t5
+t7 = t3+t6
+PRINT t7
+
+READ b1
+t8 = 23
+Param t8
+t9 = "perra"
+Param t9
+t10 = b2
+Param t10
+t11 = call hola, 3

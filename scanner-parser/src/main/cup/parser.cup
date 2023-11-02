@@ -152,19 +152,22 @@ operand ::= literal:n
 | IDENTIFIER:id 
 {:
 
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-    String[] symbol = getSymbol(tabla, id.toString());
+    RESULT="null:null";
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash); //Obtener la tabla de simbolos del ambito actual
+    String[] symbol = getSymbol(tabla, id.toString());//Obtener el simbolo de la tabla de simbolos del ambito actual
     if (symbol == null) {
         System.out.println("Error semantico en la linea x: "+id.toString()+" no ha sido declarado");
+
     }else{
         String tipoId = symbol[2];
-        RESULT = id+":"+tipoId;     
-    }   
+        RESULT = id+":"+tipoId;     //Devolver el tipo de dato del identificador
+    }
+
                                                        
 :} 
 | callFunction:cf
 {:
-    RESULT = cf;
+    RESULT = cf; //Devolver el tipo de dato de la funcion
 
 :};
 
@@ -181,14 +184,14 @@ logicalOp ::= AND:and {: RESULT = and; :}  | OR:or {: RESULT = or; :} ;
 aritmeticExpression ::= operand:n 
 {:
 
-    RESULT = n; 
+    RESULT = n;  //Devolver el tipo de dato del operando
 
 :}
 | MINUS literal:n 
 
 {: 
 
-    if (!String.valueOf(n).endsWith("int") && !String.valueOf(n).endsWith("float")) {
+    if (!String.valueOf(n).endsWith("int") && !String.valueOf(n).endsWith("float")) { //Verificar que el operando sea de tipo int o float
         System.out.println("Error semantico en la linea x: Operacion aritmetica no valida");
     }
     RESULT = "-"+n; 
@@ -198,27 +201,28 @@ aritmeticExpression ::= operand:n
 
 | IDENTIFIER:id INCREMENT 
 {:
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-    String[] symbol = getSymbol(tabla, id.toString());
-    String tipoId = symbol[2];
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash); //Obtener la tabla de simbolos del ambito actual
+    String[] symbol = getSymbol(tabla, id.toString()); //Obtener el simbolo de la tabla de simbolos del ambito actual
+    String tipoId = symbol[2]; //Obtener el tipo de dato del identificador
 
-    if (!tipoId.equals("int"))
+    if (!tipoId.equals("int")) //Verificar que el tipo de dato del identificador sea int
+
     System.out.println("Error semantico en la linea x: No se permite el uso de incremento en variables de tipo: "+tipoId);  
-    RESULT = id+":"+tipoId;
+    RESULT = id+":"+tipoId; //Devolver el tipo de dato del identificador
 
 :}
 
 | IDENTIFIER:id DECREMENT 
 {:
 
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-    String[] symbol = getSymbol(tabla, id.toString());
-    String tipoId = symbol[2];
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash); //Obtener la tabla de simbolos del ambito actual
+    String[] symbol = getSymbol(tabla, id.toString()); //Obtener el simbolo de la tabla de simbolos del ambito actual
+    String tipoId = symbol[2]; //Obtener el tipo de dato del identificador
 
     if (!tipoId.equals("int")){
         System.out.println("Error semantico en la linea x: No se permite el uso de decremento en variables de tipo: "+tipoId);  
     }
-    RESULT = id+":"+tipoId;
+    RESULT = id+":"+tipoId; //Devolver el tipo de dato del identificador
 
 :};
 
@@ -227,31 +231,31 @@ aritmeticExpression ::= aritmeticExpression:e1 aritmeticOp:op aritmeticExpressio
 {:
     //Verificar que los operandos sean iguales y que sean de tipo int o float
 
-    String operand1 = e1.toString().split(":")[0];
-    String operand2 = e2.toString().split(":")[0];
-    String tipo1 = e1.toString().split(":")[1];
-    String tipo2 = e2.toString().split(":")[1];
+    String operand1 = e1.toString().split(":")[0]; //Obtener el operando 1
+    String operand2 = e2.toString().split(":")[0]; //Obtener el operando 2
+    String tipo1 = e1.toString().split(":")[1]; //Obtener el tipo de dato del operando 1
+    String tipo2 = e2.toString().split(":")[1]; //Obtener el tipo de dato del operando 2
 
     String operationType = "null";
 
     // Verificar que los operandos sean de tipo int o float
-    if ((!tipo1.equals("int") && !tipo1.equals("float")) || (!tipo2.equals("int") && !tipo2.equals("float"))) {
+    if ((!tipo1.equals("int") && !tipo1.equals("float")) || (!tipo2.equals("int") && !tipo2.equals("float"))) { //Verificar que los operandos sean de tipo int o float
         System.out.println("Error semantico en la linea x: Tipos de operandos invalidos en la operacion aritmetica: "+operand1+op.toString()+operand2);
     }
     // Verificar que los operandos sean iguales
-    else if (!tipo1.equals(tipo2)){
+    else if (!tipo1.equals(tipo2)){ //Verificar que los operandos sean iguales
         System.out.println("Error semantico en la linea x: Los operandos deben ser del mismo tipo en la operacion aritmetica: "+operand1+op.toString()+operand2);
     }
     else{
           operationType = tipo1;
     }
-    RESULT = operand1+op.toString()+operand2+":"+operationType;
+    RESULT = operand1+op.toString()+operand2+":"+operationType; //Devolver el tipo de dato de la operacion
 
 :};
 
 aritmeticExpression ::= LPAREN aritmeticExpression:e1 RPAREN
 {:
-    RESULT = e1;
+    RESULT = e1; //Devolver el tipo de dato de la expresion
 
 :};
 
@@ -266,12 +270,12 @@ logicalExpression ::= NOT logicalExpression;
 
 expression ::= aritmeticExpression:e
 {:
-    RESULT = e; 
+    RESULT = e; //Devolver el tipo de dato de la expresion
 :} 
 
 | logicalExpression:e
 {:
-    RESULT = e; 
+    RESULT = e; //Devolver el tipo de dato de la expresion
 :};
 
 
@@ -335,17 +339,17 @@ default_statement ::= DEFAULT DOTS statements;
 
 case_statement ::= CASE SEPARATOR literal:lit DOTS statements
 {:
-    RESULT = lit;
+    RESULT = lit; //Devolver el tipo de dato del literal
 :};
 
 case_statements ::= case_statement:cs
 {:
-    RESULT = cs;
+    RESULT = cs; //Devolver el tipo de dato del case statement
 :};
 
 case_statements ::= case_statements:css case_statement:cs
 {:
-    RESULT = css + "," + cs;
+    RESULT = css + "," + cs; //Devolver el tipo de dato del case statement
 
 :};
 
@@ -522,7 +526,7 @@ sendParameters ::= expression:e
 callFunction ::= IDENTIFIER:id LPAREN sendParameters:actualParams  RPAREN 
 {: 
 
-    String[] funcInfo = new String[2];
+    String[] funcInfo = new String[2]; // 0: Tipo de tabla, 1: Tipo de dato de la funcion
     funcInfo[0] = "null";
     funcInfo[1] = "null";
      //Verificar si la funcion existe
@@ -536,7 +540,7 @@ callFunction ::= IDENTIFIER:id LPAREN sendParameters:actualParams  RPAREN
         String[] sendParams = actualParams.toString().split(",");
 
     
-        if (funcParamstypes.size() != sendParams.length) {
+        if (funcParamstypes.size() != sendParams.length) {// Verificar si la cantidad de parametros enviados coincide con la cantidad de parametros de la funcion
             System.out.println("Error semantico en la linea x: La cantidad de parametros enviados no coincide con la cantidad de parametros de la funcion: "+ id.toString());
         } else {
             for (int i = 0; i < funcParamstypes.size(); i++) {
@@ -564,7 +568,7 @@ callFunction ::= IDENTIFIER:id LPAREN sendParameters:actualParams  RPAREN
 callFunction ::= IDENTIFIER:id LPAREN RPAREN
 {:
 
-    String[] funcInfo = new String[2];
+    String[] funcInfo = new String[2]; // 0: Tipo de tabla, 1: Tipo de dato de la funcion
     funcInfo[0] = "null";
     funcInfo[1] = "null";
     //Verificar si la funcion existe
@@ -592,10 +596,10 @@ return_statement ::= RETURN SEPARATOR expression:e ENDLINE
 
 // Verificar que el tipo de retorno coincida con el tipo de dato de la funcion
 
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash); //Obtener la tabla de simbolos del ambito actual
     String[] infoTabla = tabla.get(0);
-    String tipoFuncion = infoTabla[1];
-    String tipoExpresion = e.toString().split(":")[1];
+    String tipoFuncion = infoTabla[1]; //Obtener el tipo de dato de la funcion
+    String tipoExpresion = e.toString().split(":")[1]; //Obtener el tipo de dato de la expresion
 
     if (!tipoFuncion.equals(tipoExpresion)) {
         System.out.println("Error semantico en la linea x: Tipo de retorno no valido");
@@ -620,7 +624,7 @@ statements ::= statements statement;
 parameter ::= type:t SEPARATOR IDENTIFIER:idParam 
 {:
 
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash); //Obtener la tabla de simbolos del ambito actual
 
      // Verificar si el parámetro ya existe en la tabla
     if (existParam(tabla, idParam.toString())) {
@@ -699,7 +703,7 @@ program ::= globalVariables functions
 
 error_recovery ::= ERROR_RECOVERY:err 
 {:
-    if (!errorDisplayed){
+    if (!errorDisplayed){ //MANEJO DE ERRORES
         System.out.println("EL ARCHIVO FUENTE NO PUEDE SER GENERADO POR LA GRAMÁTICA \n\nERRORS:\n ");
         errorDisplayed = true;
     } 

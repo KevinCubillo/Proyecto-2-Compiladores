@@ -1031,14 +1031,17 @@ class CUP$parser$actions {
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
 
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-    String[] symbol = getSymbol(tabla, id.toString());
+    RESULT="null:null";
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash); //Obtener la tabla de simbolos del ambito actual
+    String[] symbol = getSymbol(tabla, id.toString());//Obtener el simbolo de la tabla de simbolos del ambito actual
     if (symbol == null) {
         System.out.println("Error semantico en la linea x: "+id.toString()+" no ha sido declarado");
+
     }else{
         String tipoId = symbol[2];
-        RESULT = id+":"+tipoId;     
-    }   
+        RESULT = id+":"+tipoId;     //Devolver el tipo de dato del identificador
+    }
+
                                                        
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("operand",31, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1053,7 +1056,7 @@ class CUP$parser$actions {
 		int cfright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object cf = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    RESULT = cf;
+    RESULT = cf; //Devolver el tipo de dato de la funcion
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("operand",31, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1165,7 +1168,7 @@ class CUP$parser$actions {
 		Object n = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
 
-    RESULT = n; 
+    RESULT = n;  //Devolver el tipo de dato del operando
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("aritmeticExpression",24, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1181,7 +1184,7 @@ class CUP$parser$actions {
 		Object n = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		 
 
-    if (!String.valueOf(n).endsWith("int") && !String.valueOf(n).endsWith("float")) {
+    if (!String.valueOf(n).endsWith("int") && !String.valueOf(n).endsWith("float")) { //Verificar que el operando sea de tipo int o float
         System.out.println("Error semantico en la linea x: Operacion aritmetica no valida");
     }
     RESULT = "-"+n; 
@@ -1200,13 +1203,14 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-    String[] symbol = getSymbol(tabla, id.toString());
-    String tipoId = symbol[2];
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash); //Obtener la tabla de simbolos del ambito actual
+    String[] symbol = getSymbol(tabla, id.toString()); //Obtener el simbolo de la tabla de simbolos del ambito actual
+    String tipoId = symbol[2]; //Obtener el tipo de dato del identificador
 
-    if (!tipoId.equals("int"))
+    if (!tipoId.equals("int")) //Verificar que el tipo de dato del identificador sea int
+
     System.out.println("Error semantico en la linea x: No se permite el uso de incremento en variables de tipo: "+tipoId);  
-    RESULT = id+":"+tipoId;
+    RESULT = id+":"+tipoId; //Devolver el tipo de dato del identificador
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("aritmeticExpression",24, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1222,14 +1226,14 @@ class CUP$parser$actions {
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		
 
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
-    String[] symbol = getSymbol(tabla, id.toString());
-    String tipoId = symbol[2];
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash); //Obtener la tabla de simbolos del ambito actual
+    String[] symbol = getSymbol(tabla, id.toString()); //Obtener el simbolo de la tabla de simbolos del ambito actual
+    String tipoId = symbol[2]; //Obtener el tipo de dato del identificador
 
     if (!tipoId.equals("int")){
         System.out.println("Error semantico en la linea x: No se permite el uso de decremento en variables de tipo: "+tipoId);  
     }
-    RESULT = id+":"+tipoId;
+    RESULT = id+":"+tipoId; //Devolver el tipo de dato del identificador
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("aritmeticExpression",24, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1252,25 +1256,25 @@ class CUP$parser$actions {
 		
     //Verificar que los operandos sean iguales y que sean de tipo int o float
 
-    String operand1 = e1.toString().split(":")[0];
-    String operand2 = e2.toString().split(":")[0];
-    String tipo1 = e1.toString().split(":")[1];
-    String tipo2 = e2.toString().split(":")[1];
+    String operand1 = e1.toString().split(":")[0]; //Obtener el operando 1
+    String operand2 = e2.toString().split(":")[0]; //Obtener el operando 2
+    String tipo1 = e1.toString().split(":")[1]; //Obtener el tipo de dato del operando 1
+    String tipo2 = e2.toString().split(":")[1]; //Obtener el tipo de dato del operando 2
 
     String operationType = "null";
 
     // Verificar que los operandos sean de tipo int o float
-    if ((!tipo1.equals("int") && !tipo1.equals("float")) || (!tipo2.equals("int") && !tipo2.equals("float"))) {
+    if ((!tipo1.equals("int") && !tipo1.equals("float")) || (!tipo2.equals("int") && !tipo2.equals("float"))) { //Verificar que los operandos sean de tipo int o float
         System.out.println("Error semantico en la linea x: Tipos de operandos invalidos en la operacion aritmetica: "+operand1+op.toString()+operand2);
     }
     // Verificar que los operandos sean iguales
-    else if (!tipo1.equals(tipo2)){
+    else if (!tipo1.equals(tipo2)){ //Verificar que los operandos sean iguales
         System.out.println("Error semantico en la linea x: Los operandos deben ser del mismo tipo en la operacion aritmetica: "+operand1+op.toString()+operand2);
     }
     else{
           operationType = tipo1;
     }
-    RESULT = operand1+op.toString()+operand2+":"+operationType;
+    RESULT = operand1+op.toString()+operand2+":"+operationType; //Devolver el tipo de dato de la operacion
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("aritmeticExpression",24, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1285,7 +1289,7 @@ class CUP$parser$actions {
 		int e1right = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
 		Object e1 = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		
-    RESULT = e1;
+    RESULT = e1; //Devolver el tipo de dato de la expresion
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("aritmeticExpression",24, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1345,7 +1349,7 @@ class CUP$parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    RESULT = e; 
+    RESULT = e; //Devolver el tipo de dato de la expresion
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expression",6, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1359,7 +1363,7 @@ class CUP$parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    RESULT = e; 
+    RESULT = e; //Devolver el tipo de dato de la expresion
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expression",6, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1507,7 +1511,7 @@ class CUP$parser$actions {
 		int litright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
 		Object lit = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 		
-    RESULT = lit;
+    RESULT = lit; //Devolver el tipo de dato del literal
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("case_statement",20, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1521,7 +1525,7 @@ class CUP$parser$actions {
 		int csright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object cs = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    RESULT = cs;
+    RESULT = cs; //Devolver el tipo de dato del case statement
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("case_statements",21, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1538,7 +1542,7 @@ class CUP$parser$actions {
 		int csright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object cs = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    RESULT = css + "," + cs;
+    RESULT = css + "," + cs; //Devolver el tipo de dato del case statement
 
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("case_statements",21, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1833,7 +1837,7 @@ class CUP$parser$actions {
 		Object actualParams = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		 
 
-    String[] funcInfo = new String[2];
+    String[] funcInfo = new String[2]; // 0: Tipo de tabla, 1: Tipo de dato de la funcion
     funcInfo[0] = "null";
     funcInfo[1] = "null";
      //Verificar si la funcion existe
@@ -1847,7 +1851,7 @@ class CUP$parser$actions {
         String[] sendParams = actualParams.toString().split(",");
 
     
-        if (funcParamstypes.size() != sendParams.length) {
+        if (funcParamstypes.size() != sendParams.length) {// Verificar si la cantidad de parametros enviados coincide con la cantidad de parametros de la funcion
             System.out.println("Error semantico en la linea x: La cantidad de parametros enviados no coincide con la cantidad de parametros de la funcion: "+ id.toString());
         } else {
             for (int i = 0; i < funcParamstypes.size(); i++) {
@@ -1884,7 +1888,7 @@ class CUP$parser$actions {
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 		
 
-    String[] funcInfo = new String[2];
+    String[] funcInfo = new String[2]; // 0: Tipo de tabla, 1: Tipo de dato de la funcion
     funcInfo[0] = "null";
     funcInfo[1] = "null";
     //Verificar si la funcion existe
@@ -1928,10 +1932,10 @@ class CUP$parser$actions {
 
 // Verificar que el tipo de retorno coincida con el tipo de dato de la funcion
 
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash); //Obtener la tabla de simbolos del ambito actual
     String[] infoTabla = tabla.get(0);
-    String tipoFuncion = infoTabla[1];
-    String tipoExpresion = e.toString().split(":")[1];
+    String tipoFuncion = infoTabla[1]; //Obtener el tipo de dato de la funcion
+    String tipoExpresion = e.toString().split(":")[1]; //Obtener el tipo de dato de la expresion
 
     if (!tipoFuncion.equals(tipoExpresion)) {
         System.out.println("Error semantico en la linea x: Tipo de retorno no valido");
@@ -2117,7 +2121,7 @@ class CUP$parser$actions {
 		Object idParam = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
 
-    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash);
+    ArrayList<String[]> tabla = tablasDeSimbolos.get(currentHash); //Obtener la tabla de simbolos del ambito actual
 
      // Verificar si el parámetro ya existe en la tabla
     if (existParam(tabla, idParam.toString())) {
@@ -2325,7 +2329,7 @@ class CUP$parser$actions {
 		int errright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object err = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    if (!errorDisplayed){
+    if (!errorDisplayed){ //MANEJO DE ERRORES
         System.out.println("EL ARCHIVO FUENTE NO PUEDE SER GENERADO POR LA GRAMÁTICA \n\nERRORS:\n ");
         errorDisplayed = true;
     } 

@@ -4,57 +4,108 @@ data_int x
 data_int y
 t1 = 10
 x = t1
-t2 = 20
+t2 = hola
 y = t2
+t3 = adios
+param t3
+t4 = call func, 1
 main_if_1:
-t3 = x
-t4 = 5
-t5 = t3>t4
-if t5 goto main_if_1_bloque
+t5 = x
+t6 = 5
+t7 = t5>t6
+if t7 goto main_if_1_bloque
 goto main_if_1_bloque_end
 main_if_1_bloque:
-t6 = x
-t7 = 1
-t8 = t6+t7
-x = t8
+t8 = x
+t9 = 1
+t10 = t8+t9
+x = t10
 main_if_1_bloque_end:
 main_if_1_else:
-t9 = y
-t10 = 1
-t11 = t9-t10
-y = t11
+t11 = y
+t12 = 1
+t13 = t11-t12
+y = t13
 main_if_1_else_end:
 main_if_1_end:
 main_while_3:
 main_while_3_condition:
-t12 = x
-t13 = 15
-t14 = t12<t13
-if t14 goto main_while_3_bloque
+t14 = x
+t15 = 15
+t16 = t14<t15
+if t16 goto main_while_3_bloque
 goto main_while_3_bloque_end
 main_while_3_bloque:
 main_if_2:
-t15 = x
-t16 = 10
-t17 = t15<t16
-if t17 goto main_if_2_bloque
+t17 = x
+t18 = 10
+t19 = t17<t18
+if t19 goto main_if_2_bloque
 goto main_if_2_bloque_end
 main_if_2_bloque:
-t18 = x
-t19 = 1
-t20 = t18+t19
-x = t20
+t20 = x
+t21 = 1
+t22 = t20+t21
+x = t22
 main_if_2_bloque_end:
 main_if_2_else:
-t21 = y
-t22 = 1
-t23 = t21-t22
-y = t23
+t23 = y
+t24 = 1
+t25 = t23-t24
+y = t25
 main_if_2_else_end:
 main_if_2_end:
 goto main_while_3_condition
 main_while_3_bloque_end:
 main_while_3_end:
 data_int i
-t24 = 0
+t26 = 0
+return t26
+begin_func_probarReadAndPrint:
+data_int x
+data_int var
+param x
+t1 = call read, 1
+probarReadAndPrint_if_4:
+t2 = x
+t3 = 5
+t4 = t2>t3
+if t4 goto probarReadAndPrint_if_4_bloque
+goto probarReadAndPrint_if_4_bloque_end
+probarReadAndPrint_if_4_bloque:
+t5 = "Es mayor a 5"
+PRINT t5
+
+probarReadAndPrint_if_4_bloque_end:
+probarReadAndPrint_if_4_else:
+t6 = "Es menor a 5"
+PRINT t6
+
+probarReadAndPrint_if_4_else_end:
+probarReadAndPrint_if_4_end:
+data_string s
+t7 = "Hola mundo"
+s = t7
+t8 = s
+PRINT t8
+
+t9 = 2
+t10 = 2
+t11 = 2
+t12 = var
+t13 = 1
+t14 = t12 - t13
+var = t14
+t15 = 2
+t16 = 3
+t17 = -5
+t18 = t16^t17
+t19 = t15/t18
+t20 = var*t19
+t21 = t11+t20
+t22 = t10-t21
+t23 = t9+t22
+PRINT t23
+
+t24 = s
 return t24

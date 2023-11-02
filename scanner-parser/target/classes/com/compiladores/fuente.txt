@@ -5,8 +5,8 @@ int#main() {
     int#y;
 
     x = 10;
-    y = 20;
-
+    y = hola;
+    func(adios);
     if (x > 5) {
         x = x + 1;
     } else {
@@ -23,5 +23,20 @@ int#main() {
 
     int#i;
     return#0;
+}
+string#probarReadAndPrint() {
+    int#x;
+    int#var;
+    read>> x;
+    if (x > 5) {
+        print<<"Es mayor a 5";
+    } else {
+        print<<"Es menor a 5";
+    }
+    string#s;
+    s = "Hola mundo";
+    print<< s;
+    print<< 2+2-2+var--*2/3^-5;
+    return#s;
 }
 

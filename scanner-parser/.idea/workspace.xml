@@ -5,14 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d7af08d1-e724-4b2a-92b5-4c63bf52ddc3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_28_10_2023_17_40_[Changes]/App.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_28_10_2023_17_40_[Changes]/Lexer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_28_10_2023_17_40_[Changes]/parser$CUP$parser$actions.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_28_10_2023_17_40_[Changes]/parser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_28_10_2023_17_40_[Changes]/scanner-parser-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_28_10_2023_17_40_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_28_10_2023_17_40__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_30_10_2023_9_16_[Changes]/App.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_30_10_2023_9_16_[Changes]/AppTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_30_10_2023_9_16_[Changes]/Lexer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_30_10_2023_9_16_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_30_10_2023_9_16__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/Intermedio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/Intermedio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/IntermedioSym.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/fuente.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/fuente.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/intermedio.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/intermedio.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/App.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/App.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/Intermedio$CUP$Intermedio$actions.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/Intermedio$CUP$Intermedio$actions.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/intermedio.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/compiladores/intermedio.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/compiladores/tokens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/compiladores/tokens.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/fuente.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/intermedio.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/compiladores/tokens.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/compiladores/AppTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/compiladores/AppTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,9 +41,9 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2VipFqU9W8HAT4VFSzZx4RqzzIV" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -41,7 +54,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;facu&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/kevin/Desktop/Proyecto 2-Compiladores/Proyecto-2-Compiladores/scanner-parser&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Casa/Fabricio/TEC/Compi/Proyecto 2/Programa/Proyecto-2-Compiladores/scanner-parser&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -204,7 +217,11 @@
       <workItem from="1698281455525" duration="20896000" />
       <workItem from="1698604843176" duration="32337000" />
       <workItem from="1698866946139" duration="8942000" />
-      <workItem from="1698897787350" duration="5197000" />
+      <workItem from="1698897787350" duration="5781000" />
+      <workItem from="1699831024507" duration="692000" />
+      <workItem from="1699888170049" duration="95000" />
+      <workItem from="1699889146882" duration="7917000" />
+      <workItem from="1700583037203" duration="4300000" />
     </task>
     <servers />
   </component>

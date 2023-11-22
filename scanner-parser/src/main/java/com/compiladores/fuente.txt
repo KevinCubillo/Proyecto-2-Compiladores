@@ -1,34 +1,12 @@
-//Comentario de prueba 1
 
-string#hola;
-int#perro;
 
-int#main() {
-    int#x;
-    int#y;
+float#miFunc (int#dif, char#otra){
 
-    x = 10;
-    y = "20";
-    func(tomate);
+	for#x#in#range(10,30,2)
+	{
+		read>>dif;
 
-    if (y < 30 || x==32) {
-        x = x + 1;
-    } else {
-        y = y - 1;
-    }
-
-    while ((y > 10) && (20>x)) {
-        if (x < 10) {
-            x = x + 1;
-        } else {
-            y = y - 1;
-        }
-    }
-
-    int#i;
-    return#hola;
+	}
+	return#1.1;
 }
 
-int#func(int#x) {
-    int#adios=main();
-}

@@ -1,22 +1,12 @@
-int#main(){
-	int#b1 = 45;
-	int#b2;
-	b1 = 10;
-	print<<56+89+454;
-	read>>b1;
-
-	hola(23,"perra", b2);
 
 
+float#miFunc (int#dif, char#otra){
 
-/*
-	if(b1>15){
-	    b2 = 10;
-		if(b1 != b2){
-		    int#b3=99;
-		}
-		int#b4;
-		b4 = 10;
+	for#x#in#range(10,30,2)
+	{
+		read>>dif;
+
 	}
-	b2 = 99;*/
+	return#1.1;
 }
+

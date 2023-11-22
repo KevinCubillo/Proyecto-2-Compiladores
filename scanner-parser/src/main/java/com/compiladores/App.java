@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 
-public class App 
+public class App
 {
     public static void main( String[] args ) throws Exception
     {
@@ -42,11 +42,12 @@ public class App
         Reader reader = new BufferedReader(new FileReader(archivoFuente));
         Lexer lexer = new Lexer(reader);
 
-        parser p = new parser(lexer);
-        p.parse();
-
+        //parser p = new parser(lexer);
+        //p.parse();
+        Intermedio i = new Intermedio(lexer);
+        i.parse();
         //Escribir en archivo de codigo intermedio
-        intermediateCode(p.getIntermediateCode());
+       intermediateCode(i.getIntermediateCode());
     }
 
     public static void intermediateCode(StringBuffer intermediateCode) {
